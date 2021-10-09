@@ -1,0 +1,28 @@
+.mp-register-box .ant-input-group .ant-input-group-addon:nth-child(1) {
+    width: 100px;
+}
+
+.mp-register-input {
+    width: 300px;
+}
+
+.mp-register-btnlist {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.mp-register-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mp-register-pic {
+    padding-top: 30px;
+    padding-bottom: 100px;
+    padding-left: 30px;
+}

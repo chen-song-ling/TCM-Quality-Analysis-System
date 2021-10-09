@@ -1,0 +1,28 @@
+.mp-adlogin-box .ant-input-group .ant-input-group-addon:nth-child(1) {
+    width: 100px;
+}
+
+.mp-adlogin-input {
+    width: 300px;
+}
+
+.mp-adlogin-btnlist {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.mp-adlogin-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mp-adlogin-pic {
+    padding-top: 30px;
+    padding-bottom: 100px;
+    padding-left: 30px;
+}

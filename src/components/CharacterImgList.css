@@ -1,0 +1,28 @@
+.mp-charimglist-row-left {
+    background-color: rgb(232, 222, 222);
+    height: 200px;
+    width: 200px;
+}
+
+.mp-charimglist-row-mid {
+    background-color: rgb(232, 222, 222);
+    height: 200px;
+    width: 200px;
+}
+
+.mp-charimglist-row-right {
+    background-color: rgb(232, 222, 222);
+    height: 200px;
+    width: 200px;
+}
+
+.mp-charimglist-row-head {
+    width: 200px;
+}
+
+.mp-charimglist-row-head p {
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

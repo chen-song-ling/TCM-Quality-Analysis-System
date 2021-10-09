@@ -1,0 +1,21 @@
+.mp-login-logo {
+    padding-top: 30px;
+    padding-bottom: 100px;
+    padding-left: 30px;
+}
+
+.mp-login-input {
+    width: 300px;
+}
+
+.mp-login .ant-input-group .ant-input-group-addon:nth-child(1) {
+    width: 100px;
+}
+
+.mp-login-btnlist {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}

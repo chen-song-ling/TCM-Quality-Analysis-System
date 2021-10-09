@@ -1,0 +1,16 @@
+.mp-charinbox .ant-input-group .ant-input-group-addon:nth-child(1) {
+    width: 100px;
+}
+
+.mp-charinbox .ant-input-group-wrapper {
+    width: 600px;
+}
+
+.mp-charinbox .mp-charinbox-textarea {
+    width: 600px;
+}
+
+
+.mp-charinbox-textarea .ant-input {
+    height: 100px;
+}

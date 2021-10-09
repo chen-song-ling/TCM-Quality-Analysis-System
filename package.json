@@ -1,0 +1,65 @@
+{
+  "name": "drug-control-medp",
+  "productName": "智能检测平台",
+  "description": "深圳市药品检验研究院，智能检测平台。",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Leundo <180210116@stu.hit.edu.cn>",
+  "copyright": "© 2021, 深圳市药品检验研究院.",
+  "homepage": ".",
+  "main": "build/electron.js",
+  "build": {
+    "appId": "com.example.void-react-electron",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "resources"
+    },
+    "publish": null
+  },
+  "scripts": {
+    "elec-dev": "electron ./src/main.js dev",
+    "elec": "electron ./src/main.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "release": "webpack --config=config/webpack/webpack.app.config.js --env=production && electron-builder"
+  },
+  "dependencies": {
+    "fs-jetpack": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@reduxjs/toolkit": "^1.6.2",
+    "antd": "^4.16.13",
+    "chai": "^4.1.0",
+    "css-loader": "^5.2.0",
+    "electron": "^15.0.1",
+    "electron-builder": "^22.5.1",
+    "react": "^17.0.2",
+    "react-cropper": "^2.1.8",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.5",
+    "react-router-dom": "^5.3.0",
+    "react-scripts": "^4.0.3",
+    "source-map-support": "^0.5.6",
+    "style-loader": "^2.0.0",
+    "webpack-merge": "^5.8.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
