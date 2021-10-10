@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./MarkBlock.css";
-import { MPListList } from "../unities/MPListList";
+import { MPListList } from "../util/MPListList";
 
 /* StateType
     focusedCv: 目前聚焦的canvas编号

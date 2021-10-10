@@ -58,19 +58,6 @@ export default function CropCntr(props) {
     
     //-- Protocol End
 
-    // useEffect(() => {
-    //     if (typeof cropper !== "undefined") {
-    //         // console.log("BBB");
-    //         // let cbData = { ...cropper.getCropBoxData() };
-    //         // cbData.width = 75;
-    //         // cropper.setCropBoxData(cbData);
-
-    //         if (typeof cropper !== "undefined") {
-    //             cropper.setData({width: 75});
-    //         }
-    //     }
-    // }, [rawImg]);
-
 
     return (
         <div className="chmt-cropcntr">
