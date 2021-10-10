@@ -5,6 +5,7 @@ const appMenuTemplate = require('./menu/app_menu_template');
 const editMenuTemplate = require('./menu/edit_menu_template');
 const devMenuTemplate = require('./menu/dev_menu_template');
 const createMnemonicWindow = require('./helpers/window');
+const initFileIpc = require('./helpers/fileIpc');
 
 // 获取在 package.json 中的命令脚本传入的参数, 来判断是开发还是生产环境
 const mode = process.argv[2];
@@ -56,6 +57,7 @@ const setApplicationMenu = () => {
 
 app.whenReady().then(() => {
   setApplicationMenu();
+  initFileIpc();
   createWindow();
 
   app.on('activate', function () {

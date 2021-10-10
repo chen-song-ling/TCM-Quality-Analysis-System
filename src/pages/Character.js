@@ -7,11 +7,14 @@ import './Character.css';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
-import { Modal } from 'antd';
+import { Modal, notification } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo } from '../slices/characterSlice';
 import CharacterHeader from '../components/CharacterHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
+
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 
 export default function Character(props) {
@@ -141,7 +144,11 @@ export default function Character(props) {
     }
 
     const onExamineStandardImgClick = (e) => {
-        
+        ipcRenderer.send("open-path", ["local", "character", "standard"]);
+    }
+
+    const onExamineAttachmentClick = (e) => {
+        ipcRenderer.send("open-pdf", ["local", "attachment", "att1.pdf"]);
     }
 
     // -- END -- CharacterInputBox相关
@@ -249,6 +256,7 @@ export default function Character(props) {
                 onSwitchClick={onSwitchClick}
                 onUploadSampleImgClick={onUploadSampleImgClick}
                 onExamineStandardImgClick={onExamineStandardImgClick}
+                onExamineAttachmentClick={onExamineAttachmentClick}
             />
 
             <CharacterImgList
