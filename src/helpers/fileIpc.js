@@ -50,7 +50,24 @@ const initFileIpc = () => {
         win.loadURL(dir);
       }
       
-    })
+    });
+
+    ipcMain.on("open-file", (event, arg) => {
+      let dir = joinAndMkdir(arg, true);
+      if (!fs.existsSync(dir)) {
+        return;
+      }
+      
+      let extname = path.extname(dir);
+      if (extname === ".pdf") {
+        let win = new PDFWindow({
+          width: 800,
+          height: 600
+        });
+        win.loadURL(dir);
+      }
+      
+    });
 
     ipcMain.on("get-file-list", (event, arg) => {
       let dir = joinAndMkdir(arg);

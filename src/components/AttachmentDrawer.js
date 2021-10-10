@@ -14,7 +14,7 @@ export default function AttachmentDrawer(props) {
     useEffect(() => {
         setLoading(true);
         ipcRenderer.send("get-file-list", ["local", "attachment"]);
-    }, [props.updateToggle])
+    }, [props.updateToggle]);
 
     useEffect(() => {
         ipcRenderer.on("file-list", (event, arg) => {
@@ -38,6 +38,14 @@ export default function AttachmentDrawer(props) {
         setLoading(true);
         ipcRenderer.send("get-file-list", ["local", "attachment"]);
     }
+
+    const onExamineClick = (record) => {
+        ipcRenderer.send("open-file", ["local", "attachment", record.fileName]);
+    }
+
+    const onDeleteClick = (record) => {
+
+    }
     
 
     const columns = [
@@ -55,8 +63,8 @@ export default function AttachmentDrawer(props) {
             key: 'action',
             render: (text, record) => (
                 <Space size="middle">
-                    <a onClick={() => props.onExamineClick(record)}>查看</a>
-                    <a onClick={() => props.onDeleteClick(record)}>删除</a>
+                    <a onClick={() => onExamineClick(record)}>查看</a>
+                    {/* <a onClick={() => onDeleteClick(record)}>删除</a> */}
                 </Space>
             ),
         },
@@ -64,12 +72,11 @@ export default function AttachmentDrawer(props) {
     return (
         <div className="mp-c-attdrw">
             <Drawer
-            title="附件列表"
-            placement="right"
-            closable={false}
-            onClose={props.onClose}
-            visible={props.visible}
-            width="650px"
+                title="附件列表"
+                placement="right"
+                onClose={props.onClose}
+                visible={props.visible}
+                width="500"
             >
                 <div style={{ marginBottom: 16 }}>
                     <Button onClick={onBrowserDisplayClick} loading={loading}>
