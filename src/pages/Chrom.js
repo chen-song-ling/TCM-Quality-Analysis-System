@@ -4,12 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Chrom.css';
 
-import { Modal, Space, notification } from 'antd';
+// import { Modal, Space, notification } from 'antd';
 import MpHeader from '../components/MpHeader';
 
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
 import { SaveAsCsv } from "../util/Saver";
+
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 export default function Chrom(props) {
     const [redirect, setRedirect] = useState(null);
@@ -82,47 +85,16 @@ export default function Chrom(props) {
     // 保存结果
     const triggerSaveResult = () => {
 
-        // // 没输入尺寸, 不能计算、保存
-        // if (sizeboxData.err !== "none") {
-        //     return;
-        // }
+        // 没输入尺寸, 不能计算、保存
+        if (sizeboxData.err !== "none") {
+            return;
+        }
 
-        // let defaultFileName = imgFileName.current;
-        // let dotIdx = defaultFileName.lastIndexOf(".");
-        // if (dotIdx !== -1) {
-        //     defaultFileName = defaultFileName.substring(0, dotIdx);
-        // }
+        let defaultFileName = imgFileName.current;
+        let csv = SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+
+        ipcRenderer.send("save-chrom-csv-with-dialog", {csv: csv, defaultFileName: defaultFileName});
         
-        // const res = dialog.showSaveDialogSync({
-        //     title: "保存标记结果",
-        //     defaultPath: defaultFileName, // 打开文件选择器的哪个路径 需要输入一个有效路径
-        //     buttonLabel: "储存",
-        //     // 限制能够选择的文件为某些类型
-        //     filters: [
-        //         // { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
-        //         // { name: 'Movies', extensions: ['mkv', 'avi', 'mp4'] },
-        //         // { name: 'Custom File Type', extensions: ['as'] },
-        //         // { name: 'All Files', extensions: ['*'] }, 
-        //         { name: "CSV UTF-8 (逗号分隔)", extensions: ["csv"]},
-        //     ],
-        //     nameFieldLabel: "存储为", // “文件名”文本字段前面显示的文本自定义标签
-        //     showsTagField: true, // 显示标签输入框，默认值为true
-        //     // properties: [ 'showHiddenFiles' ],
-        //     // message: 'mac文件选择器title',
-        // });
-
-        // // 取消保存
-        // if (res === undefined) {
-        //     return;
-        // }
-
-        // // defaultPath.current = res.substring(0, res.lastIndexOf("/")+1)
-
-        // let csv = SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
-        // console.log(csv);
-
-        // let file = path.resolve(res);
-        // fs.writeFile(file, csv, { encoding: 'utf8' }, err => {})
 
     }
 

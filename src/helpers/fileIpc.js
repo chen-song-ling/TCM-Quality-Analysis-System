@@ -1,4 +1,4 @@
-const { app, ipcMain, shell } = require('electron');
+const { app, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const PDFWindow = require('electron-pdf-window');
@@ -57,7 +57,7 @@ const initFileIpc = () => {
       if (!fs.existsSync(dir)) {
         return;
       }
-      
+
       let extname = path.extname(dir);
       if (extname === ".pdf") {
         let win = new PDFWindow({
@@ -74,7 +74,36 @@ const initFileIpc = () => {
       fs.readdir(dir, (err, files) => {
         event.reply("file-list", files);
       })
-    })
+    });
+
+    ipcMain.on("save-chrom-csv-with-dialog", (event, arg) => {
+      let csv = arg.csv;
+      let defaultFileName = arg.defaultFileName;
+      let dotIdx = defaultFileName.lastIndexOf(".");
+      if (dotIdx !== -1) {
+          defaultFileName = defaultFileName.substring(0, dotIdx);
+      }
+
+      const res = dialog.showSaveDialogSync({
+          title: "保存标记结果",
+          defaultPath: defaultFileName,
+          buttonLabel: "储存",
+          filters: [
+              { name: "CSV UTF-8 (逗号分隔)", extensions: ["csv"]},
+          ],
+          nameFieldLabel: "存储为",
+          showsTagField: true,
+      });
+
+      if (res === undefined) {
+        return;
+      }
+      let file = path.resolve(res);
+      fs.writeFile(file, csv, { encoding: 'utf8' }, err => {});
+
+    });
+
+    
 
     ipcMain.on("open-external-link", (event, href) => {
       shell.openExternal(href);
