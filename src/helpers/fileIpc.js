@@ -42,11 +42,21 @@ const initFileIpc = () => {
 
     ipcMain.on("open-pdf", (event, arg) => {
       let dir = joinAndMkdir(arg, true);
-      const win = new PDFWindow({
+      let win = new PDFWindow({
         width: 800,
         height: 600
       });
-      win.loadURL(dir);
+      if (fs.existsSync(dir)) {
+        win.loadURL(dir);
+      }
+      
+    })
+
+    ipcMain.on("get-file-list", (event, arg) => {
+      let dir = joinAndMkdir(arg);
+      fs.readdir(dir, (err, files) => {
+        event.reply("file-list", files);
+      })
     })
 
     ipcMain.on("open-external-link", (event, href) => {

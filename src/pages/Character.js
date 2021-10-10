@@ -7,11 +7,13 @@ import './Character.css';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
-import { Modal, notification } from 'antd';
+import { Modal, notification, Space, Drawer } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo } from '../slices/characterSlice';
 import CharacterHeader from '../components/CharacterHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
+import AttachmentTable from '../components/AttachmentTable';
+import AttachmentDrawer from '../components/AttachmentDrawer';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -37,6 +39,8 @@ export default function Character(props) {
 
     const [cropper, setCropper] = useState();
     const [isCroplMoadlVisible, setIsCroplMoadlVisible] = useState(false);
+    const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+    const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
 
     useEffect(() => {
         // 使用缓存
@@ -148,10 +152,20 @@ export default function Character(props) {
     }
 
     const onExamineAttachmentClick = (e) => {
-        ipcRenderer.send("open-pdf", ["local", "attachment", "att1.pdf"]);
+        // ipcRenderer.send("open-pdf", ["local", "attachment", "att1.pdf"]);
+        setUpdateAttachmentToggle(updateAttachmentToggle+1);
+        setIsAttachmentDrawerVisible(true);
     }
 
     // -- END -- CharacterInputBox相关
+
+    // -- BEGIN -- AttachmentDrawer相关
+
+    const onAttachmentDrawerClose = () => {
+        setIsAttachmentDrawerVisible(false);
+    }
+
+    // -- END -- AttachmentDrawer相关
 
     // -- BEGIN -- Crop Modal相关
 
@@ -245,19 +259,26 @@ export default function Character(props) {
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
             />
-            <CharacterInputBox
-                date={characterDate}
-                temperature={characterTemperature}
-                humidity={characterHumidity}
-                standard={characterStandard}
-                manualResult={characterManualResult}
-                checkList={characterCheckList}
-                onInputChange={onInputChange}
-                onSwitchClick={onSwitchClick}
-                onUploadSampleImgClick={onUploadSampleImgClick}
-                onExamineStandardImgClick={onExamineStandardImgClick}
-                onExamineAttachmentClick={onExamineAttachmentClick}
-            />
+
+            <Space className="mp-vlist" direction="vertical" size={'middle'}>
+                <CharacterInputBox
+                    date={characterDate}
+                    temperature={characterTemperature}
+                    humidity={characterHumidity}
+                    standard={characterStandard}
+                    manualResult={characterManualResult}
+                    checkList={characterCheckList}
+                    onInputChange={onInputChange}
+                    onSwitchClick={onSwitchClick}
+                    onUploadSampleImgClick={onUploadSampleImgClick}
+                    onExamineStandardImgClick={onExamineStandardImgClick}
+                    onExamineAttachmentClick={onExamineAttachmentClick}
+                />
+
+
+                
+
+            </Space>
 
             <CharacterImgList
                 characterImgGroup={characterImgGroup}
@@ -266,6 +287,12 @@ export default function Character(props) {
             />
 
             <input type="file" id="the-ghost-uploadSampleImg" style={{display: "none"}} onChange={onSampleImgChange} /> 
+
+            <AttachmentDrawer
+                visible={isAttachmentDrawerVisible}
+                onClose={onAttachmentDrawerClose}
+                updateToggle={updateAttachmentToggle}
+            />
 
             <Modal className="mp-character-modal" title="AI 识别" visible={isCroplMoadlVisible} onOk={onCropModalOk} onCancel={onCropModalCancel}>
                 <Cropper
