@@ -57,6 +57,10 @@ export default function MarkCntr(props) {
         props.ptc_triggerSaveResult();
     }
 
+    const triggerShowAttachment = () => {
+        props.ptc_triggerShowAttachment();
+    }
+
     //-- Protocol End
 
     return (
@@ -80,6 +84,7 @@ export default function MarkCntr(props) {
                 ptc_triggerclearMark={triggerclearMark}
                 ptc_triggerNumberMark={triggerNumberMark}
                 ptc_triggerSaveResult={triggerSaveResult}
+                ptc_triggerShowAttachment={triggerShowAttachment}
             />
         </div>
     );

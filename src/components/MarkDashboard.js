@@ -16,6 +16,7 @@ import "./MarkDashboard.css";
     triggerclearMark()
     triggerNumberMark()
     triggerSaveResult()
+    triggerShowAttachment()
 */
 
 export default function MarkDashboard(props) {
@@ -99,11 +100,16 @@ export default function MarkDashboard(props) {
         props.ptc_triggerSaveResult();
     }
 
+    const handleAttachmentBtn = () => {
+        props.ptc_triggerShowAttachment();
+    }
+
     return (
         <div className="chmt-markdb">
             <div className="chmt-markdb-btnlist">
                 <button type="button" className={setFixBtnStyle()} onClick={()=>handleFKBtnClick("fix")}>{setFixBtnText()}</button>
                 <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")}>{setKeyBtnText()}</button>
+                <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>
             </div>
             <div className="chmt-markdb-btnlist">
                 <button type="button" className="btn btn-default" onClick={handleUndoBtn}>{config.text_undobtn}</button>

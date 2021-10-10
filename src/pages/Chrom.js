@@ -9,6 +9,7 @@ import MpHeader from '../components/MpHeader';
 
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
+import AttachmentDrawer from '../components/AttachmentDrawer';
 import { SaveAsCsv } from "../util/Saver";
 
 const electron = window.require('electron');
@@ -30,6 +31,9 @@ export default function Chrom(props) {
     const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
 
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
+
+    const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+    const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
 
     //-- Protocol Begin
 
@@ -98,6 +102,12 @@ export default function Chrom(props) {
 
     }
 
+    // 附件管理
+    const triggerShowAttachment = () => {
+        setUpdateAttachmentToggle(updateAttachmentToggle+1);
+        setIsAttachmentDrawerVisible(true);
+    }
+
     //-- Protocol END
 
 
@@ -121,6 +131,10 @@ export default function Chrom(props) {
     }
 
     // -- END -- MpHeader相关
+
+    const onAttachmentDrawerClose = () => {
+        setIsAttachmentDrawerVisible(false);
+    }
 
     if (redirect !== null) {
         return (
@@ -165,6 +179,7 @@ export default function Chrom(props) {
                 />
                 <MarkCntr 
                     ptc_triggerSaveResult={triggerSaveResult}
+                    ptc_triggerShowAttachment={triggerShowAttachment}
                     ptc_uploadMarkedPoints={uploadMarkedPoints}
                     ptc_uploadScalingRatios={uploadScalingRatios}
 
@@ -172,6 +187,12 @@ export default function Chrom(props) {
                     cropBoxSizeList={cropBoxSizeList}
                 />
             </div>
+
+            <AttachmentDrawer
+                visible={isAttachmentDrawerVisible}
+                onClose={onAttachmentDrawerClose}
+                updateToggle={updateAttachmentToggle}
+            />
         </div>
     );
 }
