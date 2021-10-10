@@ -1,0 +1,13 @@
+.chmt-cropcntr {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+
+    background-color: #eeeeee;
+    width: 500px;
+    height: 600px;
+    margin-right: 40px;
+
+}

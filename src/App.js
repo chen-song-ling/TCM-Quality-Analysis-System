@@ -6,6 +6,7 @@ import Project from './pages/Project';
 import Character from './pages/Character';
 import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
+import Chrom from './pages/Chrom';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/character" component={Character} />
+          <Route path="/chrom" component={Chrom} />
           <Route path="/project" component={Project} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/register" component={Register} />

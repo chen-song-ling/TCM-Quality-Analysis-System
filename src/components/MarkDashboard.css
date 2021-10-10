@@ -1,0 +1,14 @@
+.chmt-markdb-btnlist {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+.chmt-markdb-btnlist .btn {
+    margin-right: 20px;
+}

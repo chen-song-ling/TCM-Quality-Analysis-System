@@ -5,10 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import './Project.css';
 
 import { setCharacterId } from '../slices/characterSlice';
+import { setChromId } from '../slices/chromSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } from '../slices/projectSlice';
 import { apiGetTasksOverview } from '../util/api';
 
-import ProjectHeader from '../components/ProjectHeader';
+import MpHeader from '../components/MpHeader';
 import ProjectInputBox from '../components/ProjectInputBox';
 import InputWithButton from '../components/InputWithButton';
 import ProjectTable from '../components/ProjectTable';
@@ -208,7 +209,8 @@ export default function Project(props) {
             dispatch(setCharacterId(record.id));
             setRedirect("/character");
         } else if (record.taskType === "薄层") {
-
+            dispatch(setChromId(record.id));
+            setRedirect("/chrom");
         }
     }
 
@@ -290,16 +292,24 @@ export default function Project(props) {
     renderEditFieldInput();
     return (
         <div className="mp-project">
-            <ProjectHeader
-                username={username}
+            <MpHeader
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
+                username={username}
+                breadItems = {[
+                    {
+                        text: "首页",
+                        isActive: true,
+                        funcTag: "home",
+                    },
+                    {
+                        text: "项目",
+                        isActive: false,
+                    },
+                ]}
             />
 
         
-            {/* <Button type="primary" size={'large'} onClick={onExamineCharacterClick}>
-                性状
-            </Button> */}
 
             <ProjectInputBox
                 projectInfoDisplay={projectInfoDisplay}

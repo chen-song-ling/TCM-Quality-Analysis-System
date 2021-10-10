@@ -7,12 +7,11 @@ import './Character.css';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
-import { Modal, notification, Space, Drawer } from 'antd';
+import { Modal, notification, Space } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo } from '../slices/characterSlice';
-import CharacterHeader from '../components/CharacterHeader';
+import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
-import AttachmentTable from '../components/AttachmentTable';
 import AttachmentDrawer from '../components/AttachmentDrawer';
 
 const electron = window.require('electron');
@@ -254,10 +253,26 @@ export default function Character(props) {
 
     return (
         <div className="mp-project">
-            <CharacterHeader
-                username={username}
+            <MpHeader
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
+                username={username}
+                breadItems = {[
+                    {
+                        text: "首页",
+                        isActive: true,
+                        funcTag: "home",
+                    },
+                    {
+                        text: "项目",
+                        isActive: true,
+                        funcTag: "project",
+                    },
+                    {
+                        text: "性状",
+                        isActive: false,
+                    },
+                ]}
             />
 
             <Space className="mp-vlist" direction="vertical" size={'middle'}>

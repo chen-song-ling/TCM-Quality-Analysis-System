@@ -1,0 +1,19 @@
+.mp-c-mpheader-dropdown {
+    margin-left: 20px;
+}
+
+.mp-c-mpheader-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.mp-c-mpheader-nav-bread {
+    padding-left: 30px;
+}
+
+.mp-c-mpheader-nav-subtitile {
+    padding-right: 30px;
+}
