@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Login.css';
 import { Input, Button, Space, notification } from 'antd';
-import { setPath, setUsername } from '../slices/globalSlice';
+import { setPath, setUsername, setAccessToken } from '../slices/globalSlice';
 import { apiLogin } from '../util/api';
 
 export default function Login() {
@@ -50,12 +50,21 @@ export default function Login() {
             return;
         }
 
-        apiLogin(inputUsername, inputPassword).then((result) => {
-            if (result.code == 200) {
+        apiLogin(inputUsername, inputPassword).then((res) => {
+
+            if (res.data.access_token !== undefined) {
+
                 dispatch(setUsername(inputUsername));
+                dispatch(setAccessToken(res.data.access_token));
                 setRedirect("/home");
+            } else {
+                notification.open({
+                    message: "登录失败",
+                    description: "用户名或密码错误。",
+                });
             }
         }).catch((err) => {
+            console.log(err);
             notification.open({
                 message: "登录失败",
                 description: "用户名或密码错误。",

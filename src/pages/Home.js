@@ -7,14 +7,51 @@ import './Home.css';
 import { Modal, Space, notification } from 'antd';
 import CompoundInput from '../components/CompoundInput';
 import { setProjectId } from '../slices/projectSlice';
-import { apiGetProjectsOverview } from '../util/api';
+import { apiGetProjectsOverview, apiGetProjectList } from '../util/api';
 import HomeHeader from '../components/HomeHeader';
 import HomeTable from '../components/HomeTable';
+
+const mockData = {data: [
+    {
+        "name": "菊花",
+        "number": "CZ20195363",
+        "standard": "这是执行标准",
+        "note": "这是备注",
+        "additional_fields": [
+          {
+            "field_name": "string",
+            "field_value": "string"
+          }
+        ],
+        "attachments": "string",
+        "id": 1,
+        "creator_id": 1,
+        "creation_time": "2021-10-17T12:22:48.461Z"
+    },
+    {
+        "name": "人参",
+        "number": "CZ20187813",
+        "standard": "这是执行标准",
+        "note": "这是备注",
+        "additional_fields": [
+          {
+            "field_name": "string",
+            "field_value": "string"
+          }
+        ],
+        "attachments": "string",
+        "id": 2,
+        "creator_id": 1,
+        "creation_time": "2021-02-03T12:22:48.461Z"
+    },
+], total: 2};
+
 
 
 export default function Home(props) {
     const [redirect, setRedirect] = useState(null);
     const username = useSelector(state => state.global.username);
+    const accessToken = useSelector(state => state.global.accessToken);
     const dispatch = useDispatch();
 
     const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -35,20 +72,55 @@ export default function Home(props) {
     const [inputNote, setInputNote] = useState("");
 
     useEffect(() => {
-        apiGetProjectsOverview(username, pagination.current, "addingTime", "descend", pagination.pageSize).then((result) => {
-            if (result.code == 200) {
-                setData(result.data);
-                setPagination(
-                    {
-                        ...pagination,
-                        total: result.total
-                    }
-                )
-                setLoading(false);
-            }
+
+        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, "addingTime", "descend").then((res) => {
+            // console.log(res.data);
+            // let data = res.data;
+            let data = mockData;
+
+            let newData = [];
+            data.data.forEach(item => {
+                let date = new Date(item.creation_time);
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+                newData.push({
+                    key: item.id,
+                    id: item.id,
+                    name: item.name,
+                    addingTime: dateStr,
+                    sampleId: item.number,
+                    standard: item.standard,
+                    note: item.note,
+                });
+            });
+            setData(newData);
+            setPagination(
+                {
+                    ...pagination,
+                    total: data.total
+                }
+            );
+            setLoading(false);
+
         }).catch((err) => {
-            
+            console.log(err);
         });
+
+
+        // 原测试
+        // apiGetProjectsOverview(username, pagination.current, "addingTime", "descend", pagination.pageSize).then((result) => {
+        //     if (result.code == 200) {
+        //         setData(result.data);
+        //         setPagination(
+        //             {
+        //                 ...pagination,
+        //                 total: result.total
+        //             }
+        //         )
+        //         setLoading(false);
+        //     }
+        // }).catch((err) => {
+            
+        // });
     }, []);
 
     // -- BEGIN -- HomeHeader相关
@@ -89,17 +161,50 @@ export default function Home(props) {
     }
 
     const onTableChange = (pagination, filters, sorter) => {
-        console.log(sorter);
-        setLoading(true);
-        apiGetProjectsOverview(username, pagination.current, sorter.field, sorter.order, pagination.pageSize).then((result) => {
-            if (result.code == 200) {
-                setData(result.data);
-                setPagination({...pagination});
-                setLoading(false);
-            }
+        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, "addingTime", "descend").then((res) => {
+            // console.log(res.data);
+            // let data = res.data;
+            let data = mockData;
+
+            let newData = [];
+            data.data.forEach(item => {
+                let date = new Date(item.creation_time);
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+                newData.push({
+                    key: item.id,
+                    id: item.id,
+                    name: item.name,
+                    addingTime: dateStr,
+                    sampleId: item.number,
+                    standard: item.standard,
+                    note: item.note,
+                });
+            });
+            setData(newData);
+            setPagination(
+                {
+                    ...pagination,
+                    total: data.total
+                }
+            );
+            setLoading(false);
+
         }).catch((err) => {
-            
+            console.log(err);
         });
+
+        // 原测试
+        // console.log(sorter);
+        // setLoading(true);
+        // apiGetProjectsOverview(username, pagination.current, sorter.field, sorter.order, pagination.pageSize).then((result) => {
+        //     if (result.code == 200) {
+        //         setData(result.data);
+        //         setPagination({...pagination});
+        //         setLoading(false);
+        //     }
+        // }).catch((err) => {
+            
+        // });
 
     };
 

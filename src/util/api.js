@@ -1,13 +1,30 @@
+import axios from 'axios';
+const baseUrl = "https://eusearts-brc-dev.mock.coding.io";
+const version = "v1";
+
 export const apiLogin = (username, password) => {
     return new Promise((resolve,reject) => {
-        setTimeout(() => {
-            if (false) {
-                reject(new Error("apiLogin"));
-            } else {
-                resolve({code: 200});
-            }
+        // setTimeout(() => {
+        //     if (false) {
+        //         reject(new Error("apiLogin"));
+        //     } else {
+        //         resolve({code: 200});
+        //     }
     
-        }, 100);
+        // }, 100);
+        axios({
+            url: `${baseUrl}/api/${version}/login/access-token`,
+            data: {
+                username: username,
+                password: password,
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+
     });
 };
 
@@ -76,6 +93,28 @@ export const apiGetProjectsOverview = (username, pageId, sortField, sortOrder, p
             }
     
         }, 100);
+    });
+}
+
+export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects`,
+            params: {
+                skip: skip,
+                limit: limit,
+                sortField: sortField,
+                sortOrder: sortOrder,
+            },
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
 
