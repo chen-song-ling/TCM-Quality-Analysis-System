@@ -252,6 +252,48 @@ export const apiUpdateProject = (accessToken, projectName, sampleId, standard, n
     });
 }
 
+export const apiAddProject = (accessToken, projectName, sampleId, standard, note) => {
+    let jsonData = {
+        name: projectName,
+        number: sampleId,
+        standard: standard,
+        note: note,
+        additional_fields: [],
+        attachments: "",
+    }
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/`,
+            data: JSON.stringify(jsonData),
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteProject = (accessToken, projectId) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${projectId}`,
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 // // projectId: 目标项目. 希望返回目标项目的所有任务
 // export const apiGetTasksOverview = (username, projectId) => {
 //     return new Promise((resolve,reject) => {

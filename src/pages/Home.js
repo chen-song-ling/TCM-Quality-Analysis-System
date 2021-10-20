@@ -7,7 +7,7 @@ import './Home.css';
 import { Modal, Space, notification } from 'antd';
 import CompoundInput from '../components/CompoundInput';
 import { setProjectId } from '../slices/projectSlice';
-import { apiGetProjectList } from '../util/api';
+import { apiGetProjectList, apiAddProject, apiDeleteProject, apiUpdateProject } from '../util/api';
 import HomeHeader from '../components/HomeHeader';
 import HomeTable from '../components/HomeTable';
 
@@ -28,18 +28,17 @@ export default function Home(props) {
     });
     const [loading, setLoading] = useState(true);
 
+    const [editRecord, setEditRecord] = useState("");
     // 两个Modal都用同一组
     const [inputName, setInputName] = useState("");
     const [inputSampleId, setInputSampleId] = useState("");
     const [inputStandard, setInputStandard] = useState("");
     const [inputNote, setInputNote] = useState("");
 
-    useEffect(() => {
-
+    const updateProjectList = () => {
         apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, "creation_time", "descend").then((res) => {
             // console.log(res.data);
             let data = res.data;
-
             let newData = [];
             data.data.forEach(item => {
                 let date = new Date(item.creation_time);
@@ -52,6 +51,8 @@ export default function Home(props) {
                     sampleId: item.number,
                     standard: item.standard,
                     note: item.note,
+                    additionalFields: item.additional_fields,
+                    attachments: item.attachments,
                 });
             });
             setData(newData);
@@ -66,6 +67,11 @@ export default function Home(props) {
         }).catch((err) => {
             console.log(err);
         });
+    };
+
+    useEffect(() => {
+
+        updateProjectList();
 
     }, []);
 
@@ -98,12 +104,22 @@ export default function Home(props) {
     }
 
     const onEditClick = (record) => {
+        setEditRecord(record);
         setInputName(record.name);
         setInputSampleId(record.sampleId);
         setInputStandard(record.standard);
         setInputNote(record.note);
         setIsEditModalVisible(true);
        
+    }
+
+    const onDeleteClick = (record) => {
+        apiDeleteProject(accessToken, record.id).then((res) => {
+            // console.log(res);
+            updateProjectList();
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     const onTableChange = (pagination, filters, sorter) => {
@@ -159,9 +175,16 @@ export default function Home(props) {
                 message: "信息不完整",
                 description: "请补充完整所有必填信息",
             });
-            return;
+        } else {
+            console.log(editRecord);
+            apiUpdateProject(accessToken, inputName, inputSampleId, inputStandard, inputNote, editRecord.additionalFields, editRecord.id).then((res) => {
+                // console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            });
+            updateProjectList();
+            setIsEditModalVisible(false);
         }
-        setIsEditModalVisible(false);
     }
 
     const onEditProjectCancel = () => {
@@ -190,9 +213,17 @@ export default function Home(props) {
                 message: "信息不完整",
                 description: "请补充完整所有必填信息",
             });
-            return;
+        } else {
+            apiAddProject(accessToken, inputName, inputSampleId, inputStandard, inputNote).then((res) => {
+                console.log(res);
+                updateProjectList();
+            }).catch((err) => {
+                console.log(err);
+            });
+            setIsAddModalVisible(false);
         }
-        setIsAddModalVisible(false);
+
+        
     }
 
     const onAddProjectCancel = () => {
@@ -230,6 +261,7 @@ export default function Home(props) {
             <HomeTable 
                 onExamineClick={onExamineClick}
                 onEditClick={onEditClick}
+                onDeleteClick={onDeleteClick}
                 onTableChange={onTableChange}
                 data={data}
                 pagination={pagination}
@@ -237,7 +269,7 @@ export default function Home(props) {
             />
 
             <Modal
-                title="基本信息"
+                title="编辑项目"
                 visible={isEditModalVisible}
                 onOk={onEditProjectOk}
                 onCancel={onEditProjectCancel}
@@ -293,7 +325,7 @@ export default function Home(props) {
             </Modal>
 
             <Modal
-                title="基本信息"
+                title="添加项目"
                 visible={isAddModalVisible}
                 onOk={onAddProjectOk}
                 onCancel={onAddProjectCancel}

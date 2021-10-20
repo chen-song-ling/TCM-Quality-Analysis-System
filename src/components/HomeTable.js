@@ -1,6 +1,6 @@
 import React from 'react';
 import './HomeTable.css';
-import { Table, Space } from 'antd';
+import { Popconfirm, Table, Space } from 'antd';
 
 export default function HomeTable(props) {
 
@@ -34,7 +34,14 @@ export default function HomeTable(props) {
                 <Space size="middle">
                     <a onClick={() => props.onExamineClick(record)}>查看</a>
                     <a onClick={() => props.onEditClick(record)}>编辑</a>
-                    <a>删除</a>
+                    <Popconfirm 
+                        title="您确定要删除吗？" 
+                        okText="是" 
+                        cancelText="取消"  
+                        onConfirm={() => props.onDeleteClick(record)}
+                    >
+                        <a>删除</a>
+                    </Popconfirm>
                 </Space>
             ),
         },
