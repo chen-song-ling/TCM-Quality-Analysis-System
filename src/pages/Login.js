@@ -19,6 +19,7 @@ export default function Login() {
     useEffect(() => {
         if (path === undefined) {
             let raw = window.location.href;
+            // console.log(raw);
             if (raw.substring(0, 4) === "file") {
                 dispatch(setPath(raw.substring(7, raw.length-10)));
             } else {

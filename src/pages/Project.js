@@ -7,7 +7,7 @@ import './Project.css';
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } from '../slices/projectSlice';
-import { apiGetTasksOverview } from '../util/api';
+import { apiGetTaskList, apiGetProject, apiGetTasksOverview } from '../util/api';
 
 import MpHeader from '../components/MpHeader';
 import ProjectInputBox from '../components/ProjectInputBox';
@@ -21,6 +21,7 @@ import { Button, Modal, Space, notification } from 'antd';
 export default function Project(props) {
     const [redirect, setRedirect] = useState(null);
     const username = useSelector(state => state.global.username);
+    const accessToken = useSelector(state => state.global.accessToken);
     const dispatch = useDispatch();
 
     const projectId = useSelector(state => state.project.projectId);
@@ -42,24 +43,69 @@ export default function Project(props) {
     useEffect(() => {
 
         // 使用缓存
-        if (projectId === lastProjectId) {
+        // if (projectId === lastProjectId) {
 
-        } else {
-            dispatch(setProjectInfo({name: "", sampleId: "", standard: "", note: "", }));
-            dispatch(setProjectExtraInfo([]));
-            dispatch(setProjectInfoDisplay([true, true, true, true, ]));
+        // } else {
+        //     dispatch(setProjectInfo({name: "", sampleId: "", standard: "", note: "", }));
+        //     dispatch(setProjectExtraInfo([]));
+        //     dispatch(setProjectInfoDisplay([true, true, true, true, ]));
             
-        }
+        // }
+
+        // 拉取项目数据
+        apiGetProject(accessToken, projectId).then((res) => {
+            // console.log(res.data);
+            dispatch(setProjectInfo({name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
+            
+
+            let newProjectExtraInfo = [];
+            let newProjectInfoDisplay = [true, true, true, true, ];
+            res.data.additional_fields.forEach(item => {
+                newProjectExtraInfo.push({
+                    fieldName: item.field_name,
+                    fieldValue: item.field_value,
+                })
+                newProjectInfoDisplay.push(true);
+            });
+            dispatch(setProjectExtraInfo(newProjectExtraInfo));
+            dispatch(setProjectInfoDisplay(newProjectInfoDisplay));
+
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        apiGetTaskList(accessToken, projectId).then((res) => {
+            let newData = [];
+            res.data.forEach(item => {
+
+                let date = new Date(item.creation_time);
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+
+                newData.push({
+                    key: item.id,
+                    id: item.id,
+                    taskName: item.name,
+                    addingTime: dateStr,
+                    taskType: item.type,
+                })
+            });
+            setData(newData);
+            setLoading(false);
+
+        }).catch((err) => {
+            console.log(err);
+        });
 
         // 拉取表格数据
-        apiGetTasksOverview(username, projectId).then((result) => {
-            if (result.code == 200) {
-                setData(result.data);
-                setLoading(false);
-            }
-        }).catch((err) => {
+        // apiGetTasksOverview(username, projectId).then((result) => {
+        //     if (result.code == 200) {
+        //         setData(result.data);
+        //         setLoading(false);
+        //     }
+        // }).catch((err) => {
             
-        });
+        // });
+
     }, []);
 
     useEffect(() => {

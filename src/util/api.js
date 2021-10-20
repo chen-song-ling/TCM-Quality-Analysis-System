@@ -1,30 +1,31 @@
 import axios from 'axios';
-const baseUrl = "https://eusearts-brc-dev.mock.coding.io";
+const baseUrl = "http://lab2.tery.top:8080";
 const version = "v1";
 
 export const apiLogin = (username, password) => {
     return new Promise((resolve,reject) => {
-        // setTimeout(() => {
-        //     if (false) {
-        //         reject(new Error("apiLogin"));
-        //     } else {
-        //         resolve({code: 200});
-        //     }
-    
-        // }, 100);
         axios({
             url: `${baseUrl}/api/${version}/login/access-token`,
             data: {
                 username: username,
                 password: password,
             },
+            transformRequest: [
+                function (data) {
+                   let ret = ''
+                   for (let it in data) {
+                      ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                   }
+                   ret = ret.substring(0, ret.lastIndexOf('&'));
+                   return ret
+                }
+            ],
             method: "post",
         }).then(res => {
             resolve(res);
         }).catch(err => {
             reject(err);
         });
-
     });
 };
 
@@ -54,48 +55,6 @@ export const apiAdminLogin = (password) => {
     });
 }
 
-// pageId: 页号, 表示第几页
-// sortField: 指定排序字段
-// sortOrder: 指定排序是升序号还是降序, ascend 或者 descend
-// pageSize: 每页的条目数, 也决定了返回后每页的最大条目数
-export const apiGetProjectsOverview = (username, pageId, sortField, sortOrder, pageSize) => {
-    return new Promise((resolve,reject) => {
-        setTimeout(() => {
-            if (false) {
-                reject(new Error("apiGetProjectsOverview"));
-            } else {
-                resolve(
-                    {
-                        code: 200,
-                        total: 2,
-                        data: [
-                            {
-                                key: '1',
-                                id: '1',
-                                name: '菊花',
-                                addingTime: '2021-03-06',
-                                sampleId: 'CZ20195363',
-                                standard: '这是执行标准',
-                                note: '这是备注',
-                            },
-                            {
-                                key: '2',
-                                id: '2',
-                                name: '人参',
-                                addingTime: '2021-02-06',
-                                sampleId: 'CZ20187813',
-                                standard: '这是执行标准',
-                                note: '这是备注',
-                            },
-                        ]
-                    }
-                );
-            }
-    
-        }, 100);
-    });
-}
-
 export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder) => {
     return new Promise((resolve,reject) => {
         axios({
@@ -103,8 +62,45 @@ export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder
             params: {
                 skip: skip,
                 limit: limit,
-                sortField: sortField,
-                sortOrder: sortOrder,
+                sort_by_field: sortField,
+                sort_order: sortOrder,
+            },
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiGetProject = (accessToken, id) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${id}`,
+            params: {  
+            },
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiGetTaskList = (accessToken, projectId) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks`,
+            params: {
+                project_id: projectId,
             },
             headers: { 
                 'Authorization':`Bearer ${accessToken}`,
