@@ -113,6 +113,10 @@ export default function Chrom(props) {
 
     // -- BEGIN -- MpHeader相关
 
+    const onHeaderBackClick = (e) => {
+        setRedirect("/project");
+    }
+
     const onQuitClick = (e) => {
         setRedirect("/");
     }
@@ -146,6 +150,7 @@ export default function Chrom(props) {
         <div className="mp-chrom">
         
             <MpHeader
+                onHeaderBackClick={onHeaderBackClick}
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}

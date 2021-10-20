@@ -73,6 +73,10 @@ export default function Character(props) {
 
     // -- BEGIN -- ProjectHeader相关
 
+    const onHeaderBackClick = (e) => {
+        setRedirect("/project");
+    }
+
     const onQuitClick = (e) => {
         setRedirect("/");
     }
@@ -254,6 +258,7 @@ export default function Character(props) {
     return (
         <div className="mp-project">
             <MpHeader
+                onHeaderBackClick={onHeaderBackClick}
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}

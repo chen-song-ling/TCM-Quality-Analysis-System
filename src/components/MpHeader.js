@@ -49,7 +49,7 @@ export default function MpHeader(props) {
     return (
         <div className="mp-c-mpheader">
             <PageHeader
-                onBack={() => {window.history.back(-1);}}
+                onBack={props.onHeaderBackClick}
                 title="中药质量标准数字评价系统"
                 subTitle={dropdown}
             />
