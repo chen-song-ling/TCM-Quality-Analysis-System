@@ -177,7 +177,7 @@ export default function Home(props) {
             });
         } else {
             console.log(editRecord);
-            apiUpdateProject(accessToken, inputName, inputSampleId, inputStandard, inputNote, editRecord.additionalFields, editRecord.id).then((res) => {
+            apiUpdateProject(accessToken, inputName, inputSampleId, inputStandard, inputNote, editRecord.additionalFields, editRecord.attachments, editRecord.id).then((res) => {
                 // console.log(res);
             }).catch((err) => {
                 console.log(err);

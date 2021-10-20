@@ -17,6 +17,7 @@ export const projectSlice = createSlice({
         //     fieldValue: "实验室L302",
         // }],
         projectInfoDisplay: [true, true, true, true],
+        projectAttachments: "",
         // projectInfoDisplay: [true, true, true, true, true],
     },
     reducers: {
@@ -29,6 +30,9 @@ export const projectSlice = createSlice({
         setProjectInfo: (state, action) => {
             state.projectInfo = action.payload;
         },
+        setProjectAttachments: (state, action) => {
+            state.projectAttachments = action.payload;
+        },
         setProjectExtraInfo: (state, action) => {
             state.projectExtraInfo = action.payload;
         },
@@ -38,5 +42,5 @@ export const projectSlice = createSlice({
     }
 });
 
-export const { setProjectId, setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } = projectSlice.actions;
+export const { setProjectId, setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay, setProjectAttachments } = projectSlice.actions;
 export default projectSlice.reducer;

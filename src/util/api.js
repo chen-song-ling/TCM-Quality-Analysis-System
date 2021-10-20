@@ -156,16 +156,16 @@ export const apiAddTask = (accessToken, taskName, taskType, projectId) => {
     });
 }
 
-export const apiUpdateTask = (accessToken, taskName, taskType, taskId) => {
+export const apiUpdateTask = (accessToken, taskName, taskType, taskId, standardDesc, manualDesc, additionalFields, attachments, result, subType) => {
     let jsonData = {
         name: taskName,
         type: taskType,
-        sub_type: "",
-        standard_desc: "",
-        desc_manual: "",
-        additional_fields: [],
-        attachments: "",
-        result: "",
+        sub_type: subType,
+        standard_desc: standardDesc,
+        desc_manual: manualDesc,
+        additional_fields: additionalFields,
+        attachments: attachments,
+        result: result,
     }
     return new Promise((resolve,reject) => {
         axios({
@@ -216,16 +216,16 @@ export const apiDeleteTask = (accessToken, taskId) => {
 //     "attachments": "string"
 // }
 
-export const apiUpdateProject = (accessToken, projectName, sampleId, standard, note, projectExtraInfo, projectId) => {
-    let additionalFields = [];
-    projectExtraInfo.forEach(item => {
-        additionalFields.push({
-            field_name: item.fieldName,
-            field_value: item.fieldValue,
-            is_included_in_report: true,
-            is_required: true,
-        })
-    });
+export const apiUpdateProject = (accessToken, projectName, sampleId, standard, note, additionalFields, attachments, projectId) => {
+    // let additionalFields = [];
+    // projectExtraInfo.forEach(item => {
+    //     additionalFields.push({
+    //         field_name: item.fieldName,
+    //         field_value: item.fieldValue,
+    //         is_included_in_report: true,
+    //         is_required: true,
+    //     })
+    // });
 
     let jsonData = {
         name: projectName,

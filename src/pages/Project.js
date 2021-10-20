@@ -27,6 +27,7 @@ export default function Project(props) {
     const projectId = useSelector(state => state.project.projectId);
     const lastProjectId = useSelector(state => state.project.lastProjectId);
     const projectInfo = useSelector(state => state.project.projectInfo);
+    const projectAttachments = useSelector(state => state.project.projectAttachments);
     const projectExtraInfo = useSelector(state => state.project.projectExtraInfo);
     const projectInfoDisplay = useSelector(state => state.project.projectInfoDisplay);
 
@@ -55,6 +56,12 @@ export default function Project(props) {
                     taskName: item.name,
                     addingTime: dateStr,
                     taskType: item.type,
+                    standardDesc: item.standard_desc, 
+                    manualDesc: item.desc_manual, 
+                    additionalFields: item.additional_fields, 
+                    attachments: item.attachments, 
+                    result: item.result, 
+                    subType: item.sub_type,
                 })
             });
             setData(newData);
@@ -83,7 +90,7 @@ export default function Project(props) {
         apiGetProject(accessToken, projectId).then((res) => {
             // console.log(res.data);
             dispatch(setProjectInfo({name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
-            
+            dispatch(setProjectAttachments(res.data.attachments));
 
             let newProjectExtraInfo = [];
             let newProjectInfoDisplay = [true, true, true, true, ];
@@ -171,7 +178,17 @@ export default function Project(props) {
         }); 
 
         if (isCompleted) {
-            apiUpdateProject(accessToken, projectInfo.name, projectInfo.sampleId, projectInfo.standard, projectInfo.note, projectExtraInfo, projectId).then((res) => {
+            let additionalFields = [];
+            projectExtraInfo.forEach(item => {
+                additionalFields.push({
+                    field_name: item.fieldName,
+                    field_value: item.fieldValue,
+                    is_included_in_report: true,
+                    is_required: true,
+                })
+            });
+
+            apiUpdateProject(accessToken, projectInfo.name, projectInfo.sampleId, projectInfo.standard, projectInfo.note, additionalFields, projectAttachments, projectId).then((res) => {
                 // console.log(res);
                 notification.open({
                     message: "保存成功",
@@ -329,7 +346,7 @@ export default function Project(props) {
                 description: "请输入所有必选项目。",
             });
         } else {
-            apiUpdateTask(accessToken, editReordInput, editReord.taskType, editReord.id).then((res) => {
+            apiUpdateTask(accessToken, editReordInput, editReord.taskType, editReord.id, editReord.standardDesc, editReord.manualDesc, editReord.additionalFields, editReord.attachments, editReord.result, editReord.subType).then((res) => {
                 // console.log(res);
                 updateTaskList();
             }).catch((err) => {
