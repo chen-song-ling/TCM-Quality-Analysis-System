@@ -18,7 +18,7 @@ export default function CompoundSelect(props) {
     if (props.options !== undefined) {
         for (let i = 0; i < props.options.length; i++) {
             options.push(
-                <Select.Option value={props.options[i].value}>{props.options[i].text}</Select.Option>
+                <Select.Option key={i} value={props.options[i].value}>{props.options[i].text}</Select.Option>
             );
         }
     }

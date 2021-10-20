@@ -114,43 +114,102 @@ export const apiGetTaskList = (accessToken, projectId) => {
     });
 }
 
-// projectId: 目标项目. 希望返回目标项目的所有任务
-export const apiGetTasksOverview = (username, projectId) => {
+
+// {
+//     "name": "性状1",
+//     "type": "性状",
+//     "sub_type": "",
+//     "standard_desc": "",
+//     "desc_manual": "",
+//     "additional_fields": [],
+//     "attachments": "",
+//     "result": "",
+//     "project_id": "1"
+// }
+
+export const apiAddTask = (accessToken, taskName, taskType, projectId) => {
+    let jsonData = {
+        name: taskName,
+        type: taskType,
+        sub_type: "",
+        standard_desc: "",
+        desc_manual: "",
+        additional_fields: [],
+        attachments: "",
+        result: "",
+        project_id: projectId,
+    }
     return new Promise((resolve,reject) => {
-        setTimeout(() => {
-            if (false) {
-                reject(new Error("apiGetProjectsOverview"));
-            } else {
-                resolve(
-                    {
-                        code: 200,
-                        data: [
-                            {
-                                key: '1',
-                                id: '1',
-                                taskName: '性状1',
-                                addingTime: '2021-03-05',
-                                taskType: '性状',
-                            },
-                            {
-                                key: '2',
-                                id: '2',
-                                taskName: '性状2',
-                                addingTime: '2021-03-06',
-                                taskType: '性状',
-                            },
-                            {
-                                key: '3',
-                                id: '3',
-                                taskName: '薄层1',
-                                addingTime: '2021-03-07',
-                                taskType: '薄层',
-                            },
-                        ]
-                    }
-                );
-            }
-    
-        }, 100);
+        axios({
+            url: `${baseUrl}/api/${version}/tasks`,
+            data: JSON.stringify(jsonData),
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
+
+export const apiDeleteTask = (accessToken, taskId) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}`,
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+
+// // projectId: 目标项目. 希望返回目标项目的所有任务
+// export const apiGetTasksOverview = (username, projectId) => {
+//     return new Promise((resolve,reject) => {
+//         setTimeout(() => {
+//             if (false) {
+//                 reject(new Error("apiGetProjectsOverview"));
+//             } else {
+//                 resolve(
+//                     {
+//                         code: 200,
+//                         data: [
+//                             {
+//                                 key: '1',
+//                                 id: '1',
+//                                 taskName: '性状1',
+//                                 addingTime: '2021-03-05',
+//                                 taskType: '性状',
+//                             },
+//                             {
+//                                 key: '2',
+//                                 id: '2',
+//                                 taskName: '性状2',
+//                                 addingTime: '2021-03-06',
+//                                 taskType: '性状',
+//                             },
+//                             {
+//                                 key: '3',
+//                                 id: '3',
+//                                 taskName: '薄层1',
+//                                 addingTime: '2021-03-07',
+//                                 taskType: '薄层',
+//                             },
+//                         ]
+//                     }
+//                 );
+//             }
+    
+//         }, 100);
+//     });
+// }

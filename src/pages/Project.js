@@ -7,7 +7,7 @@ import './Project.css';
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } from '../slices/projectSlice';
-import { apiGetTaskList, apiGetProject, apiGetTasksOverview } from '../util/api';
+import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask } from '../util/api';
 
 import MpHeader from '../components/MpHeader';
 import ProjectInputBox from '../components/ProjectInputBox';
@@ -38,7 +38,32 @@ export default function Project(props) {
     const [editReordInput, setEditReordInput] = useState("");
     const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
     const [addTaskName, setAddTaskName] = useState("");
-    const [addTaskType, setAddTaskType] = useState("character");
+    const [addTaskType, setAddTaskType] = useState("性状");
+
+    const updateTaskList = () => {
+        apiGetTaskList(accessToken, projectId).then((res) => {
+            let newData = [];
+            res.data.forEach(item => {
+
+                let date = new Date(item.creation_time);
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+
+                newData.push({
+                    key: item.id,
+                    id: item.id,
+                    taskName: item.name,
+                    addingTime: dateStr,
+                    taskType: item.type,
+                })
+            });
+            setData(newData);
+            setLoading(false);
+
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
 
     useEffect(() => {
 
@@ -74,27 +99,7 @@ export default function Project(props) {
             console.log(err);
         });
 
-        apiGetTaskList(accessToken, projectId).then((res) => {
-            let newData = [];
-            res.data.forEach(item => {
-
-                let date = new Date(item.creation_time);
-                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
-
-                newData.push({
-                    key: item.id,
-                    id: item.id,
-                    taskName: item.name,
-                    addingTime: dateStr,
-                    taskType: item.type,
-                })
-            });
-            setData(newData);
-            setLoading(false);
-
-        }).catch((err) => {
-            console.log(err);
-        });
+        updateTaskList();
 
         // 拉取表格数据
         // apiGetTasksOverview(username, projectId).then((result) => {
@@ -261,7 +266,12 @@ export default function Project(props) {
     }
 
     const onDeleteRecordClick = (record) => {
-
+        apiDeleteTask(accessToken, record.id).then((res) => {
+            // console.log(res);
+            updateTaskList();
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     // -- END -- ProjectTable相关
@@ -302,6 +312,16 @@ export default function Project(props) {
                 return;
             }
         }
+
+        
+        apiAddTask(accessToken, addTaskName, addTaskType, projectId).then((res) => {
+            // console.log(res);
+            updateTaskList();
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        
         setIsAddTaskModalVisible(false);
         
     }
@@ -435,6 +455,7 @@ export default function Project(props) {
                         isRequired={true}
                         textWidth={200}
                         maxLength={10}
+                        
 
                         onInputChange={onAddTaskInputChange}
                     />
@@ -442,14 +463,14 @@ export default function Project(props) {
                         fieldName="任务类型"
                         textWidth={200}
                         isRequired={true}
-                        defaultValue="character"
+                        defaultValue="性状"
                         options={[
                             {
-                                value: "character",
+                                value: "性状",
                                 text: "性状",
                             },
                             {
-                                value: "chrom",
+                                value: "薄层",
                                 text: "薄层",
                             }
                         ]}
