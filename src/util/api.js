@@ -156,6 +156,34 @@ export const apiAddTask = (accessToken, taskName, taskType, projectId) => {
     });
 }
 
+export const apiUpdateTask = (accessToken, taskName, taskType, taskId) => {
+    let jsonData = {
+        name: taskName,
+        type: taskType,
+        sub_type: "",
+        standard_desc: "",
+        desc_manual: "",
+        additional_fields: [],
+        attachments: "",
+        result: "",
+    }
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}`,
+            data: JSON.stringify(jsonData),
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 export const apiDeleteTask = (accessToken, taskId) => {
     return new Promise((resolve,reject) => {
         axios({
@@ -172,6 +200,57 @@ export const apiDeleteTask = (accessToken, taskId) => {
     });
 }
 
+// {
+//     "name": "string",
+//     "number": "string",
+//     "standard": "string",
+//     "note": "string",
+//     "additional_fields": [
+//       {
+//         "field_name": "string",
+//         "field_value": "string",
+//         "is_included_in_report": false,
+//         "is_required": true
+//       }
+//     ],
+//     "attachments": "string"
+// }
+
+export const apiUpdateProject = (accessToken, projectName, sampleId, standard, note, projectExtraInfo, projectId) => {
+    let additionalFields = [];
+    projectExtraInfo.forEach(item => {
+        additionalFields.push({
+            field_name: item.fieldName,
+            field_value: item.fieldValue,
+            is_included_in_report: true,
+            is_required: true,
+        })
+    });
+
+    let jsonData = {
+        name: projectName,
+        number: sampleId,
+        standard: standard,
+        note: note,
+        additional_fields: additionalFields,
+        attachments: "",
+    }
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${projectId}`,
+            data: JSON.stringify(jsonData),
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
 
 // // projectId: 目标项目. 希望返回目标项目的所有任务
 // export const apiGetTasksOverview = (username, projectId) => {

@@ -7,7 +7,7 @@ import './Project.css';
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } from '../slices/projectSlice';
-import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask } from '../util/api';
+import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask, apiUpdateProject, apiUpdateTask } from '../util/api';
 
 import MpHeader from '../components/MpHeader';
 import ProjectInputBox from '../components/ProjectInputBox';
@@ -36,6 +36,7 @@ export default function Project(props) {
     const [isEditInfoModalVisible, setIsEditInfoModalVisible] = useState(false);
     const [isEditRecordModalVisible, setIsEditRecordModalVisible] = useState(false);
     const [editReordInput, setEditReordInput] = useState("");
+    const [editReord, setEditReord] = useState("");
     const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
     const [addTaskName, setAddTaskName] = useState("");
     const [addTaskType, setAddTaskType] = useState("性状");
@@ -63,6 +64,7 @@ export default function Project(props) {
             console.log(err);
         });
     };
+
 
 
     useEffect(() => {
@@ -146,7 +148,39 @@ export default function Project(props) {
     }
 
     const onSaveInfoClick = (e) => {
+        let isCompleted = true;
 
+        if (projectInfo.name === "" || projectInfo.sampleId === "" || projectInfo.standard === "") {
+            notification.open({
+                message: "保存失败",
+                description: "请输入所有必选项目。",
+            });
+            isCompleted = false;
+            return;
+        }
+        
+        projectExtraInfo.forEach(item => {
+            if (item.fieldName === "" || item.fieldValue === "") {
+                notification.open({
+                    message: "保存失败",
+                    description: "请输入所有必选项目。",
+                });
+                isCompleted = false;
+                return;
+            }
+        }); 
+
+        if (isCompleted) {
+            apiUpdateProject(accessToken, projectInfo.name, projectInfo.sampleId, projectInfo.standard, projectInfo.note, projectExtraInfo, projectId).then((res) => {
+                // console.log(res);
+                notification.open({
+                    message: "保存成功",
+                });
+                
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     }
 
     const onEditInfoClick = (e) => {
@@ -252,6 +286,7 @@ export default function Project(props) {
 
     const onEditRecordClick = (record) => {
         setEditReordInput(record.taskName);
+        setEditReord(record);
         setIsEditRecordModalVisible(true);
     }
 
@@ -279,7 +314,31 @@ export default function Project(props) {
     // -- BEGIN -- EditRecordModal相关
 
     const onEditRecordOk = () => {
-        setIsEditRecordModalVisible(false);
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].taskName === editReordInput && data[i].id !== editReord.id) {
+                notification.open({
+                    message: "字段重复",
+                    description: "任务名称与已存在的名称重复，请调整为不重复的名称",
+                });
+                return;
+            }
+        }
+        if (editReordInput === "") {
+            notification.open({
+                message: "保存失败",
+                description: "请输入所有必选项目。",
+            });
+        } else {
+            apiUpdateTask(accessToken, editReordInput, editReord.taskType, editReord.id).then((res) => {
+                // console.log(res);
+                updateTaskList();
+            }).catch((err) => {
+                console.log(err);
+            });
+    
+            setIsEditRecordModalVisible(false);
+        }
+        
     }
 
     const onEditRecordCancel = () => {
@@ -312,7 +371,6 @@ export default function Project(props) {
                 return;
             }
         }
-
         
         apiAddTask(accessToken, addTaskName, addTaskType, projectId).then((res) => {
             // console.log(res);
@@ -320,7 +378,6 @@ export default function Project(props) {
         }).catch((err) => {
             console.log(err);
         });
-
         
         setIsAddTaskModalVisible(false);
         
@@ -382,6 +439,7 @@ export default function Project(props) {
                 projectInfo={projectInfo}
                 projectExtraInfo={projectExtraInfo}
 
+                onSaveInfoClick={onSaveInfoClick}
                 onSwitchClick={onSwitchClick}
                 onInputChange={onInputChange}
                 onEditInfoClick={onEditInfoClick}
