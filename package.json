@@ -28,7 +28,8 @@
     "release": "webpack --config=config/webpack/webpack.app.config.js --env=production && electron-builder"
   },
   "dependencies": {
-    "fs-jetpack": "^4.1.0"
+    "fs-jetpack": "^4.1.0",
+    "electron-pdf-window": "^1.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -40,7 +41,6 @@
     "css-loader": "^5.2.0",
     "electron": "^15.0.1",
     "electron-builder": "^22.5.1",
-    "electron-pdf-window": "^1.0.12",
     "react": "^17.0.2",
     "react-cropper": "^2.1.8",
     "react-dom": "^17.0.2",

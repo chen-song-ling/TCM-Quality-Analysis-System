@@ -8,6 +8,8 @@ import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
 import Chrom from './pages/Chrom';
 
+// import PDFWindow from "electron-pdf-window";
+
 function App() {
   return (
     <Router>
