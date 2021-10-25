@@ -17,6 +17,7 @@ export const characterSlice = createSlice({
             cropSize: null,
         },
         characterImgGroup: null,
+        characterStandardImgGroup: null,
         characterImgAiInfo: null
     },
     reducers: {
@@ -50,11 +51,14 @@ export const characterSlice = createSlice({
         setCharacterImgGroup: (state, action) => {
             state.characterImgGroup = action.payload;
         },
+        setCharacterStandardImgGroup: (state, action) => {
+            state.characterStandardImgGroup = action.payload;
+        },
         setCharacterImgAiInfo: (state, action) => {
             state.characterImgAiInfo = action.payload;
         },
     }
 });
 
-export const { setCharacterId, setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo } = characterSlice.actions;
+export const { setCharacterId, setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterStandardImgGroup, setCharacterImgAiInfo } = characterSlice.actions;
 export default characterSlice.reducer;

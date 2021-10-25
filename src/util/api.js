@@ -131,18 +131,22 @@ export const apiAddTask = (accessToken, taskName, taskType, projectId) => {
     let jsonData = {
         name: taskName,
         type: taskType,
-        sub_type: "",
+        sub_type: 0,
         standard_desc: "",
         desc_manual: "",
         additional_fields: [],
         attachments: "",
         result: "",
-        project_id: projectId,
+        // project_id: projectId,
     }
+    console.log(taskType);
     return new Promise((resolve,reject) => {
         axios({
             url: `${baseUrl}/api/${version}/tasks`,
             data: JSON.stringify(jsonData),
+            params: {
+                project_id: projectId,
+            },
             headers: { 
                 'Authorization':`Bearer ${accessToken}`,
                 'Content-Type': 'application/json;'
@@ -192,6 +196,24 @@ export const apiDeleteTask = (accessToken, taskId) => {
                 'Authorization':`Bearer ${accessToken}`,
             },
             method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiRunCharacterTask = (accessToken, taskId, formData) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}/run`,
+            data: formData,
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data;'
+            },
+            method: "post",
         }).then(res => {
             resolve(res);
         }).catch(err => {

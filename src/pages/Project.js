@@ -17,6 +17,15 @@ import CompoundInput from '../components/CompoundInput';
 import CompoundSelect from '../components/CompoundSelect';
 import { Button, Modal, Space, notification } from 'antd';
 
+const taskTypeDicNumber2String = {
+    0: "性状",
+    1: "薄层",
+}
+
+const taskTypeDicString2Number = {
+    "性状": 0,
+    "薄层": 1
+}
 
 export default function Project(props) {
     const [redirect, setRedirect] = useState(null);
@@ -49,13 +58,12 @@ export default function Project(props) {
 
                 let date = new Date(item.creation_time);
                 let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
-
                 newData.push({
                     key: item.id,
                     id: item.id,
                     taskName: item.name,
                     addingTime: dateStr,
-                    taskType: item.type,
+                    taskType: taskTypeDicNumber2String[item.type],
                     standardDesc: item.standard_desc, 
                     manualDesc: item.desc_manual, 
                     additionalFields: item.additional_fields, 
@@ -350,7 +358,7 @@ export default function Project(props) {
                 description: "请输入所有必选项目。",
             });
         } else {
-            apiUpdateTask(accessToken, editReordInput, editReord.taskType, editReord.id, editReord.standardDesc, editReord.manualDesc, editReord.additionalFields, editReord.attachments, editReord.result, editReord.subType).then((res) => {
+            apiUpdateTask(accessToken, editReordInput, taskTypeDicString2Number[editReord.taskType], editReord.id, editReord.standardDesc, editReord.manualDesc, editReord.additionalFields, editReord.attachments, editReord.result, editReord.subType).then((res) => {
                 // console.log(res);
                 updateTaskList();
             }).catch((err) => {
@@ -393,7 +401,7 @@ export default function Project(props) {
             }
         }
         
-        apiAddTask(accessToken, addTaskName, addTaskType, projectId).then((res) => {
+        apiAddTask(accessToken, addTaskName, taskTypeDicString2Number[addTaskType], projectId).then((res) => {
             // console.log(res);
             updateTaskList();
         }).catch((err) => {

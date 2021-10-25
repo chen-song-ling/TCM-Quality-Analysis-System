@@ -8,7 +8,8 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
 import { Modal, notification, Space } from 'antd';
-import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo } from '../slices/characterSlice';
+import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo, setCharacterStandardImgGroup } from '../slices/characterSlice';
+import { apiRunCharacterTask } from '../util/api';
 import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
@@ -31,9 +32,11 @@ export default function Character(props) {
 
     const characterSampleImg = useSelector(state => state.character.characterSampleImg);
     const characterImgGroup = useSelector(state => state.character.characterImgGroup);
+    const characterStandardImgGroup = useSelector(state => state.character.characterStandardImgGroup);
     const characterImgAiInfo = useSelector(state => state.character.characterImgAiInfo);
 
     const username = useSelector(state => state.global.username);
+    const accessToken = useSelector(state => state.global.accessToken);
     const dispatch = useDispatch();
 
     const [cropper, setCropper] = useState();
@@ -43,9 +46,9 @@ export default function Character(props) {
 
     useEffect(() => {
         // 使用缓存
-        if (characterId === lastCharacterId) {
+        // if (characterId === lastCharacterId) {
 
-        } else {
+        // } else {
             dispatch(setCharacterDate(""));
             dispatch(setCharacterTemperature(""));
             dispatch(setCharacterHumidity(""));
@@ -59,9 +62,10 @@ export default function Character(props) {
                 cropSize: null,
             }));
             dispatch(setCharacterImgGroup(null));
+            dispatch(setCharacterStandardImgGroup(null));
             dispatch(setCharacterImgAiInfo(null));
             
-        }
+        // }
         
     }, []);
 
@@ -215,7 +219,7 @@ export default function Character(props) {
         callback(buffer.toDataURL());
       };
 
-    const onCropModalOk = () => {
+    const onCropModalOk_discarded2 = () => {
         if (typeof cropper !== "undefined") {
             let canvas = cropper.getCroppedCanvas();
             let w = canvas.width;
@@ -235,8 +239,46 @@ export default function Character(props) {
                     newones[i] = res;
                 })
             }
-            // console.log(newones);
+            console.log(newones);
             dispatch(setCharacterImgGroup(newones));
+        }
+
+        setIsCroplMoadlVisible(false);
+    }
+
+    const onCropModalOk = () => {
+        if (typeof cropper !== "undefined") {
+            let canvas = cropper.getCroppedCanvas();
+            let w = canvas.width;
+            let h = canvas.height;
+            dispatch(setCharacterSampleImg({
+                ...characterSampleImg,
+                cropSize: {
+                    width: w,
+                    height: h,
+                }
+            }));
+            canvas.toBlob((blob) => {
+                let formData = new FormData();
+                formData.append('files', blob, 'blob.png');
+                apiRunCharacterTask(accessToken, characterId, formData).then((res) => {
+                    console.log(res);
+                    let newones_smp = [];
+                    let newones_std = [];
+                    let newones_info = [];
+                    res.data.result.results.forEach(item => {
+                        newones_smp.push(item.origin_image.save_path);
+                        newones_std.push(item.retrieval_image.save_path);
+                        newones_info.push(item.score);
+                    });
+                    dispatch(setCharacterImgGroup(newones_smp));
+                    dispatch(setCharacterStandardImgGroup(newones_std));
+                    dispatch(setCharacterImgAiInfo(newones_info));
+                }).catch((err) => {
+                    console.log(err);
+                });
+            });
+            
         }
 
         setIsCroplMoadlVisible(false);
@@ -302,6 +344,7 @@ export default function Character(props) {
 
             <CharacterImgList
                 characterImgGroup={characterImgGroup}
+                characterStandardImgGroup={characterStandardImgGroup}
                 characterImgAiInfo={characterImgAiInfo}
                 cropBoxSize={characterSampleImg.cropSize}
             />
