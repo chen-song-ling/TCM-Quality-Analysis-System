@@ -114,6 +114,21 @@ export const apiGetTaskList = (accessToken, projectId) => {
     });
 }
 
+export const apiGetTask = (accessToken, taskId) => {
+    return new Promise((resolve,reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}`,
+            headers: { 
+                'Authorization':`Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
 
 // {
 //     "name": "性状1",

@@ -6,7 +6,7 @@ import './Project.css';
 
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
-import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay } from '../slices/projectSlice';
+import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay, setProjectAttachments } from '../slices/projectSlice';
 import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask, apiUpdateProject, apiUpdateTask } from '../util/api';
 
 import MpHeader from '../components/MpHeader';
@@ -19,12 +19,12 @@ import { Button, Modal, Space, notification } from 'antd';
 
 const taskTypeDicNumber2String = {
     0: "性状",
-    1: "薄层",
+    2: "薄层",
 }
 
 const taskTypeDicString2Number = {
     "性状": 0,
-    "薄层": 1
+    "薄层": 2,
 }
 
 export default function Project(props) {
@@ -109,6 +109,7 @@ export default function Project(props) {
                 })
                 newProjectInfoDisplay.push(true);
             });
+
             dispatch(setProjectExtraInfo(newProjectExtraInfo));
             dispatch(setProjectInfoDisplay(newProjectInfoDisplay));
 
@@ -117,16 +118,6 @@ export default function Project(props) {
         });
 
         updateTaskList();
-
-        // 拉取表格数据
-        // apiGetTasksOverview(username, projectId).then((result) => {
-        //     if (result.code == 200) {
-        //         setData(result.data);
-        //         setLoading(false);
-        //     }
-        // }).catch((err) => {
-            
-        // });
 
     }, []);
 

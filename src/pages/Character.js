@@ -9,7 +9,7 @@ import "cropperjs/dist/cropper.css";
 
 import { Modal, notification, Space } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo, setCharacterStandardImgGroup } from '../slices/characterSlice';
-import { apiRunCharacterTask } from '../util/api';
+import { apiRunCharacterTask, apiGetTask, apiUpdateTask } from '../util/api';
 import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
@@ -44,35 +44,75 @@ export default function Character(props) {
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
     const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
 
+    const [originalTaskData, setOriginalTaskData] = useState(null);
+
     useEffect(() => {
         // 使用缓存
         // if (characterId === lastCharacterId) {
 
         // } else {
-            dispatch(setCharacterDate(""));
-            dispatch(setCharacterTemperature(""));
-            dispatch(setCharacterHumidity(""));
-            dispatch(setCharacterStandard(""));
-            dispatch(setCharacterManualResult(""));
-            dispatch(setCharacterCheckList([true, true, true, true, true]));
 
-            dispatch(setCharacterSampleImg({
-                sampleImg: null,
-                sampleImgName: "",
-                cropSize: null,
-            }));
-            dispatch(setCharacterImgGroup(null));
-            dispatch(setCharacterStandardImgGroup(null));
-            dispatch(setCharacterImgAiInfo(null));
+        apiGetTask(accessToken, characterId).then((res) => {
+            console.log(res.data);
+            setOriginalTaskData(res.data);
+            dispatch(setCharacterStandard(res.data.standard_desc));
+            dispatch(setCharacterManualResult(res.data.desc_manual));
+            res.data.additional_fields.forEach(item => {
+                if (item.field_name === "日期") {
+                    dispatch(setCharacterDate(item.field_value));
+                } else if (item.field_name === "温度") {
+                    dispatch(setCharacterTemperature(item.field_value));
+                } else if (item.field_name === "湿度") {
+                    dispatch(setCharacterHumidity(item.field_value));
+                }
+                
+            });
+
+            if (res.data.result !== null) {
+                let newones_smp = [];
+                let newones_std = [];
+                let newones_info = [];
+                res.data.result.results.forEach(item => {
+                    newones_smp.push(item.origin_image.save_path);
+                    newones_std.push(item.retrieval_image.save_path);
+                    newones_info.push(item.score);
+                });
+                dispatch(setCharacterImgGroup(newones_smp));
+                dispatch(setCharacterStandardImgGroup(newones_std));
+                dispatch(setCharacterImgAiInfo(newones_info));
+            }
+            
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        dispatch(setCharacterDate(""));
+        dispatch(setCharacterTemperature(""));
+        dispatch(setCharacterHumidity(""));
+        dispatch(setCharacterStandard(""));
+        dispatch(setCharacterManualResult(""));
+        dispatch(setCharacterCheckList([true, true, true, true, true]));
+
+        dispatch(setCharacterSampleImg({
+            sampleImg: null,
+            sampleImgName: "",
+            cropSize: null,
+        }));
+        dispatch(setCharacterImgGroup(null));
+        dispatch(setCharacterStandardImgGroup(null));
+        dispatch(setCharacterImgAiInfo(null));
             
         // }
         
     }, []);
 
     useEffect(() => {
-        return () => {
-            dispatch(setLastCharacterId(characterId));
-        }
+
+        
+
+        // return () => {
+        //     dispatch(setLastCharacterId(characterId));
+        // }
     });
 
     // -- BEGIN -- ProjectHeader相关
@@ -133,6 +173,49 @@ export default function Character(props) {
     const onUploadSampleImgClick = (e) => {
         let ele = document.getElementById("the-ghost-uploadSampleImg");
         ele.click();
+    }
+
+    const onSaveInfoClick = (e) => {
+        // console.log(originalTaskData);
+        // apiUpdateTask(accessToken, editReordInput, taskTypeDicString2Number[editReord.taskType], editReord.id, editReord.standardDesc, editReord.manualDesc, editReord.additionalFields, editReord.attachments, editReord.result, editReord.subType).then((res) => {
+        //     // console.log(res);
+
+        // }).catch((err) => {
+        //     console.log(err);
+        // });
+
+        apiGetTask(accessToken, characterId).then((res) => {
+            // console.log(res.data);
+            let additionalFields = [];
+            additionalFields.push({
+                field_name: "日期",
+                field_value: characterDate,
+                is_included_in_report: true,
+                is_required: true,
+            });
+            additionalFields.push({
+                field_name: "温度",
+                field_value: characterTemperature,
+                is_included_in_report: true,
+                is_required: true,
+            });
+            additionalFields.push({
+                field_name: "湿度",
+                field_value: characterHumidity,
+                is_included_in_report: true,
+                is_required: true,
+            });
+            apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, characterStandard, characterManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+                notification.open({
+                    message: "保存成功",
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
+            
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     const onSampleImgChange = (e) => {
@@ -330,6 +413,7 @@ export default function Character(props) {
                     standard={characterStandard}
                     manualResult={characterManualResult}
                     checkList={characterCheckList}
+                    onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}
                     onUploadSampleImgClick={onUploadSampleImgClick}

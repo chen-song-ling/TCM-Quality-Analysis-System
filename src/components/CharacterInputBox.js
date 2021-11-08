@@ -38,6 +38,10 @@ export default function CharacterInputBox(props) {
                 
                 <Space size={'large'}>
 
+                    <Button type="primary" size={'large'} onClick={props.onSaveInfoClick}>
+                        保存
+                    </Button>
+
                     <Button type="primary" size={'large'} onClick={props.onUploadSampleImgClick}>
                         上传样本图片
                     </Button>
