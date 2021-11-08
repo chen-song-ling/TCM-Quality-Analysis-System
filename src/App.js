@@ -7,6 +7,7 @@ import Character from './pages/Character';
 import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
 import Chrom from './pages/Chrom';
+import Micro from './pages/Micro';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Switch>
           <Route path="/character" component={Character} />
           <Route path="/chrom" component={Chrom} />
+          <Route path="/micro" component={Micro} />
           <Route path="/project" component={Project} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/register" component={Register} />

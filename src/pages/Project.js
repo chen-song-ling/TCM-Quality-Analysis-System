@@ -6,6 +6,7 @@ import './Project.css';
 
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
+import { setMicroId } from '../slices/microSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay, setProjectAttachments } from '../slices/projectSlice';
 import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask, apiUpdateProject, apiUpdateTask } from '../util/api';
 
@@ -19,11 +20,13 @@ import { Button, Modal, Space, notification } from 'antd';
 
 const taskTypeDicNumber2String = {
     0: "性状",
+    1: "显微",
     2: "薄层",
 }
 
 const taskTypeDicString2Number = {
     "性状": 0,
+    "显微": 1,
     "薄层": 2,
 }
 
@@ -317,6 +320,9 @@ export default function Project(props) {
         } else if (record.taskType === "薄层") {
             dispatch(setChromId(record.id));
             setRedirect("/chrom");
+        } else if (record.taskType === "显微") {
+            dispatch(setMicroId(record.id));
+            setRedirect("/micro");
         }
     }
 
@@ -547,6 +553,10 @@ export default function Project(props) {
                             {
                                 value: "性状",
                                 text: "性状",
+                            },
+                            {
+                                value: "显微",
+                                text: "显微",
                             },
                             {
                                 value: "薄层",

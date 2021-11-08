@@ -44,17 +44,22 @@ export default function Character(props) {
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
     const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
 
-    const [originalTaskData, setOriginalTaskData] = useState(null);
 
     useEffect(() => {
-        // 使用缓存
-        // if (characterId === lastCharacterId) {
 
-        // } else {
+        dispatch(setCharacterDate(""));
+        dispatch(setCharacterTemperature(""));
+        dispatch(setCharacterHumidity(""));
+        dispatch(setCharacterStandard(""));
+        dispatch(setCharacterManualResult(""));
+        dispatch(setCharacterCheckList([true, true, true, true, true]));
 
-        apiGetTask(accessToken, characterId).then((res) => {
-            console.log(res.data);
-            setOriginalTaskData(res.data);
+        dispatch(setCharacterImgGroup(null));
+        dispatch(setCharacterStandardImgGroup(null));
+        dispatch(setCharacterImgAiInfo(null));
+
+        apiGetTask(accessToken, characterId).then((res) => {  
+
             dispatch(setCharacterStandard(res.data.standard_desc));
             dispatch(setCharacterManualResult(res.data.desc_manual));
             res.data.additional_fields.forEach(item => {
@@ -86,24 +91,7 @@ export default function Character(props) {
             console.log(err);
         });
 
-        dispatch(setCharacterDate(""));
-        dispatch(setCharacterTemperature(""));
-        dispatch(setCharacterHumidity(""));
-        dispatch(setCharacterStandard(""));
-        dispatch(setCharacterManualResult(""));
-        dispatch(setCharacterCheckList([true, true, true, true, true]));
 
-        dispatch(setCharacterSampleImg({
-            sampleImg: null,
-            sampleImgName: "",
-            cropSize: null,
-        }));
-        dispatch(setCharacterImgGroup(null));
-        dispatch(setCharacterStandardImgGroup(null));
-        dispatch(setCharacterImgAiInfo(null));
-            
-        // }
-        
     }, []);
 
     useEffect(() => {
@@ -210,6 +198,10 @@ export default function Character(props) {
                     message: "保存成功",
                 });
             }).catch((err) => {
+                notification.open({
+                    message: "保存失败",
+                    description: "网络错误。",
+                });
                 console.log(err);
             });
             
@@ -334,13 +326,13 @@ export default function Character(props) {
             let canvas = cropper.getCroppedCanvas();
             let w = canvas.width;
             let h = canvas.height;
-            dispatch(setCharacterSampleImg({
-                ...characterSampleImg,
-                cropSize: {
-                    width: w,
-                    height: h,
-                }
-            }));
+            // dispatch(setCharacterSampleImg({
+            //     ...characterSampleImg,
+            //     cropSize: {
+            //         width: w,
+            //         height: h,
+            //     }
+            // }));
             canvas.toBlob((blob) => {
                 let formData = new FormData();
                 formData.append('files', blob, 'blob.png');
@@ -381,7 +373,7 @@ export default function Character(props) {
     }
 
     return (
-        <div className="mp-project">
+        <div className="mp-character">
             <MpHeader
                 onHeaderBackClick={onHeaderBackClick}
                 onQuitClick={onQuitClick}
@@ -430,7 +422,7 @@ export default function Character(props) {
                 characterImgGroup={characterImgGroup}
                 characterStandardImgGroup={characterStandardImgGroup}
                 characterImgAiInfo={characterImgAiInfo}
-                cropBoxSize={characterSampleImg.cropSize}
+                // cropBoxSize={characterSampleImg.cropSize}
             />
 
             <input type="file" id="the-ghost-uploadSampleImg" style={{display: "none"}} onChange={onSampleImgChange} /> 

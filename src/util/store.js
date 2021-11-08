@@ -3,6 +3,7 @@ import globalSlice from '../slices/globalSlice';
 import projectSlice from '../slices/projectSlice';
 import characterSlice from '../slices/characterSlice';
 import chromSlice from '../slices/chromSlice';
+import microSlice from '../slices/microSlice';
 
 export default configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
         project: projectSlice,
         character: characterSlice,
         chrom: chromSlice,
+        micro: microSlice,
     }
 });
