@@ -7,7 +7,8 @@ export default function CharacterImgList(props) {
     const config = {
         num_canvas_width: 180,
         num_canvas_height: 180,
-        base_url: "http://lab2.tery.top:8080/static/",
+        // base_url: "http://lab2.tery.top:8080/static/",
+        base_url: "http://10.249.43.41:8080/static/",
     }
 
     useEffect(() => {

@@ -9,10 +9,11 @@ import "cropperjs/dist/cropper.css";
 
 import { Modal, notification, Space } from 'antd';
 import { setMicroDate, setMicroTemperature, setMicroHumidity, setMicroStandard, setMicroManualResult, setMicroCheckList, setMicroImgGroup, setMicroImgAiInfo, setMicroStandardImgGroup } from '../slices/microSlice';
-import { apiRunCharacterTask, apiGetTask, apiUpdateTask } from '../util/api';
+import { apiRunMicroTask, apiGetTask, apiUpdateTask } from '../util/api';
 import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
+import PictureWall from '../components/PictureWall';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -35,8 +36,8 @@ export default function Micro(props) {
     const microStandardImgGroup = useSelector(state => state.micro.microStandardImgGroup);
     const microImgAiInfo = useSelector(state => state.micro.microImgAiInfo);
 
-    const [imgPathList, setImgPathList] = useState([]);
     const [isImgSelectorMoadlVisible, setIsImgSelectorMoadlVisible] = useState(false);
+    const [fileList, setFileList] = useState([]);
 
 
     useEffect(() => {
@@ -190,12 +191,61 @@ export default function Micro(props) {
 
     // -- BDGIN -- ImgSelectorModal相关
 
+    const dataurl2Blob = (dataurl) => {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+        var byteString = atob(dataurl.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataurl.split(',')[0].split(':')[1].split(';')[0]
+
+        // write the bytes of the string to an ArrayBuffer
+        var ab = new ArrayBuffer(byteString.length);
+
+        // create a view into the buffer
+        var ia = new Uint8Array(ab);
+
+        // set the bytes of the buffer to the correct values
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        // write the ArrayBuffer to a blob, and you're done
+        var blob = new Blob([ab], {type: mimeString});
+        return blob;
+    }
+
     const onImgSelectorModalOk = () => {
+        let formData = new FormData();
+        fileList.forEach(item => {
+            formData.append('files', dataurl2Blob(item.thumbUrl), item.name);
+        });
+        apiRunMicroTask(accessToken, microId, formData).then((res) => {
+            console.log(res);
+            let newones_smp = [];
+            let newones_std = [];
+            let newones_info = [];
+            res.data.result.results.forEach(item => {
+                newones_smp.push(item.origin_image.save_path);
+                newones_std.push(item.retrieval_image.save_path);
+                newones_info.push(item.score);
+            });
+            dispatch(setMicroImgGroup(newones_smp));
+            dispatch(setMicroStandardImgGroup(newones_std));
+            dispatch(setMicroImgAiInfo(newones_info));
+        }).catch((err) => {
+            console.log(err);
+        });
+
         setIsImgSelectorMoadlVisible(false);
     }
 
     const onImgSelectorModalCancel = () => {
         setIsImgSelectorMoadlVisible(false);
+    }
+
+    const uploadFileList = (fileList) => {
+        setFileList(fileList);
     }
 
     // -- END -- ImgSelectorModal相关
@@ -255,8 +305,10 @@ export default function Micro(props) {
                 characterImgAiInfo={microImgAiInfo}
             />
 
-            <Modal title="选择要识别的所有图片" visible={isImgSelectorMoadlVisible} onOk={onImgSelectorModalOk} onCancel={onImgSelectorModalCancel}>
-
+            <Modal title="上传要识别的所有图片" visible={isImgSelectorMoadlVisible} onOk={onImgSelectorModalOk} onCancel={onImgSelectorModalCancel}>
+                <PictureWall 
+                    uploadFileList={uploadFileList}
+                />
             </Modal>
             
         </div>

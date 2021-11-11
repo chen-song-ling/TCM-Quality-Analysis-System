@@ -43,6 +43,15 @@ export default function Login() {
 
     const onLoginClick = (e) => {
 
+        // -- BEGIN 测试用路径
+
+        if (inputUsername === "t") {
+            setRedirect("/dev-test");
+            return;
+        }
+
+        // -- END 测试用路径
+
         if (inputPassword === "" || inputUsername === "") {
             notification.open({
                 message: "登录失败",
