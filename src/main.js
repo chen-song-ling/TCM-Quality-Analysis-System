@@ -1,4 +1,4 @@
-const {app, Menu, BrowserWindow} = require('electron');
+const { app, Menu, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const appMenuTemplate = require('./menu/app_menu_template');
@@ -10,7 +10,7 @@ const initFileIpc = require('./helpers/fileIpc');
 // 获取在 package.json 中的命令脚本传入的参数, 来判断是开发还是生产环境
 const mode = process.argv[2];
 
-function createWindow () {
+function createWindow() {
   // const mainWindow = new BrowserWindow({
   //   width: 1200,
   //   height: 800,
@@ -40,13 +40,13 @@ function createWindow () {
     mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, '../build/index.html'), 
-      protocol: 'file:', 
+      pathname: path.join(__dirname, '../build/index.html'),
+      protocol: 'file:',
       slashes: true
     }));
-    
+
   }
-  
+
 }
 
 const setApplicationMenu = () => {
@@ -65,7 +65,7 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-    } 
+    }
   });
 })
 

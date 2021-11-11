@@ -9,7 +9,7 @@ import "cropperjs/dist/cropper.css";
 
 import { Modal, notification, Space } from 'antd';
 import { setMicroDate, setMicroTemperature, setMicroHumidity, setMicroStandard, setMicroManualResult, setMicroCheckList, setMicroImgGroup, setMicroImgAiInfo, setMicroStandardImgGroup } from '../slices/microSlice';
-import { apiRunMicroTask, apiGetTask, apiUpdateTask } from '../util/api';
+import { apiRunMicroTask, apiGetTask, apiUpdateTask, apiGetTaskReport } from '../util/api';
 import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
@@ -183,8 +183,12 @@ export default function Micro(props) {
         });
     }
 
-    const onUploadSampleImgClick = () => {
+    const onUploadSampleImgClick = (e) => {
         setIsImgSelectorMoadlVisible(true);
+    }
+
+    const onViewReportClick = (e) => {
+
     }
 
     // -- END -- CharacterInputBox相关
@@ -294,6 +298,7 @@ export default function Micro(props) {
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}
                     onUploadSampleImgClick={onUploadSampleImgClick}
+                    onViewReportClick={onViewReportClick}
                     // onExamineStandardImgClick={onExamineStandardImgClick}
                     // onExamineAttachmentClick={onExamineAttachmentClick}
                 />

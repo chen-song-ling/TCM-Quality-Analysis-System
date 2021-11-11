@@ -9,7 +9,7 @@ import "cropperjs/dist/cropper.css";
 
 import { Modal, notification, Space } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo, setCharacterStandardImgGroup } from '../slices/characterSlice';
-import { apiRunCharacterTask, apiGetTask, apiUpdateTask } from '../util/api';
+import { apiRunCharacterTask, apiGetTask, apiUpdateTask, apiGetTaskReport } from '../util/api';
 import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
@@ -161,6 +161,14 @@ export default function Character(props) {
     const onUploadSampleImgClick = (e) => {
         let ele = document.getElementById("the-ghost-uploadSampleImg");
         ele.click();
+    }
+
+    const onViewReportClick = (e) => {
+        apiGetTaskReport(accessToken, characterId).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     const onSaveInfoClick = (e) => {
@@ -411,6 +419,7 @@ export default function Character(props) {
                     onUploadSampleImgClick={onUploadSampleImgClick}
                     onExamineStandardImgClick={onExamineStandardImgClick}
                     onExamineAttachmentClick={onExamineAttachmentClick}
+                    onViewReportClick={onViewReportClick}
                 />
 
 

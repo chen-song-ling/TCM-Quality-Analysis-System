@@ -50,7 +50,7 @@ export default function CharacterInputBox(props) {
                         查看标准样本文件
                     </Button>
 
-                    <Button size={'large'}>
+                    <Button size={'large'} onClick={props.onViewReportClick}>
                         预览报告
                     </Button>
 

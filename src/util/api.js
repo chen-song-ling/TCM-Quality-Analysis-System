@@ -256,6 +256,22 @@ export const apiRunMicroTask = (accessToken, taskId, formData) => {
     });
 }
 
+export const apiGetTaskReport = (accessToken, taskId) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}/report`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 // {
 //     "name": "string",
 //     "number": "string",
