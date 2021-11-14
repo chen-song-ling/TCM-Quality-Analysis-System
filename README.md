@@ -1,12 +1,12 @@
-# void-react-electron
+# drug-control-medp
 
-自用空项目，用于起步构建嵌入 react 框架的 electron 项目。在 [electron-boilerplate](https://github.com/szwacz/electron-boilerplate) 的基础上修改而来。
+毕业设计，辅助工具之二
 
 ## 快速开始 Or 生产环境测试
 
 ```bas
-git clone git@github.com:Leundo/void-react-electron.git
-cd void-react-electron
+git clone git@github.com:Leundo/drug-control-medp.git
+cd drug-control-medp
 npm install
 npm run build
 npm run elec
