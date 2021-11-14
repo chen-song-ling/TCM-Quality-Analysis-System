@@ -1,7 +1,9 @@
-const { app, ipcMain, shell, dialog } = require('electron');
+const { app, ipcMain, shell, dialog, BrowserWindow } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const PDFWindow = require('electron-pdf-window');
+
+const baseApiUrl = "http://10.249.43.41:8080/static/";
 
 const joinAndMkdir = (arg, isFile = false) => {
   let dir = path.join(app.getAppPath(), '..');
@@ -65,6 +67,28 @@ const initFileIpc = () => {
         height: 600
       });
       win.loadURL(dir);
+    }
+
+  });
+
+  // 直接利用 url 在线预览文件
+  ipcMain.on("view-file-online", (event, arg) => {
+    let extname = path.extname(arg);
+
+    if (extname === ".pdf") {
+
+      let win = new PDFWindow({
+        width: 800,
+        height: 600
+      });
+      win.loadURL(baseApiUrl + arg);
+    } else if ([".png", ".jpg", ".jpeg"].includes(extname)) {
+
+      let win = new BrowserWindow({
+        height: 800,
+        width: 600
+      });
+      win.loadURL(baseApiUrl + arg);
     }
 
   });

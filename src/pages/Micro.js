@@ -188,7 +188,13 @@ export default function Micro(props) {
     }
 
     const onViewReportClick = (e) => {
-
+        apiGetTaskReport(accessToken, characterId).then((res) => {
+            // console.log(res)
+            ipcRenderer.send("view-file-online", res.data.save_path);
+            
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     // -- END -- CharacterInputBox相关
