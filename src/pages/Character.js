@@ -15,6 +15,7 @@ import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
 import AttachmentDrawer from '../components/AttachmentDrawer';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
+import AILoading from '../components/AILoading';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -43,7 +44,8 @@ export default function Character(props) {
     const [cropper, setCropper] = useState();
     const [isCroplMoadlVisible, setIsCroplMoadlVisible] = useState(false);
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
-    const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
+
+    const [isLoadingAI, setIsLoadingAI] = useState(false);
 
 
     useEffect(() => {
@@ -349,6 +351,8 @@ export default function Character(props) {
             canvas.toBlob((blob) => {
                 let formData = new FormData();
                 formData.append('files', blob, 'blob.png');
+                setIsLoadingAI(true);
+
                 apiRunCharacterTask(accessToken, characterId, formData).then((res) => {
                     console.log(res);
                     let newones_smp = [];
@@ -362,6 +366,8 @@ export default function Character(props) {
                     dispatch(setCharacterImgGroup(newones_smp));
                     dispatch(setCharacterStandardImgGroup(newones_std));
                     dispatch(setCharacterImgAiInfo(newones_info));
+
+                    setIsLoadingAI(false);
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -428,7 +434,9 @@ export default function Character(props) {
                 />
 
 
-                
+                <AILoading
+                    loading={isLoadingAI}
+                />
 
             </Space>
 

@@ -42,6 +42,7 @@ export default function Micro(props) {
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
 
+    const [isLoadingAI, setIsLoadingAI] = useState(false);
 
 
     useEffect(() => {
@@ -192,7 +193,7 @@ export default function Micro(props) {
     }
 
     const onViewReportClick = (e) => {
-        apiGetTaskReport(accessToken, characterId).then((res) => {
+        apiGetTaskReport(accessToken, microId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
             
@@ -238,6 +239,8 @@ export default function Micro(props) {
         fileList.forEach(item => {
             formData.append('files', dataurl2Blob(item.thumbUrl), item.name);
         });
+        setIsLoadingAI(true);
+
         apiRunMicroTask(accessToken, microId, formData).then((res) => {
             console.log(res);
             let newones_smp = [];
@@ -251,6 +254,8 @@ export default function Micro(props) {
             dispatch(setMicroImgGroup(newones_smp));
             dispatch(setMicroStandardImgGroup(newones_std));
             dispatch(setMicroImgAiInfo(newones_info));
+
+            setIsLoadingAI(true);
         }).catch((err) => {
             console.log(err);
         });
@@ -324,6 +329,11 @@ export default function Micro(props) {
                     // onExamineStandardImgClick={onExamineStandardImgClick}
                     onExamineAttachmentClick={onExamineAttachmentClick}
                 />
+
+                <AILoading
+                    loading={isLoadingAI}
+                />
+
             </Space>
 
             <CharacterImgList
