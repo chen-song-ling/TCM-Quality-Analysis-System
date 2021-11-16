@@ -35,8 +35,12 @@ export default function Home(props) {
     const [inputStandard, setInputStandard] = useState("");
     const [inputNote, setInputNote] = useState("");
 
+    const [searchKey, setSearchKey] = useState("");
+    const [sortOrder, setSortOrder] = useState("descend");
+    const [sortField, setSortField] = useState("creation_time");
+
     const updateProjectList = () => {
-        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, "creation_time", "descend").then((res) => {
+        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sortField, sortOrder).then((res) => {
             // console.log(res.data);
             let data = res.data;
             let newData = [];
@@ -126,12 +130,15 @@ export default function Home(props) {
         let sort_by_field = sorter.field;
         if (sort_by_field === "sampleId") {
             sort_by_field = "number";
+            setSortField("number");
         } else if (sort_by_field === "addingTime") {
             sort_by_field = "creation_time";
+            setSortField("creation_time");
         }
+        setSortOrder(sorter.order);
 
         apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sort_by_field, sorter.order).then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             let data = res.data;
 
             let newData = [];
@@ -170,7 +177,7 @@ export default function Home(props) {
     // -- BEGIN -- EditModal相关
 
     const onEditProjectOk = () => {
-        if (inputName === "" || inputSampleId === "" || inputStandard === "" || inputNote === "") {
+        if (inputName === "" || inputSampleId === "" || inputStandard === "") {
             notification.open({
                 message: "信息不完整",
                 description: "请补充完整所有必填信息",
@@ -208,7 +215,7 @@ export default function Home(props) {
     // -- BEGIN -- AddModal相关
 
     const onAddProjectOk = () => {
-        if (inputName === "" || inputSampleId === "" || inputStandard === "" || inputNote === "") {
+        if (inputName === "" || inputSampleId === "" || inputStandard === "") {
             notification.open({
                 message: "信息不完整",
                 description: "请补充完整所有必填信息",
