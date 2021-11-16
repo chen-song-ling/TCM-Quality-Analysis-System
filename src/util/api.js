@@ -365,3 +365,71 @@ export const apiDeleteProject = (accessToken, projectId) => {
         });
     });
 }
+
+export const apiAddTaskAttachment = (accessToken, taskId, formData) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}/attachments`,
+            data: formData,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiAddProjectAttachment = (accessToken, projrctId, formData) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${projrctId}/attachments`,
+            data: formData,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteTaskAttachment = (accessToken, taskId, fileUuid) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/tasks/${taskId}/attachments/${fileUuid}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteProjectAttachment = (accessToken, projrctId, fileUuid) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${projrctId}/attachments/${fileUuid}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}

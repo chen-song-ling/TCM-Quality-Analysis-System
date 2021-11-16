@@ -1,4 +1,6 @@
 const { app, ipcMain, shell, dialog, BrowserWindow } = require('electron');
+const { download } = require("electron-dl");
+
 const path = require('path');
 const fs = require('fs');
 const PDFWindow = require('electron-pdf-window');
@@ -7,6 +9,7 @@ const baseApiUrl = "http://10.249.43.41:8080/static/";
 
 const joinAndMkdir = (arg, isFile = false) => {
   let dir = path.join(app.getAppPath(), '..');
+
   if (!isFile) {
     for (let i = 0; i < arg.length; i++) {
       dir = path.join(dir, arg[i]);
@@ -40,6 +43,11 @@ const initFileIpc = () => {
   ipcMain.on("open-path", (event, arg) => {
     let dir = joinAndMkdir(arg);
     shell.openPath(dir);
+  });
+
+  ipcMain.on("show-item-in-folder", (event, arg) => {
+    let dir = joinAndMkdir(arg);
+    shell.showItemInFolder(dir);
   });
 
   ipcMain.on("open-pdf", (event, arg) => {
@@ -127,11 +135,41 @@ const initFileIpc = () => {
 
   });
 
+  ipcMain.on("sync-open-save-dialog", (event, arg) => {
 
+    let defaultFileName = "未命名";
+    if (arg !== null && arg !== undefined) {
+      if (arg.defaultFileName !== undefined) {
+        defaultFileName = arg.defaultFileName;
+      }
+    }
+
+    const res = dialog.showSaveDialogSync({
+      title: "选择保持路径",
+      defaultPath: defaultFileName,
+      buttonLabel: "储存",
+      nameFieldLabel: "存储为",
+      showsTagField: true,
+    });
+
+    event.returnValue = res;
+  });
+
+  // ipcMain.on("download", (event, arg) => {
+  //   arg.properties.onProgress = (status) => {
+  //     // window.webContents.send("download progress", status)
+  //   };
+
+  //   download(BrowserWindow.getFocusedWindow(), arg.url, arg.properties).then((dl) => {
+  //     // window.webContents.send("download complete", dl.getSavePath())
+  //   });
+  // });
 
   ipcMain.on("open-external-link", (event, href) => {
     shell.openExternal(href);
   });
+
+
 };
 
 module.exports = initFileIpc;

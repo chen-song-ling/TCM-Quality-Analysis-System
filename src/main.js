@@ -1,4 +1,6 @@
-const { app, Menu, BrowserWindow } = require('electron');
+const { app, Menu, BrowserWindow, ipcMain } = require('electron');
+const { download } = require("electron-dl");
+
 const path = require('path');
 const url = require('url');
 const appMenuTemplate = require('./menu/app_menu_template');
@@ -44,8 +46,18 @@ function createWindow() {
       protocol: 'file:',
       slashes: true
     }));
-
   }
+  
+  ipcMain.on("download", (event, arg) => {
+    arg.properties.onProgress = (status) => {
+      mainWindow.webContents.send("download-progress", {...status, uuid: arg.uuid});
+    };
+
+    download(BrowserWindow.getFocusedWindow(), arg.url, arg.properties).then((dl) => {
+      mainWindow.webContents.send("download-complete", {uuid: arg.uuid, filename: arg.filename});
+    });
+
+  });
 
 }
 

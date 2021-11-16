@@ -14,6 +14,7 @@ import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
 import AttachmentDrawer from '../components/AttachmentDrawer';
+import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -86,6 +87,8 @@ export default function Character(props) {
                 dispatch(setCharacterStandardImgGroup(newones_std));
                 dispatch(setCharacterImgAiInfo(newones_info));
             }
+
+            // console.log(res.data);
             
         }).catch((err) => {
             console.log(err);
@@ -438,11 +441,18 @@ export default function Character(props) {
 
             <input type="file" id="the-ghost-uploadSampleImg" style={{display: "none"}} onChange={onSampleImgChange} /> 
 
-            <AttachmentDrawer
+            {/* <AttachmentDrawer
                 visible={isAttachmentDrawerVisible}
                 onClose={onAttachmentDrawerClose}
                 updateToggle={updateAttachmentToggle}
+            /> */}
+
+            <AttachmentDrawerPlus
+                visible={isAttachmentDrawerVisible}
+                onClose={onAttachmentDrawerClose}
+                networdArgs={{type: "task", id: characterId, accessToken: accessToken}}
             />
+            
 
             <Modal className="mp-character-modal" title="AI 识别" visible={isCroplMoadlVisible} onOk={onCropModalOk} onCancel={onCropModalCancel}>
                 <Cropper

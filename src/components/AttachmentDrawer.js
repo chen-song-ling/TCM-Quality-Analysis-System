@@ -10,7 +10,6 @@ export default function AttachmentDrawer(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-
     useEffect(() => {
         setLoading(true);
         ipcRenderer.send("get-file-list", ["local", "attachment"]);
@@ -31,7 +30,8 @@ export default function AttachmentDrawer(props) {
     }, []);
 
     const onBrowserDisplayClick = (e) => {
-        ipcRenderer.send("open-path", ["local", "attachment"]);
+        ipcRenderer.send("show-item-in-folder", ["local", "attachment"]);
+        ipcRenderer.send("show-item-in-folder", ["local", "attachment", "att1.pdf"]);
     }
 
     const onRefreshClick = (e) => {
@@ -69,6 +69,7 @@ export default function AttachmentDrawer(props) {
             ),
         },
     ];
+    
     return (
         <div className="mp-c-attdrw">
             <Drawer
