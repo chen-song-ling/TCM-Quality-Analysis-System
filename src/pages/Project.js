@@ -16,6 +16,7 @@ import InputWithButton from '../components/InputWithButton';
 import ProjectTable from '../components/ProjectTable';
 import CompoundInput from '../components/CompoundInput';
 import CompoundSelect from '../components/CompoundSelect';
+import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import { Button, Modal, Space, notification } from 'antd';
 
 const taskTypeDicNumber2String = {
@@ -53,6 +54,9 @@ export default function Project(props) {
     const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
     const [addTaskName, setAddTaskName] = useState("");
     const [addTaskType, setAddTaskType] = useState("性状");
+
+    const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+
 
     const updateTaskList = () => {
         apiGetTaskList(accessToken, projectId).then((res) => {
@@ -335,6 +339,10 @@ export default function Project(props) {
         });
     }
 
+    const onExamineAttachmentClick = (e) => {
+        setIsAttachmentDrawerVisible(true);
+    }
+
     // -- END -- ProjectTable相关
 
     // -- BEGIN -- EditRecordModal相关
@@ -425,10 +433,13 @@ export default function Project(props) {
     // -- END -- AddTaskModal相关相关
 
 
-    // const onExamineCharacterClick = (e) => {
-    //     dispatch(setCharacterId(1));
-    //     setRedirect("/character");
-    // }
+    // -- BEGIN -- AttachmentDrawer相关
+
+    const onAttachmentDrawerClose = () => {
+        setIsAttachmentDrawerVisible(false);
+    }
+
+    // -- END -- AttachmentDrawer相关
 
     
 
@@ -471,6 +482,7 @@ export default function Project(props) {
                 onInputChange={onInputChange}
                 onEditInfoClick={onEditInfoClick}
                 onAddTaskClick={onAddTaskClick}
+                onExamineAttachmentClick={onExamineAttachmentClick}
             />
 
 
@@ -569,6 +581,12 @@ export default function Project(props) {
                 </Space>
                 
             </Modal>
+
+            <AttachmentDrawerPlus
+                visible={isAttachmentDrawerVisible}
+                onClose={onAttachmentDrawerClose}
+                networdArgs={{type: "project", id: projectId, accessToken: accessToken}}
+            />
 
 
         </div>

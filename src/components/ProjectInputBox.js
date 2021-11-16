@@ -96,6 +96,10 @@ export default function ProjectInputBox(props) {
                             预览报告
                         </Button>
 
+                        <Button size={'large'} onClick={props.onExamineAttachmentClick}>
+                            附件管理
+                        </Button>
+
                     </Space>
                 </div>
 

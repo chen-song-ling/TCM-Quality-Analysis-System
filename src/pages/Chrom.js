@@ -9,7 +9,7 @@ import MpHeader from '../components/MpHeader';
 
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
-import AttachmentDrawer from '../components/AttachmentDrawer';
+import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import { SaveAsCsv } from "../util/Saver";
 
 const electron = window.require('electron');
@@ -18,6 +18,7 @@ const ipcRenderer = electron.ipcRenderer;
 export default function Chrom(props) {
     const [redirect, setRedirect] = useState(null);
     const username = useSelector(state => state.global.username);
+    const accessToken = useSelector(state => state.global.accessToken);
     const dispatch = useDispatch();
 
     const chromId = useSelector(state => state.chrom.chromId);
@@ -33,7 +34,7 @@ export default function Chrom(props) {
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
-    const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
+    // const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
 
     //-- Protocol Begin
 
@@ -104,7 +105,7 @@ export default function Chrom(props) {
 
     // 附件管理
     const triggerShowAttachment = () => {
-        setUpdateAttachmentToggle(updateAttachmentToggle+1);
+        // setUpdateAttachmentToggle(updateAttachmentToggle+1);
         setIsAttachmentDrawerVisible(true);
     }
 
@@ -193,11 +194,12 @@ export default function Chrom(props) {
                 />
             </div>
 
-            <AttachmentDrawer
+            <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
                 onClose={onAttachmentDrawerClose}
-                updateToggle={updateAttachmentToggle}
+                networdArgs={{type: "task", id: chromId, accessToken: accessToken}}
             />
+
         </div>
     );
 }

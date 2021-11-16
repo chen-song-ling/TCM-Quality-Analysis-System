@@ -14,6 +14,7 @@ import MpHeader from '../components/MpHeader';
 import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
 import PictureWall from '../components/PictureWall';
+import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -38,6 +39,9 @@ export default function Micro(props) {
 
     const [isImgSelectorMoadlVisible, setIsImgSelectorMoadlVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
+
+    const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+
 
 
     useEffect(() => {
@@ -197,6 +201,10 @@ export default function Micro(props) {
         });
     }
 
+    const onExamineAttachmentClick = (e) => {
+        setIsAttachmentDrawerVisible(true);
+    }
+
     // -- END -- CharacterInputBox相关
 
     // -- BDGIN -- ImgSelectorModal相关
@@ -260,6 +268,14 @@ export default function Micro(props) {
 
     // -- END -- ImgSelectorModal相关
 
+    // -- BEGIN -- AttachmentDrawer相关
+
+    const onAttachmentDrawerClose = () => {
+        setIsAttachmentDrawerVisible(false);
+    }
+
+    // -- END -- AttachmentDrawer相关
+
     if (redirect !== null) {
         return (
             <Redirect push to={redirect} />
@@ -306,7 +322,7 @@ export default function Micro(props) {
                     onUploadSampleImgClick={onUploadSampleImgClick}
                     onViewReportClick={onViewReportClick}
                     // onExamineStandardImgClick={onExamineStandardImgClick}
-                    // onExamineAttachmentClick={onExamineAttachmentClick}
+                    onExamineAttachmentClick={onExamineAttachmentClick}
                 />
             </Space>
 
@@ -314,6 +330,12 @@ export default function Micro(props) {
                 characterImgGroup={microImgGroup}
                 characterStandardImgGroup={microStandardImgGroup}
                 characterImgAiInfo={microImgAiInfo}
+            />
+
+            <AttachmentDrawerPlus
+                visible={isAttachmentDrawerVisible}
+                onClose={onAttachmentDrawerClose}
+                networdArgs={{type: "task", id: microId, accessToken: accessToken}}
             />
 
             <Modal title="上传要识别的所有图片" visible={isImgSelectorMoadlVisible} onOk={onImgSelectorModalOk} onCancel={onImgSelectorModalCancel}>

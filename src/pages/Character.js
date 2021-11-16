@@ -248,7 +248,7 @@ export default function Character(props) {
 
     const onExamineAttachmentClick = (e) => {
         // ipcRenderer.send("open-pdf", ["local", "attachment", "att1.pdf"]);
-        setUpdateAttachmentToggle(updateAttachmentToggle+1);
+        // setUpdateAttachmentToggle(updateAttachmentToggle+1);
         setIsAttachmentDrawerVisible(true);
     }
 
