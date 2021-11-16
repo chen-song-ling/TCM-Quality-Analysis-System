@@ -56,7 +56,7 @@ export const apiAdminLogin = (password) => {
     });
 }
 
-export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder) => {
+export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder, searchKey) => {
     return new Promise((resolve, reject) => {
         axios({
             url: `${baseUrl}/api/${version}/projects`,
@@ -65,6 +65,7 @@ export const apiGetProjectList = (accessToken, skip, limit, sortField, sortOrder
                 limit: limit,
                 sort_by_field: sortField,
                 sort_order: sortOrder,
+                search_key: searchKey,
             },
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

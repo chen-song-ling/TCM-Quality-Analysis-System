@@ -40,7 +40,7 @@ export default function Home(props) {
     const [sortField, setSortField] = useState("creation_time");
 
     const updateProjectList = () => {
-        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sortField, sortOrder).then((res) => {
+        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sortField, sortOrder, searchKey).then((res) => {
             // console.log(res.data);
             let data = res.data;
             let newData = [];
@@ -77,6 +77,11 @@ export default function Home(props) {
 
         updateProjectList();
 
+    }, [searchKey]);
+
+    useEffect(() => {
+        updateProjectList();
+
     }, []);
 
     // -- BEGIN -- HomeHeader相关
@@ -94,7 +99,8 @@ export default function Home(props) {
     }
 
     const onSearch = (value) => {
-        console.log(value);
+        // console.log(value);
+        setSearchKey(value);
     }
 
     // -- END -- HomeHeader相关
@@ -137,7 +143,7 @@ export default function Home(props) {
         }
         setSortOrder(sorter.order);
 
-        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sort_by_field, sorter.order).then((res) => {
+        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sort_by_field, sorter.order, searchKey).then((res) => {
             // console.log(res.data);
             let data = res.data;
 

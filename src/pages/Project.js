@@ -109,13 +109,15 @@ export default function Project(props) {
 
             let newProjectExtraInfo = [];
             let newProjectInfoDisplay = [true, true, true, true, ];
-            res.data.additional_fields.forEach(item => {
-                newProjectExtraInfo.push({
-                    fieldName: item.field_name,
-                    fieldValue: item.field_value,
-                })
-                newProjectInfoDisplay.push(true);
-            });
+            if (res.data.additional_fields !== null && res.data.additional_fields !== undefined ) {
+                res.data.additional_fields.forEach(item => {
+                    newProjectExtraInfo.push({
+                        fieldName: item.field_name,
+                        fieldValue: item.field_value,
+                    })
+                    newProjectInfoDisplay.push(true);
+                });
+            }
 
             dispatch(setProjectExtraInfo(newProjectExtraInfo));
             dispatch(setProjectInfoDisplay(newProjectInfoDisplay));

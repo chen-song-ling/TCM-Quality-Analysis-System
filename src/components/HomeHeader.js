@@ -1,9 +1,17 @@
 import React from 'react';
+import { useState, useEffect } from "react";
+
 import './HomeHeader.css';
 import { Menu, Dropdown, Breadcrumb, Input, Button, Space, PageHeader } from 'antd';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default function HomeHeader(props) {
+    const [searchInput, setSearchInput] = useState("");
+
+    const onSearchInputChange = (e) => {
+        setSearchInput(e.target.value);
+    }
+
     const menu = (
         <Menu>
           <Menu.Item danger onClick={props.onQuitClick}>退出登陆</Menu.Item>
@@ -33,7 +41,7 @@ export default function HomeHeader(props) {
                 <div className="mp-c-nav-subtitile">
                     <Space size={'large'}>
 
-                        <Input.Search placeholder="搜索" onSearch={props.onSearch} style={{ width: 200 }} />
+                        <Input.Search placeholder="搜索" onSearch={() => props.onSearch(searchInput) } value={searchInput} onChange={onSearchInputChange} style={{ width: 200 }} />
                         <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={props.onAddClick} />
 
                     </Space>
