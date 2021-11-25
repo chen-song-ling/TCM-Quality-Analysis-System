@@ -15,6 +15,7 @@ import CharacterInputBox from '../components/CharacterInputBox';
 import CharacterImgList from '../components/CharacterImgList';
 import PictureWall from '../components/PictureWall';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
+import AILoading from '../components/AILoading'
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
