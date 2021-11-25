@@ -14,7 +14,7 @@ npm run elec
 
 ## 浏览器环境测试
 
-不需要 `npm run build`，热加载模式。
+不需要 `npm run build`，热加载模式。然而该项目需要 electron 环境才能运行。
 
 ```bash
 npm run start
