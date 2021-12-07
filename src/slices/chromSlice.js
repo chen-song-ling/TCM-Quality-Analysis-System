@@ -5,6 +5,7 @@ export const chromSlice = createSlice({
     initialState: {
         chromId: "-1",
         lastChromId: "-2",
+        chromTaskName: "",
     },
     reducers: {
         setChromId: (state, action) => {
@@ -13,8 +14,11 @@ export const chromSlice = createSlice({
         setLastChromId: (state, action) => {
             state.lastChromId = action.payload;
         },
+        setChromTaskName: (state, action) => {
+            state.chromTaskName = action.payload;
+        },
     }
 });
 
-export const { setChromId, setLastChromId } = chromSlice.actions;
+export const { setChromId, setLastChromId, setChromTaskName } = chromSlice.actions;
 export default chromSlice.reducer;

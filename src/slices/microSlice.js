@@ -5,6 +5,7 @@ export const microSlice = createSlice({
     initialState: {
         microId: "-1",
         lastMicroId: "-2",
+        microTaskName: "",
         microDate: "",
         microTemperature: "",
         microHumidity: "",
@@ -22,6 +23,9 @@ export const microSlice = createSlice({
         },
         setLastMicroId: (state, action) => {
             state.lastMicroId = action.payload;
+        },
+        setMicroTaskName: (state, action) => {
+            state.microTaskName = action.payload;
         },
         setMicroDate: (state, action) => {
             state.microDate = action.payload;
@@ -53,5 +57,5 @@ export const microSlice = createSlice({
     }
 });
 
-export const { setMicroId, setLastMicroId, setMicroDate, setMicroTemperature, setMicroHumidity, setMicroStandard, setMicroManualResult, setMicroCheckList, setMicroImgGroup, setMicroStandardImgGroup, setMicroImgAiInfo } = microSlice.actions;
+export const { setMicroId, setLastMicroId, setMicroTaskName, setMicroDate, setMicroTemperature, setMicroHumidity, setMicroStandard, setMicroManualResult, setMicroCheckList, setMicroImgGroup, setMicroStandardImgGroup, setMicroImgAiInfo } = microSlice.actions;
 export default microSlice.reducer;

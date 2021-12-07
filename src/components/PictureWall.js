@@ -132,7 +132,7 @@ export default function PictureWall(props) {
                     style={{ height: 400, width: "100%" }}
                     zoomable={false}
                     zoomTo={0.5} //
-                    initialAspectRatio={1}
+                    initialAspectRatio={0}
                     preview=".img-preview"
                     src={cropModalData.img}
                     viewMode={1}

@@ -26,7 +26,6 @@ export default function CharacterImgList(props) {
                 
                 let img = new Image();
                 img.src = config.base_url + props.characterImgGroup[i];
-
                 img.onload = () => {
                     // let ow = props.cropBoxSize.width / 3;
                     // let oh = props.cropBoxSize.height / 3;
@@ -70,7 +69,6 @@ export default function CharacterImgList(props) {
                 };
             }
         }
-
     }, [props.characterImgGroup, props.characterStandardImgGroup, props.characterImgAiInfo]);
 
     const renderAiInfo = (idx) => {

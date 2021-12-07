@@ -24,6 +24,8 @@ export default function Micro(props) {
     const [redirect, setRedirect] = useState(null);
     const username = useSelector(state => state.global.username);
     const accessToken = useSelector(state => state.global.accessToken);
+    const taskName = useSelector(state => state.global.taskName);
+
     const microId = useSelector(state => state.micro.microId);
     const dispatch = useDispatch();
 
@@ -87,7 +89,7 @@ export default function Micro(props) {
                 res.data.result.results.forEach(item => {
                     newones_smp.push(item.origin_image.save_path);
                     newones_std.push(item.retrieval_image.save_path);
-                    newones_info.push(item.score);
+                    newones_info.push(`类别: ${item.category}\n置信度: ${item.score.toFixed(2)}`);
                 });
                 dispatch(setMicroImgGroup(newones_smp));
                 dispatch(setMicroStandardImgGroup(newones_std));
@@ -257,6 +259,7 @@ export default function Micro(props) {
         });
         setIsLoadingAI(true);
 
+        dispatch(setMicroStandardImgGroup(null));
         apiRunMicroTask(accessToken, microId, formData).then((res) => {
             console.log(res);
             let newones_smp = [];
@@ -265,13 +268,14 @@ export default function Micro(props) {
             res.data.result.results.forEach(item => {
                 newones_smp.push(item.origin_image.save_path);
                 newones_std.push(item.retrieval_image.save_path);
-                newones_info.push(item.score);
+                newones_info.push(`类别: ${item.category}\n置信度: ${item.score.toFixed(2)}`);
             });
             dispatch(setMicroImgGroup(newones_smp));
             dispatch(setMicroStandardImgGroup(newones_std));
             dispatch(setMicroImgAiInfo(newones_info));
 
-            setIsLoadingAI(true);
+            setIsLoadingAI(false);
+
         }).catch((err) => {
             console.log(err);
         });
@@ -323,7 +327,7 @@ export default function Micro(props) {
                         funcTag: "project",
                     },
                     {
-                        text: "显微",
+                        text: taskName,
                         isActive: false,
                     },
                 ]}

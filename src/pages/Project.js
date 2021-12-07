@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Project.css';
 
+import { setTaskName } from '../slices/globalSlice';
 import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
 import { setMicroId } from '../slices/microSlice';
@@ -323,6 +324,8 @@ export default function Project(props) {
     }
 
     const onExamineRecordClick = (record) => {
+        // console.log(record);
+        dispatch(setTaskName(record.taskName));
         if (record.taskType === "性状") {
             dispatch(setCharacterId(record.id));
             setRedirect("/character");

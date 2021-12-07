@@ -5,6 +5,7 @@ export const characterSlice = createSlice({
     initialState: {
         characterId: "-1",
         lastCharacterId: "-2",
+        characterTaskName: "",
         characterDate: "",
         characterTemperature: "",
         characterHumidity: "",
@@ -26,6 +27,9 @@ export const characterSlice = createSlice({
         },
         setLastCharacterId: (state, action) => {
             state.lastCharacterId = action.payload;
+        },
+        setCharacterTaskName: (state, action) => {
+            state.characterTaskName = action.payload;
         },
         setCharacterDate: (state, action) => {
             state.characterDate = action.payload;
@@ -60,5 +64,5 @@ export const characterSlice = createSlice({
     }
 });
 
-export const { setCharacterId, setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterStandardImgGroup, setCharacterImgAiInfo } = characterSlice.actions;
+export const { setCharacterId, setLastCharacterId, setCharacterTaskName, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterStandardImgGroup, setCharacterImgAiInfo } = characterSlice.actions;
 export default characterSlice.reducer;

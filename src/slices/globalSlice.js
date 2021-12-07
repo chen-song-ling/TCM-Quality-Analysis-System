@@ -7,6 +7,7 @@ export const globalSlice = createSlice({
         path: undefined,
         username: "",
         accessToken: "",
+        taskName: "",
     },
     reducers: {
         setPath: (state, action) => {
@@ -22,8 +23,11 @@ export const globalSlice = createSlice({
         setAccessToken: (state, action) => {
             state.accessToken = action.payload;
         },
+        setTaskName: (state, action) => {
+            state.taskName = action.payload;
+        },
     }
 });
 
-export const { setPath, setUsername, setAccessToken } = globalSlice.actions;
+export const { setPath, setUsername, setAccessToken, setTaskName } = globalSlice.actions;
 export default globalSlice.reducer;

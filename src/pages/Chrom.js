@@ -19,6 +19,8 @@ export default function Chrom(props) {
     const [redirect, setRedirect] = useState(null);
     const username = useSelector(state => state.global.username);
     const accessToken = useSelector(state => state.global.accessToken);
+    const taskName = useSelector(state => state.global.taskName);
+
     const dispatch = useDispatch();
 
     const chromId = useSelector(state => state.chrom.chromId);
@@ -167,7 +169,7 @@ export default function Chrom(props) {
                         funcTag: "project",
                     },
                     {
-                        text: "薄层",
+                        text: taskName,
                         isActive: false,
                     },
                 ]}

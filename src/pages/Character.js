@@ -39,6 +39,7 @@ export default function Character(props) {
 
     const username = useSelector(state => state.global.username);
     const accessToken = useSelector(state => state.global.accessToken);
+    const taskName = useSelector(state => state.global.taskName);
     const dispatch = useDispatch();
 
     const [cropper, setCropper] = useState();
@@ -88,7 +89,7 @@ export default function Character(props) {
                 res.data.result.results.forEach(item => {
                     newones_smp.push(item.origin_image.save_path);
                     newones_std.push(item.retrieval_image.save_path);
-                    newones_info.push(item.score);
+                    newones_info.push(`类别: ${item.category}\n置信度: ${item.score.toFixed(2)}`);
                 });
                 dispatch(setCharacterImgGroup(newones_smp));
                 dispatch(setCharacterStandardImgGroup(newones_std));
@@ -367,14 +368,15 @@ export default function Character(props) {
                 setIsLoadingAI(true);
 
                 apiRunCharacterTask(accessToken, characterId, formData).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     let newones_smp = [];
                     let newones_std = [];
                     let newones_info = [];
                     res.data.result.results.forEach(item => {
                         newones_smp.push(item.origin_image.save_path);
                         newones_std.push(item.retrieval_image.save_path);
-                        newones_info.push(item.score);
+                        // newones_info.push(item.score);
+                        newones_info.push(`类别: ${item.category}\n置信度: ${item.score.toFixed(2)}`);
                     });
                     dispatch(setCharacterImgGroup(newones_smp));
                     dispatch(setCharacterStandardImgGroup(newones_std));
@@ -423,7 +425,7 @@ export default function Character(props) {
                         funcTag: "project",
                     },
                     {
-                        text: "性状",
+                        text: taskName,
                         isActive: false,
                     },
                 ]}
