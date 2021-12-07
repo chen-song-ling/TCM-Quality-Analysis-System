@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { baseUrl } from './const';
 // const baseUrl = "http://lab2.tery.top:8080";
-const baseUrl = "http://10.249.43.41:8080";
+// const baseUrl = "http://10.249.43.41:8080";
 const version = "v1";
 
 export const apiLogin = (username, password) => {
+    // console.log(baseUrl);
     return new Promise((resolve, reject) => {
         axios({
             url: `${baseUrl}/api/${version}/login/access-token`,

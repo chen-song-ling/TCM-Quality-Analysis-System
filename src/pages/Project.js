@@ -115,7 +115,7 @@ export default function Project(props) {
                         fieldName: item.field_name,
                         fieldValue: item.field_value,
                     })
-                    newProjectInfoDisplay.push(true);
+                    newProjectInfoDisplay.push(item.is_included_in_report);
                 });
             }
 
@@ -130,11 +130,13 @@ export default function Project(props) {
 
     }, []);
 
-    useEffect(() => {
-        return () => {
-            dispatch(setLastProjectId(projectId));
-        }
-    });
+    
+
+    // useEffect(() => {
+    //     return () => {
+    //         dispatch(setLastProjectId(projectId));
+    //     }
+    // });
 
     // -- BEGIN -- ProjectHeader相关
 
@@ -163,6 +165,7 @@ export default function Project(props) {
     const onSwitchClick = (checked, e, idx) => {
         let newones = [...projectInfoDisplay];
         newones[idx] = checked;
+        // console.log(newones);
         dispatch(setProjectInfoDisplay(newones));
     }
 
@@ -191,11 +194,11 @@ export default function Project(props) {
 
         if (isCompleted) {
             let additionalFields = [];
-            projectExtraInfo.forEach(item => {
+            projectExtraInfo.forEach((item, idx) => {
                 additionalFields.push({
                     field_name: item.fieldName,
                     field_value: item.fieldValue,
-                    is_included_in_report: true,
+                    is_included_in_report: projectInfoDisplay[idx+4],
                     is_required: true,
                 })
             });

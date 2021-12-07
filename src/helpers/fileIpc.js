@@ -5,7 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const PDFWindow = require('electron-pdf-window');
 
-const baseApiUrl = "http://10.249.43.41:8080/static/";
+const baseApiUrl = "http://lab2.tery.top:8000/static/";
+// const baseApiUrl = "http://10.249.43.41:8080/static/";
 
 const joinAndMkdir = (arg, isFile = false) => {
   let dir = path.join(app.getAppPath(), '..');

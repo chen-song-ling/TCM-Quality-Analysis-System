@@ -13,6 +13,7 @@ yarn-error.log*
 /dist
 /temp
 /build
+/standard/*/
 
 # testing
 /coverage

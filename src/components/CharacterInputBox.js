@@ -9,13 +9,13 @@ export default function CharacterInputBox(props) {
 
                 <Space align="start" size={'small'}>
                     <Input.TextArea className="mp-charinbox-textarea" placeholder="标准规定" showCount maxLength={1000} value={props.standard} onChange={(e)=>props.onInputChange(e, "standard")} />
-                    <Switch checkedChildren="显示" unCheckedChildren="忽略" checked={props.checkList[0]} onClick={(checked, e) => props.onSwitchClick(checked, e, 0)} />
+                    <Switch className="invisible" checkedChildren="显示" unCheckedChildren="忽略" checked={props.checkList[0]} onClick={(checked, e) => props.onSwitchClick(checked, e, 0)} />
                 </Space>
 
 
                 <Space align="start" size={'small'}>
                     <Input.TextArea className="mp-charinbox-textarea" placeholder="人工鉴别结果" showCount maxLength={1000} value={props.manualResult} onChange={(e)=>props.onInputChange(e, "manualResult")} />
-                    <Switch checkedChildren="显示" unCheckedChildren="忽略" checked={props.checkList[1]} onClick={(checked, e) => props.onSwitchClick(checked, e, 1)} />
+                    <Switch className="invisible" checkedChildren="显示" unCheckedChildren="忽略" checked={props.checkList[1]} onClick={(checked, e) => props.onSwitchClick(checked, e, 1)} />
                 </Space>
 
                 <Space size={'small'}>

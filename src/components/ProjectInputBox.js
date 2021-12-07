@@ -17,7 +17,7 @@ export default function ProjectInputBox(props) {
             // key 设置为 i 只是为了消除警告
             // 这样设置没有问题, 因为数据源的相对顺序是正确的
             <CompoundInput
-                checked={props.projectInfoDisplay[0]}
+                checked={props.projectInfoDisplay[i+4]}
                 fieldName={props.projectExtraInfo[i].fieldName}
                 text={props.projectExtraInfo[i].fieldValue}
                 isRequired={true}
@@ -39,6 +39,7 @@ export default function ProjectInputBox(props) {
                     text={props.projectInfo.name}
                     isRequired={true}
                     textWidth={config.textWidth}
+                    isSwitchInvisible={true}
 
                     onSwitchClick={(checked, e) => props.onSwitchClick(checked, e, 0)}
                     onInputChange={(e)=>props.onInputChange(e, 0)}
@@ -49,6 +50,7 @@ export default function ProjectInputBox(props) {
                     text={props.projectInfo.sampleId}
                     isRequired={true}
                     textWidth={config.textWidth}
+                    isSwitchInvisible={true}
 
                     onSwitchClick={(checked, e) => props.onSwitchClick(checked, e, 1)}
                     onInputChange={(e)=>props.onInputChange(e, 1)}
@@ -59,6 +61,7 @@ export default function ProjectInputBox(props) {
                     text={props.projectInfo.standard}
                     isRequired={true}
                     textWidth={config.textWidth}
+                    isSwitchInvisible={true}
 
                     onSwitchClick={(checked, e) => props.onSwitchClick(checked, e, 2)}
                     onInputChange={(e)=>props.onInputChange(e, 2)}
@@ -69,6 +72,7 @@ export default function ProjectInputBox(props) {
                     text={props.projectInfo.note}
                     isRequired={false}
                     textWidth={config.textWidth}
+                    isSwitchInvisible={true}
 
                     onSwitchClick={(checked, e) => props.onSwitchClick(checked, e, 3)}
                     onInputChange={(e)=>props.onInputChange(e, 3)}

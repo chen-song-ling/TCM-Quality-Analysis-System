@@ -3,21 +3,22 @@ import { useState, useEffect } from "react";
 import './AttachmentDrawerPlus.css';
 import { Table, Space, Drawer, Button, Popconfirm, Progress, notification, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { baseStaticUrl } from '../util/const';
 
 import { apiGetTask, apiGetProject, apiAddTaskAttachment, apiDeleteTaskAttachment, apiAddProjectAttachment, apiDeleteProjectAttachment } from '../util/api';
-import { file } from '_fs-jetpack@4.2.0@fs-jetpack';
+// import { file } from '_fs-jetpack@4.2.0@fs-jetpack';
 
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
-const baseStaticUrl = "http://10.249.43.41:8080/static/";
+// const baseStaticUrl = "http://10.249.43.41:8080/static/";
 
 export default function AttachmentDrawerPlus(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [networdArgs, setNetwordArgs] = useState(null);
-    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState(null);
 
     const refreshTable = () => {
         if (props.networdArgs.type === "task") {

@@ -4,3 +4,7 @@
 .mp-c-cpdipt-fieldname {
     text-align: center;
 }
+
+.mp-c-cpdipt .invisible {
+    visibility: hidden;
+}

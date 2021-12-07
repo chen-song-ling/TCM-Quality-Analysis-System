@@ -14,3 +14,7 @@
 .mp-charinbox-textarea .ant-input {
     height: 100px;
 }
+
+.mp-charinbox .invisible {
+    visibility: hidden;
+}

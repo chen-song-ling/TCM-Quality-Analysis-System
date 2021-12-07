@@ -61,20 +61,25 @@ export default function Character(props) {
         dispatch(setCharacterStandardImgGroup(null));
         dispatch(setCharacterImgAiInfo(null));
 
-        apiGetTask(accessToken, characterId).then((res) => {  
+        apiGetTask(accessToken, characterId).then((res) => {
 
             dispatch(setCharacterStandard(res.data.standard_desc));
             dispatch(setCharacterManualResult(res.data.desc_manual));
+
+            let newCharacterCheckList = [true, true, true, true, true];
             res.data.additional_fields.forEach(item => {
                 if (item.field_name === "日期") {
                     dispatch(setCharacterDate(item.field_value));
+                    newCharacterCheckList[2] = item.is_included_in_report;
                 } else if (item.field_name === "温度") {
                     dispatch(setCharacterTemperature(item.field_value));
+                    newCharacterCheckList[3] = item.is_included_in_report;
                 } else if (item.field_name === "湿度") {
                     dispatch(setCharacterHumidity(item.field_value));
+                    newCharacterCheckList[4] = item.is_included_in_report;
                 }
-                
             });
+            dispatch(setCharacterCheckList(newCharacterCheckList));
 
             if (res.data.result !== null) {
                 let newones_smp = [];
@@ -91,7 +96,7 @@ export default function Character(props) {
             }
 
             // console.log(res.data);
-            
+
         }).catch((err) => {
             console.log(err);
         });
@@ -101,7 +106,7 @@ export default function Character(props) {
 
     useEffect(() => {
 
-        
+
 
         // return () => {
         //     dispatch(setLastCharacterId(characterId));
@@ -172,7 +177,7 @@ export default function Character(props) {
         apiGetTaskReport(accessToken, characterId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
-            
+
         }).catch((err) => {
             console.log(err);
         });
@@ -187,50 +192,58 @@ export default function Character(props) {
         //     console.log(err);
         // });
 
-        apiGetTask(accessToken, characterId).then((res) => {
-            // console.log(res.data);
-            let additionalFields = [];
-            additionalFields.push({
-                field_name: "日期",
-                field_value: characterDate,
-                is_included_in_report: true,
-                is_required: true,
+        if (characterDate === "" || characterTemperature === "" || characterHumidity == "") {
+            notification.open({
+                message: "保存失败",
+                description: "请输入所有必选项目。",
             });
-            additionalFields.push({
-                field_name: "温度",
-                field_value: characterTemperature,
-                is_included_in_report: true,
-                is_required: true,
-            });
-            additionalFields.push({
-                field_name: "湿度",
-                field_value: characterHumidity,
-                is_included_in_report: true,
-                is_required: true,
-            });
-            apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, characterStandard, characterManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
-                notification.open({
-                    message: "保存成功",
+        } else {
+
+            apiGetTask(accessToken, characterId).then((res) => {
+                // console.log(res.data);
+                let additionalFields = [];
+                additionalFields.push({
+                    field_name: "日期",
+                    field_value: characterDate,
+                    is_included_in_report: characterCheckList[2],
+                    is_required: true,
                 });
+                additionalFields.push({
+                    field_name: "温度",
+                    field_value: characterTemperature,
+                    is_included_in_report: characterCheckList[3],
+                    is_required: true,
+                });
+                additionalFields.push({
+                    field_name: "湿度",
+                    field_value: characterHumidity,
+                    is_included_in_report: characterCheckList[4],
+                    is_required: true,
+                });
+                apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, characterStandard, characterManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+                    notification.open({
+                        message: "保存成功",
+                    });
+                }).catch((err) => {
+                    notification.open({
+                        message: "保存失败",
+                        description: "网络错误。",
+                    });
+                    console.log(err);
+                });
+
             }).catch((err) => {
-                notification.open({
-                    message: "保存失败",
-                    description: "网络错误。",
-                });
                 console.log(err);
             });
-            
-        }).catch((err) => {
-            console.log(err);
-        });
+        }
     }
 
     const onSampleImgChange = (e) => {
         let files;
         if (e.dataTransfer) {
-          files = e.dataTransfer.files;
+            files = e.dataTransfer.files;
         } else if (e.target) {
-          files = e.target.files;
+            files = e.target.files;
         }
         const reader = new FileReader();
         reader.onload = () => {
@@ -293,7 +306,7 @@ export default function Character(props) {
         setIsCroplMoadlVisible(false);
     }
 
-    var crop = function(canvas, offsetX, offsetY, width, height, callback) {
+    var crop = function (canvas, offsetX, offsetY, width, height, callback) {
         // create an in-memory canvas
         var buffer = document.createElement('canvas');
         var b_ctx = buffer.getContext('2d');
@@ -304,10 +317,10 @@ export default function Character(props) {
         // drawImage(source, source_X, source_Y, source_Width, source_Height, 
         //  dest_X, dest_Y, dest_Width, dest_Height)
         b_ctx.drawImage(canvas, offsetX, offsetY, width, height,
-                        0, 0, buffer.width, buffer.height);
+            0, 0, buffer.width, buffer.height);
         // now call the callback with the dataURL of our buffer canvas
         callback(buffer.toDataURL());
-      };
+    };
 
     const onCropModalOk_discarded2 = () => {
         if (typeof cropper !== "undefined") {
@@ -372,7 +385,7 @@ export default function Character(props) {
                     console.log(err);
                 });
             });
-            
+
         }
 
         setIsCroplMoadlVisible(false);
@@ -398,7 +411,7 @@ export default function Character(props) {
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}
-                breadItems = {[
+                breadItems={[
                     {
                         text: "首页",
                         isActive: true,
@@ -444,10 +457,10 @@ export default function Character(props) {
                 characterImgGroup={characterImgGroup}
                 characterStandardImgGroup={characterStandardImgGroup}
                 characterImgAiInfo={characterImgAiInfo}
-                // cropBoxSize={characterSampleImg.cropSize}
+            // cropBoxSize={characterSampleImg.cropSize}
             />
 
-            <input type="file" id="the-ghost-uploadSampleImg" style={{display: "none"}} onChange={onSampleImgChange} /> 
+            <input type="file" id="the-ghost-uploadSampleImg" style={{ display: "none" }} onChange={onSampleImgChange} />
 
             {/* <AttachmentDrawer
                 visible={isAttachmentDrawerVisible}
@@ -458,9 +471,9 @@ export default function Character(props) {
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
                 onClose={onAttachmentDrawerClose}
-                networdArgs={{type: "task", id: characterId, accessToken: accessToken}}
+                networdArgs={{ type: "task", id: characterId, accessToken: accessToken }}
             />
-            
+
 
             <Modal className="mp-character-modal" title="AI 识别" visible={isCroplMoadlVisible} onOk={onCropModalOk} onCancel={onCropModalCancel}>
                 <Cropper

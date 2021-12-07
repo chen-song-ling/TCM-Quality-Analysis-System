@@ -63,16 +63,22 @@ export default function Micro(props) {
 
             dispatch(setMicroStandard(res.data.standard_desc));
             dispatch(setMicroManualResult(res.data.desc_manual));
+
+            let newMicroCheckList = [true, true, true, true, true];
             res.data.additional_fields.forEach(item => {
                 if (item.field_name === "日期") {
                     dispatch(setMicroDate(item.field_value));
+                    newMicroCheckList[2] = item.is_included_in_report;
                 } else if (item.field_name === "温度") {
                     dispatch(setMicroTemperature(item.field_value));
+                    newMicroCheckList[3] = item.is_included_in_report;
                 } else if (item.field_name === "湿度") {
                     dispatch(setMicroHumidity(item.field_value));
+                    newMicroCheckList[4] = item.is_included_in_report;
                 }
-                
+
             });
+            dispatch(setMicroCheckList(newMicroCheckList));
 
             if (res.data.result !== null) {
                 let newones_smp = [];
@@ -87,11 +93,11 @@ export default function Micro(props) {
                 dispatch(setMicroStandardImgGroup(newones_std));
                 dispatch(setMicroImgAiInfo(newones_info));
             }
-            
+
         }).catch((err) => {
             console.log(err);
         });
-        
+
     }, []);
 
 
@@ -120,9 +126,9 @@ export default function Micro(props) {
 
     // -- END -- ProjectHeader相关
 
-     // -- BEGIN -- CharacterInputBox相关
+    // -- BEGIN -- CharacterInputBox相关
 
-     const onInputChange = (e, tag) => {
+    const onInputChange = (e, tag) => {
         switch (tag) {
             case "date":
                 dispatch(setMicroDate(e.target.value));
@@ -151,42 +157,51 @@ export default function Micro(props) {
     }
 
     const onSaveInfoClick = (e) => {
-        apiGetTask(accessToken, microId).then((res) => {
 
-            let additionalFields = [];
-            additionalFields.push({
-                field_name: "日期",
-                field_value: microDate,
-                is_included_in_report: true,
-                is_required: true,
+        if (microDate === "" || microTemperature === "" || microHumidity == "") {
+            notification.open({
+                message: "保存失败",
+                description: "请输入所有必选项目。",
             });
-            additionalFields.push({
-                field_name: "温度",
-                field_value: microTemperature,
-                is_included_in_report: true,
-                is_required: true,
-            });
-            additionalFields.push({
-                field_name: "湿度",
-                field_value: microHumidity,
-                is_included_in_report: true,
-                is_required: true,
-            });
-            apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, microStandard, microManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
-                notification.open({
-                    message: "保存成功",
+        } else {
+
+            apiGetTask(accessToken, microId).then((res) => {
+                // console.log(res.data);
+                let additionalFields = [];
+                additionalFields.push({
+                    field_name: "日期",
+                    field_value: microDate,
+                    is_included_in_report: microCheckList[2],
+                    is_required: true,
                 });
+                additionalFields.push({
+                    field_name: "温度",
+                    field_value: microTemperature,
+                    is_included_in_report: microCheckList[3],
+                    is_required: true,
+                });
+                additionalFields.push({
+                    field_name: "湿度",
+                    field_value: microHumidity,
+                    is_included_in_report: microCheckList[4],
+                    is_required: true,
+                });
+                apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, microStandard, microManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+                    notification.open({
+                        message: "保存成功",
+                    });
+                }).catch((err) => {
+                    notification.open({
+                        message: "保存失败",
+                        description: "网络错误。",
+                    });
+                    console.log(err);
+                });
+
             }).catch((err) => {
-                notification.open({
-                    message: "保存失败",
-                    description: "网络错误。",
-                });
                 console.log(err);
             });
-            
-        }).catch((err) => {
-            console.log(err);
-        });
+        }
     }
 
     const onUploadSampleImgClick = (e) => {
@@ -197,7 +212,7 @@ export default function Micro(props) {
         apiGetTaskReport(accessToken, microId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
-            
+
         }).catch((err) => {
             console.log(err);
         });
@@ -231,7 +246,7 @@ export default function Micro(props) {
         }
 
         // write the ArrayBuffer to a blob, and you're done
-        var blob = new Blob([ab], {type: mimeString});
+        var blob = new Blob([ab], { type: mimeString });
         return blob;
     }
 
@@ -296,7 +311,7 @@ export default function Micro(props) {
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}
-                breadItems = {[
+                breadItems={[
                     {
                         text: "首页",
                         isActive: true,
@@ -346,15 +361,15 @@ export default function Micro(props) {
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
                 onClose={onAttachmentDrawerClose}
-                networdArgs={{type: "task", id: microId, accessToken: accessToken}}
+                networdArgs={{ type: "task", id: microId, accessToken: accessToken }}
             />
 
             <Modal title="上传要识别的所有图片" visible={isImgSelectorMoadlVisible} onOk={onImgSelectorModalOk} onCancel={onImgSelectorModalCancel}>
-                <PictureWall 
+                <PictureWall
                     uploadFileList={uploadFileList}
                 />
             </Modal>
-            
+
         </div>
     );
 };
