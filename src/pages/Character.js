@@ -257,6 +257,8 @@ export default function Character(props) {
                 sampleImgName: files[0].name,
             }))
             setIsCroplMoadlVisible(true);
+            let ele = document.getElementById("the-ghost-uploadSampleImg");
+            ele.value = "";
         };
         reader.readAsDataURL(files[0]);
     }

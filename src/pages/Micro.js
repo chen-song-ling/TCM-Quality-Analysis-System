@@ -226,6 +226,10 @@ export default function Micro(props) {
         setIsAttachmentDrawerVisible(true);
     }
 
+    const onExamineStandardImgClick = (e) => {
+        ipcRenderer.send("open-path", ["local", "micro", "standard"]);
+    }
+
     // -- END -- CharacterInputBox相关
 
     // -- BDGIN -- ImgSelectorModal相关
@@ -350,7 +354,7 @@ export default function Micro(props) {
                     onSwitchClick={onSwitchClick}
                     onUploadSampleImgClick={onUploadSampleImgClick}
                     onViewReportClick={onViewReportClick}
-                    // onExamineStandardImgClick={onExamineStandardImgClick}
+                    onExamineStandardImgClick={onExamineStandardImgClick}
                     onExamineAttachmentClick={onExamineAttachmentClick}
                 />
 

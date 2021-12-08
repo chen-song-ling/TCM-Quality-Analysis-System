@@ -107,7 +107,7 @@ export default function Project(props) {
 
         // 拉取项目数据
         apiGetProject(accessToken, projectId).then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             dispatch(setProjectInfo({name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
             dispatch(setProjectAttachments(res.data.attachments));
 
