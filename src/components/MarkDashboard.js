@@ -100,6 +100,10 @@ export default function MarkDashboard(props) {
         props.ptc_triggerSaveResult();
     }
 
+    const handleReportBtn = () => {
+        console.log("handleReportBtn");
+    }
+
     const handleAttachmentBtn = () => {
         props.ptc_triggerShowAttachment();
     }
@@ -115,6 +119,7 @@ export default function MarkDashboard(props) {
                 <button type="button" className="btn btn-default" onClick={handleUndoBtn}>{config.text_undobtn}</button>
                 <button type="button" className="btn btn-default" onClick={handleClearBtn}>{config.text_clearbtn}</button>
                 <button type="button" className="btn btn-default" onClick={handleNumberBtn}>{config.text_numberbtn}</button>
+                <button type="button" className="btn btn-default" disabled="disabled" onClick={handleReportBtn}>{"预览报告"}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleSaveBtn}>{config.text_savebtn}</button>
             </div>
         </div>

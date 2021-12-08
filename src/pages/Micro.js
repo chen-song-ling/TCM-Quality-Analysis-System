@@ -45,6 +45,7 @@ export default function Micro(props) {
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
 
+    const [isReportBtnActive, setIsReportBtnActive] = useState(false);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
 
@@ -83,6 +84,7 @@ export default function Micro(props) {
             dispatch(setMicroCheckList(newMicroCheckList));
 
             if (res.data.result !== null) {
+                setIsReportBtnActive(true);
                 let newones_smp = [];
                 let newones_std = [];
                 let newones_info = [];
@@ -275,6 +277,7 @@ export default function Micro(props) {
             dispatch(setMicroImgAiInfo(newones_info));
 
             setIsLoadingAI(false);
+            setIsReportBtnActive(true);
 
         }).catch((err) => {
             console.log(err);
@@ -341,6 +344,7 @@ export default function Micro(props) {
                     standard={microStandard}
                     manualResult={microManualResult}
                     checkList={microCheckList}
+                    isReportBtnActive={isReportBtnActive}
                     onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}

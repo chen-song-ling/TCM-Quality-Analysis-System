@@ -96,7 +96,7 @@ export default function ProjectInputBox(props) {
                             添加任务
                         </Button>
 
-                        <Button size={'large'}>
+                        <Button size={'large'} onClick={props.onViewReportClick}>
                             预览报告
                         </Button>
 

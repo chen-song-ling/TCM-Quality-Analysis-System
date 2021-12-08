@@ -128,3 +128,15 @@
     background-image: none;
     border-color: #204d74;
 }
+
+.btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.65;
+    box-shadow: none;
+}
+
+.btn-default[disabled]:hover {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}

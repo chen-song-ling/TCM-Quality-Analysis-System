@@ -275,6 +275,22 @@ export const apiGetTaskReport = (accessToken, taskId) => {
     });
 }
 
+export const apiGetProjectReport = (accessToken, projectId) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/projects/${projectId}/report`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 // {
 //     "name": "string",
 //     "number": "string",

@@ -46,6 +46,7 @@ export default function Character(props) {
     const [isCroplMoadlVisible, setIsCroplMoadlVisible] = useState(false);
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
 
+    const [isReportBtnActive, setIsReportBtnActive] = useState(false);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
 
@@ -83,6 +84,8 @@ export default function Character(props) {
             dispatch(setCharacterCheckList(newCharacterCheckList));
 
             if (res.data.result !== null) {
+                setIsReportBtnActive(true);
+
                 let newones_smp = [];
                 let newones_std = [];
                 let newones_info = [];
@@ -367,6 +370,7 @@ export default function Character(props) {
                 formData.append('files', blob, 'blob.png');
                 setIsLoadingAI(true);
 
+                dispatch(setCharacterStandardImgGroup(null));
                 apiRunCharacterTask(accessToken, characterId, formData).then((res) => {
                     // console.log(res);
                     let newones_smp = [];
@@ -383,6 +387,7 @@ export default function Character(props) {
                     dispatch(setCharacterImgAiInfo(newones_info));
 
                     setIsLoadingAI(false);
+                    setIsReportBtnActive(true);
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -439,6 +444,7 @@ export default function Character(props) {
                     standard={characterStandard}
                     manualResult={characterManualResult}
                     checkList={characterCheckList}
+                    isReportBtnActive={isReportBtnActive}
                     onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}

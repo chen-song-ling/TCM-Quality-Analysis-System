@@ -40,7 +40,7 @@ export default function CompoundInput(props) {
                             {props.fieldName}
                         </h3>
                     </div>
-                    <Input.TextArea showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
+                    <Input.TextArea autoSize showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
                     <Switch checkedChildren="显示" unCheckedChildren="忽略" checked={props.checked} onClick={props.onSwitchClick} />
                 </Space>
             </div>
@@ -55,7 +55,7 @@ export default function CompoundInput(props) {
                             {props.fieldName}
                         </h3>
                     </div>
-                    <Input.TextArea showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
+                    <Input.TextArea autoSize showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
                     <Switch className="invisible" checkedChildren="显示" unCheckedChildren="忽略" checked={props.checked} onClick={props.onSwitchClick} />
                 </Space>
             </div>
@@ -70,7 +70,7 @@ export default function CompoundInput(props) {
                             {props.fieldName}
                         </h3>
                     </div>
-                    <Input.TextArea showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
+                    <Input.TextArea autoSize showCount maxLength={maxLength} value={props.text} style={{ width: textAreaWidth }} onChange={props.onInputChange} />
                 </Space>
             </div>
         );

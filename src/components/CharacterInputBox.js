@@ -3,6 +3,12 @@ import './CharacterInputBox.css';
 import { Input, Space, Switch, Button } from 'antd';
 
 export default function CharacterInputBox(props) {
+
+    var isReportBtnActive = false;
+    if (props.isReportBtnActive !== undefined) {
+        isReportBtnActive = props.isReportBtnActive;
+    }
+
     return (
         <div className="mp-charinbox mp-vlist">
             <Space className="mp-vlist" direction="vertical" size={'middle'}>
@@ -50,7 +56,7 @@ export default function CharacterInputBox(props) {
                         查看标准样本文件
                     </Button>
 
-                    <Button size={'large'} onClick={props.onViewReportClick}>
+                    <Button disabled={!isReportBtnActive} size={'large'} onClick={props.onViewReportClick}>
                         预览报告
                     </Button>
 

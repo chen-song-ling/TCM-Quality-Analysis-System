@@ -9,7 +9,7 @@ import { setCharacterId } from '../slices/characterSlice';
 import { setChromId } from '../slices/chromSlice';
 import { setMicroId } from '../slices/microSlice';
 import { setLastProjectId, setProjectInfo, setProjectExtraInfo, setProjectInfoDisplay, setProjectAttachments } from '../slices/projectSlice';
-import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask, apiUpdateProject, apiUpdateTask } from '../util/api';
+import { apiGetTaskList, apiGetProject, apiAddTask, apiDeleteTask, apiUpdateProject, apiUpdateTask, apiGetProjectReport } from '../util/api';
 
 import MpHeader from '../components/MpHeader';
 import ProjectInputBox from '../components/ProjectInputBox';
@@ -19,6 +19,9 @@ import CompoundInput from '../components/CompoundInput';
 import CompoundSelect from '../components/CompoundSelect';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import { Button, Modal, Space, notification } from 'antd';
+
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 const taskTypeDicNumber2String = {
     0: "性状",
@@ -104,7 +107,7 @@ export default function Project(props) {
 
         // 拉取项目数据
         apiGetProject(accessToken, projectId).then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             dispatch(setProjectInfo({name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
             dispatch(setProjectAttachments(res.data.attachments));
 
@@ -250,6 +253,16 @@ export default function Project(props) {
             }
             dispatch(setProjectExtraInfo(newones));
         }
+    }
+
+    const onViewReportClick = (e) => {
+        apiGetProjectReport(accessToken, projectId).then((res) => {
+            // console.log(res)
+            ipcRenderer.send("view-file-online", res.data.save_path);
+
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     // -- END -- ProjectInputBox相关
@@ -490,6 +503,7 @@ export default function Project(props) {
                 onInputChange={onInputChange}
                 onEditInfoClick={onEditInfoClick}
                 onAddTaskClick={onAddTaskClick}
+                onViewReportClick={onViewReportClick}
                 onExamineAttachmentClick={onExamineAttachmentClick}
             />
 
