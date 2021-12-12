@@ -16,6 +16,7 @@ import CharacterImgList from '../components/CharacterImgList';
 import AttachmentDrawer from '../components/AttachmentDrawer';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import AILoading from '../components/AILoading';
+import { baseStaticUrl } from '../util/const';
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -42,12 +43,17 @@ export default function Character(props) {
     const taskName = useSelector(state => state.global.taskName);
     const dispatch = useDispatch();
 
+    const [characterOriginalImgUrl, setCharacterOriginalImgUrl] = useState(null);
+
     const [cropper, setCropper] = useState();
     const [isCroplMoadlVisible, setIsCroplMoadlVisible] = useState(false);
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+    const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     const [isReportBtnActive, setIsReportBtnActive] = useState(false);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
+
+
 
 
     useEffect(() => {
@@ -64,6 +70,8 @@ export default function Character(props) {
         dispatch(setCharacterImgAiInfo(null));
 
         apiGetTask(accessToken, characterId).then((res) => {
+
+            console.log(res.data);
 
             dispatch(setCharacterStandard(res.data.standard_desc));
             dispatch(setCharacterManualResult(res.data.desc_manual));
@@ -85,6 +93,7 @@ export default function Character(props) {
 
             if (res.data.result !== null) {
                 setIsReportBtnActive(true);
+                setCharacterOriginalImgUrl(baseStaticUrl + res.data.result.uploaded_images[0].save_path)
 
                 let newones_smp = [];
                 let newones_std = [];
@@ -99,7 +108,6 @@ export default function Character(props) {
                 dispatch(setCharacterImgAiInfo(newones_info));
             }
 
-            // console.log(res.data);
 
         }).catch((err) => {
             console.log(err);
@@ -109,9 +117,6 @@ export default function Character(props) {
     }, []);
 
     useEffect(() => {
-
-
-
         // return () => {
         //     dispatch(setLastCharacterId(characterId));
         // }
@@ -181,7 +186,7 @@ export default function Character(props) {
         apiGetTaskReport(accessToken, characterId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
-
+            setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
         }).catch((err) => {
             console.log(err);
         });
@@ -464,6 +469,7 @@ export default function Character(props) {
             </Space>
 
             <CharacterImgList
+                originalImg={characterOriginalImgUrl}
                 characterImgGroup={characterImgGroup}
                 characterStandardImgGroup={characterStandardImgGroup}
                 characterImgAiInfo={characterImgAiInfo}
@@ -480,6 +486,7 @@ export default function Character(props) {
 
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
+                updateToggle={attachmentDrawerUpdateToggle}
                 onClose={onAttachmentDrawerClose}
                 networdArgs={{ type: "task", id: characterId, accessToken: accessToken }}
             />

@@ -45,6 +45,11 @@ export default function AttachmentDrawerPlus(props) {
     useEffect(() => {
         setNetwordArgs(props.networdArgs);
         refreshTable();
+    }, [props.updateToggle]);
+
+    useEffect(() => {
+        // setNetwordArgs(props.networdArgs);
+        // refreshTable();
 
         ipcRenderer.on("download-progress", (event, info) => {
             // console.log(info);

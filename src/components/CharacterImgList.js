@@ -5,6 +5,11 @@ import { baseStaticUrl } from '../util/const';
 
 export default function CharacterImgList(props) {
 
+    var originalImg = null;
+    if (props.originalImg !== undefined) {
+        originalImg = props.originalImg;
+    }
+
     const config = {
         num_canvas_width: 180,
         num_canvas_height: 180,
@@ -23,7 +28,7 @@ export default function CharacterImgList(props) {
                 if (cv === undefined) {
                     continue;
                 }
-                
+
                 let img = new Image();
                 img.src = config.base_url + props.characterImgGroup[i];
                 img.onload = () => {
@@ -33,10 +38,10 @@ export default function CharacterImgList(props) {
                     let oh = img.height;
                     let scalingRatio = Math.min(config.num_canvas_height / oh, config.num_canvas_width / ow);
 
-                    let w = ow*scalingRatio;
-                    let h = oh*scalingRatio;
-                    let x = (config.num_canvas_width-w)/2;
-                    let y = (config.num_canvas_height-h)/2;
+                    let w = ow * scalingRatio;
+                    let h = oh * scalingRatio;
+                    let x = (config.num_canvas_width - w) / 2;
+                    let y = (config.num_canvas_height - h) / 2;
 
                     cv.clearRect(0, 0, config.num_canvas_width, config.num_canvas_height);
                     cv.drawImage(img, x, y, w, h);
@@ -50,7 +55,7 @@ export default function CharacterImgList(props) {
                 if (cv === undefined) {
                     continue;
                 }
-                
+
                 let img = new Image();
                 img.src = config.base_url + props.characterStandardImgGroup[i];
 
@@ -59,10 +64,10 @@ export default function CharacterImgList(props) {
                     let oh = img.height;
                     let scalingRatio = Math.min(config.num_canvas_height / oh, config.num_canvas_width / ow);
 
-                    let w = ow*scalingRatio;
-                    let h = oh*scalingRatio;
-                    let x = (config.num_canvas_width-w)/2;
-                    let y = (config.num_canvas_height-h)/2;
+                    let w = ow * scalingRatio;
+                    let h = oh * scalingRatio;
+                    let x = (config.num_canvas_width - w) / 2;
+                    let y = (config.num_canvas_height - h) / 2;
 
                     cv.clearRect(0, 0, config.num_canvas_width, config.num_canvas_height);
                     cv.drawImage(img, x, y, w, h);
@@ -90,6 +95,9 @@ export default function CharacterImgList(props) {
     const renderRow = (idx) => {
         return (
             <div className="mp-charimglist-row mp-hlist" key={idx}>
+                <div className="mp-charimglist-row-num mp-vlist">
+                    {idx + 1}
+                </div>
                 <div className="mp-charimglist-row-left mp-vlist">
                     <canvas id={"the-charimglist-canvas-sample-" + idx} className="mp-crtimglst-canvas" width={config.num_canvas_width} height={config.num_canvas_height} ></canvas>
                 </div>
@@ -104,8 +112,21 @@ export default function CharacterImgList(props) {
     }
 
 
+    const renderOriginalImg = () => {
+        if (originalImg !== null) {
+            return (
+                <div className="mp-vlist">
+                    <div className="mp-charimglist-row-head mp-vlist">
+                        <p>原始图</p>
+                    </div>
+                    <img className="mp-charimglist-ori-img" src={originalImg} />
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
 
-    
 
     if (props.characterImgGroup === null || props.characterImgGroup === undefined) {
         return (
@@ -117,7 +138,10 @@ export default function CharacterImgList(props) {
             rows.push(renderRow(i));
         }
         return (
-            <div className="mp-charimglist">
+            <div className="mp-charimglist mp-vlist">
+
+                {renderOriginalImg()}
+
                 <div className="mp-charimglist-row mp-hlist">
                     <div className="mp-charimglist-row-head mp-vlist">
                         <p>截取图</p>

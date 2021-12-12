@@ -1,3 +1,13 @@
+.mp-charimglist-ori-img {
+    width: 400px;
+}
+
+.mp-charimglist-row-num {
+    background-color: rgb(232, 222, 222);
+    height: 200px;
+    width: 50px;
+}
+
 .mp-charimglist-row-left {
     background-color: rgb(232, 222, 222);
     height: 200px;

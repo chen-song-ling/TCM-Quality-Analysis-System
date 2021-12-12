@@ -44,6 +44,7 @@ export default function Micro(props) {
     const [fileList, setFileList] = useState([]);
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
+    const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     const [isReportBtnActive, setIsReportBtnActive] = useState(false);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -216,7 +217,7 @@ export default function Micro(props) {
         apiGetTaskReport(accessToken, microId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
-
+            setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
         }).catch((err) => {
             console.log(err);
         });
@@ -372,6 +373,7 @@ export default function Micro(props) {
 
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
+                updateToggle={attachmentDrawerUpdateToggle}
                 onClose={onAttachmentDrawerClose}
                 networdArgs={{ type: "task", id: microId, accessToken: accessToken }}
             />

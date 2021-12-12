@@ -47,14 +47,14 @@ function createWindow() {
       slashes: true
     }));
   }
-  
+
   ipcMain.on("download", (event, arg) => {
     arg.properties.onProgress = (status) => {
-      mainWindow.webContents.send("download-progress", {...status, uuid: arg.uuid});
+      mainWindow.webContents.send("download-progress", { ...status, uuid: arg.uuid });
     };
 
     download(BrowserWindow.getFocusedWindow(), arg.url, arg.properties).then((dl) => {
-      mainWindow.webContents.send("download-complete", {uuid: arg.uuid, filename: arg.filename});
+      mainWindow.webContents.send("download-complete", { uuid: arg.uuid, filename: arg.filename });
     });
 
   });
@@ -69,11 +69,13 @@ const setApplicationMenu = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
 app.whenReady().then(() => {
   setApplicationMenu();
   initFileIpc();
   createWindow();
 
+  
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

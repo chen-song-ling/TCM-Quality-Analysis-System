@@ -60,7 +60,7 @@ export default function Project(props) {
     const [addTaskType, setAddTaskType] = useState("性状");
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
-
+    const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     const updateTaskList = () => {
         apiGetTaskList(accessToken, projectId).then((res) => {
@@ -68,18 +68,18 @@ export default function Project(props) {
             res.data.forEach(item => {
 
                 let date = new Date(item.creation_time);
-                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth() + 1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
                 newData.push({
                     key: item.id,
                     id: item.id,
                     taskName: item.name,
                     addingTime: dateStr,
                     taskType: taskTypeDicNumber2String[item.type],
-                    standardDesc: item.standard_desc, 
-                    manualDesc: item.desc_manual, 
-                    additionalFields: item.additional_fields, 
-                    attachments: item.attachments, 
-                    result: item.result, 
+                    standardDesc: item.standard_desc,
+                    manualDesc: item.desc_manual,
+                    additionalFields: item.additional_fields,
+                    attachments: item.attachments,
+                    result: item.result,
                     subType: item.sub_type,
                 })
             });
@@ -102,18 +102,18 @@ export default function Project(props) {
         //     dispatch(setProjectInfo({name: "", sampleId: "", standard: "", note: "", }));
         //     dispatch(setProjectExtraInfo([]));
         //     dispatch(setProjectInfoDisplay([true, true, true, true, ]));
-            
+
         // }
 
         // 拉取项目数据
         apiGetProject(accessToken, projectId).then((res) => {
             // console.log(res.data);
-            dispatch(setProjectInfo({name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
+            dispatch(setProjectInfo({ name: res.data.name, sampleId: res.data.number, standard: res.data.standard, note: res.data.note, }));
             dispatch(setProjectAttachments(res.data.attachments));
 
             let newProjectExtraInfo = [];
-            let newProjectInfoDisplay = [true, true, true, true, ];
-            if (res.data.additional_fields !== null && res.data.additional_fields !== undefined ) {
+            let newProjectInfoDisplay = [true, true, true, true,];
+            if (res.data.additional_fields !== null && res.data.additional_fields !== undefined) {
                 res.data.additional_fields.forEach(item => {
                     newProjectExtraInfo.push({
                         fieldName: item.field_name,
@@ -134,7 +134,7 @@ export default function Project(props) {
 
     }, []);
 
-    
+
 
     // useEffect(() => {
     //     return () => {
@@ -184,7 +184,7 @@ export default function Project(props) {
             isCompleted = false;
             return;
         }
-        
+
         projectExtraInfo.forEach(item => {
             if (item.fieldName === "" || item.fieldValue === "") {
                 notification.open({
@@ -194,7 +194,7 @@ export default function Project(props) {
                 isCompleted = false;
                 return;
             }
-        }); 
+        });
 
         if (isCompleted) {
             let additionalFields = [];
@@ -202,7 +202,7 @@ export default function Project(props) {
                 additionalFields.push({
                     field_name: item.fieldName,
                     field_value: item.fieldValue,
-                    is_included_in_report: projectInfoDisplay[idx+4],
+                    is_included_in_report: projectInfoDisplay[idx + 4],
                     is_required: true,
                 })
             });
@@ -212,7 +212,7 @@ export default function Project(props) {
                 notification.open({
                     message: "保存成功",
                 });
-                
+
             }).catch((err) => {
                 console.log(err);
             });
@@ -247,8 +247,8 @@ export default function Project(props) {
             }));
         } else {
             let newones = [...projectExtraInfo];
-            newones[idx-4] = {
-                ...newones[idx-4],
+            newones[idx - 4] = {
+                ...newones[idx - 4],
                 fieldValue: e.target.value,
             }
             dispatch(setProjectExtraInfo(newones));
@@ -259,7 +259,7 @@ export default function Project(props) {
         apiGetProjectReport(accessToken, projectId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
-
+            setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
         }).catch((err) => {
             console.log(err);
         });
@@ -313,7 +313,7 @@ export default function Project(props) {
             editFieldInput.push(
                 // key 设置为 i 只是为了消除警告
                 // 这样设置没有问题, 因为数据源的相对顺序是正确的
-                <InputWithButton 
+                <InputWithButton
                     text={projectExtraInfo[i].fieldName}
                     buttonText="删除"
                     isDanger={true}
@@ -390,10 +390,10 @@ export default function Project(props) {
             }).catch((err) => {
                 console.log(err);
             });
-    
+
             setIsEditRecordModalVisible(false);
         }
-        
+
     }
 
     const onEditRecordCancel = () => {
@@ -402,7 +402,7 @@ export default function Project(props) {
 
     const onEditRecordInputChange = (e) => {
         setEditReordInput(e.target.value);
-    } 
+    }
 
 
     // -- END -- EditRecordModal相关
@@ -426,16 +426,16 @@ export default function Project(props) {
                 return;
             }
         }
-        
+
         apiAddTask(accessToken, addTaskName, taskTypeDicString2Number[addTaskType], projectId).then((res) => {
             // console.log(res);
             updateTaskList();
         }).catch((err) => {
             console.log(err);
         });
-        
+
         setIsAddTaskModalVisible(false);
-        
+
     }
 
     const onAddTaskCancel = () => {
@@ -444,7 +444,7 @@ export default function Project(props) {
 
     const onAddTaskInputChange = (e) => {
         setAddTaskName(e.target.value);
-    } 
+    }
 
     const onAddTaskSelectChange = (value) => {
         setAddTaskType(value);
@@ -462,7 +462,7 @@ export default function Project(props) {
 
     // -- END -- AttachmentDrawer相关
 
-    
+
 
     if (redirect !== null) {
         return (
@@ -478,7 +478,7 @@ export default function Project(props) {
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}
-                breadItems = {[
+                breadItems={[
                     {
                         text: "首页",
                         isActive: true,
@@ -491,7 +491,7 @@ export default function Project(props) {
                 ]}
             />
 
-        
+
 
             <ProjectInputBox
                 projectInfoDisplay={projectInfoDisplay}
@@ -532,7 +532,7 @@ export default function Project(props) {
                         添加字段
                     </Button>
                 </Space>
-                
+
             </Modal>
 
             <Modal
@@ -555,7 +555,7 @@ export default function Project(props) {
                         onInputChange={onEditRecordInputChange}
                     />
                 </Space>
-                
+
             </Modal>
 
             <Modal
@@ -574,7 +574,7 @@ export default function Project(props) {
                         isRequired={true}
                         textWidth={200}
                         maxLength={10}
-                        
+
 
                         onInputChange={onAddTaskInputChange}
                     />
@@ -601,13 +601,14 @@ export default function Project(props) {
                         onSelectChange={onAddTaskSelectChange}
                     />
                 </Space>
-                
+
             </Modal>
 
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
+                updateToggle={attachmentDrawerUpdateToggle}
                 onClose={onAttachmentDrawerClose}
-                networdArgs={{type: "project", id: projectId, accessToken: accessToken}}
+                networdArgs={{ type: "project", id: projectId, accessToken: accessToken }}
             />
 
 

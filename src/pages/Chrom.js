@@ -36,7 +36,7 @@ export default function Chrom(props) {
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
 
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
-    // const [updateAttachmentToggle, setUpdateAttachmentToggle] = useState(0);
+    const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     //-- Protocol Begin
 
@@ -198,6 +198,7 @@ export default function Chrom(props) {
 
             <AttachmentDrawerPlus
                 visible={isAttachmentDrawerVisible}
+                updateToggle={attachmentDrawerUpdateToggle}
                 onClose={onAttachmentDrawerClose}
                 networdArgs={{type: "task", id: chromId, accessToken: accessToken}}
             />
