@@ -54,6 +54,8 @@ export default function Character(props) {
     const [isSaveBtnActive, setIsSaveBtnActive] = useState(true);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
+    const [cache, setCache] = useState(null);
+
 
     useEffect(() => {
 
@@ -71,6 +73,7 @@ export default function Character(props) {
         apiGetTask(accessToken, characterId).then((res) => {
 
             // console.log(res.data);
+            setCache(res.data);
 
             dispatch(setCharacterStandard(res.data.standard_desc));
             dispatch(setCharacterManualResult(res.data.desc_manual));
@@ -120,6 +123,15 @@ export default function Character(props) {
         //     dispatch(setLastCharacterId(characterId));
         // }
     });
+
+
+    useEffect(() => {
+        if (characterStandard === "" || characterManualResult === "" || characterDate === "" || characterTemperature === "" || characterHumidity == "") {
+            setIsSaveBtnActive(false);
+        } else {
+            setIsSaveBtnActive(true);
+        }
+    }, [characterStandard, characterManualResult, characterDate, characterTemperature, characterHumidity]);
 
     // -- BEGIN -- ProjectHeader相关
 
@@ -181,12 +193,97 @@ export default function Character(props) {
         ele.click();
     }
 
-    const onViewReportClick = (e) => {
+    const onViewReportClick_discarded = (e) => {
         apiGetTaskReport(accessToken, characterId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
             setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
         }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const onViewReportClick_discarded2 = (e) => {
+
+        apiGetTask(accessToken, characterId).then((res) => {
+            // console.log(res.data);
+            let additionalFields = [];
+            additionalFields.push({
+                field_name: "日期",
+                field_value: characterDate,
+                is_included_in_report: characterCheckList[2],
+                is_required: true,
+            });
+            additionalFields.push({
+                field_name: "温度",
+                field_value: characterTemperature,
+                is_included_in_report: characterCheckList[3],
+                is_required: true,
+            });
+            additionalFields.push({
+                field_name: "湿度",
+                field_value: characterHumidity,
+                is_included_in_report: characterCheckList[4],
+                is_required: true,
+            });
+            apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, characterStandard, characterManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+                apiGetTaskReport(accessToken, characterId).then((res) => {
+                    // console.log(res)
+                    ipcRenderer.send("view-file-online", res.data.save_path);
+                    setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
+                }).catch((err) => {
+                    console.log(err);
+                });
+
+            }).catch((err) => {
+                notification.open({
+                    message: "预览失败",
+                    description: "网络错误。",
+                });
+                console.log(err);
+            });
+
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const onViewReportClick = (e) => {
+
+        // console.log(res.data);
+        let additionalFields = [];
+        additionalFields.push({
+            field_name: "日期",
+            field_value: characterDate,
+            is_included_in_report: characterCheckList[2],
+            is_required: true,
+        });
+        additionalFields.push({
+            field_name: "温度",
+            field_value: characterTemperature,
+            is_included_in_report: characterCheckList[3],
+            is_required: true,
+        });
+        additionalFields.push({
+            field_name: "湿度",
+            field_value: characterHumidity,
+            is_included_in_report: characterCheckList[4],
+            is_required: true,
+        });
+        apiUpdateTask(accessToken, cache.name, cache.type, cache.id, characterStandard, characterManualResult, additionalFields, cache.attachments, cache.result, cache.sub_type).then((res) => {
+            apiGetTaskReport(accessToken, characterId).then((res) => {
+                // console.log(res)
+                ipcRenderer.send("view-file-online", res.data.save_path);
+                setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        }).catch((err) => {
+            notification.open({
+                message: "预览失败",
+                description: "网络错误。",
+            });
             console.log(err);
         });
     }
@@ -450,7 +547,7 @@ export default function Character(props) {
                     standard={characterStandard}
                     manualResult={characterManualResult}
                     checkList={characterCheckList}
-                    isReportBtnActive={isReportBtnActive}
+                    isReportBtnActive={isReportBtnActive & isSaveBtnActive}
                     isSaveBtnActive={isSaveBtnActive}
                     onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}

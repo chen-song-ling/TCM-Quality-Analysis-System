@@ -47,7 +47,10 @@ export default function Micro(props) {
     const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     const [isReportBtnActive, setIsReportBtnActive] = useState(false);
+    const [isSaveBtnActive, setIsSaveBtnActive] = useState(true);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
+
+    const [cache, setCache] = useState(null);
 
 
     useEffect(() => {
@@ -64,6 +67,8 @@ export default function Micro(props) {
         dispatch(setMicroImgAiInfo(null));
 
         apiGetTask(accessToken, microId).then((res) => {
+
+            setCache(res.data);
 
             dispatch(setMicroStandard(res.data.standard_desc));
             dispatch(setMicroManualResult(res.data.desc_manual));
@@ -105,6 +110,13 @@ export default function Micro(props) {
 
     }, []);
 
+    useEffect(() => {
+        if (microStandard === "" || microManualResult === "" || microDate === "" || microTemperature === "" || microHumidity == "") {
+            setIsSaveBtnActive(false);
+        } else {
+            setIsSaveBtnActive(true);
+        }
+    }, [microStandard, microManualResult, microDate, microTemperature, microHumidity]);
 
     // -- BEGIN -- ProjectHeader相关
 
@@ -213,7 +225,7 @@ export default function Micro(props) {
         setIsImgSelectorMoadlVisible(true);
     }
 
-    const onViewReportClick = (e) => {
+    const onViewReportClick_discarded = (e) => {
         apiGetTaskReport(accessToken, microId).then((res) => {
             // console.log(res)
             ipcRenderer.send("view-file-online", res.data.save_path);
@@ -221,6 +233,45 @@ export default function Micro(props) {
         }).catch((err) => {
             console.log(err);
         });
+    }
+
+    const onViewReportClick = (e) => {
+
+        let additionalFields = [];
+        additionalFields.push({
+            field_name: "日期",
+            field_value: microDate,
+            is_included_in_report: microCheckList[2],
+            is_required: true,
+        });
+        additionalFields.push({
+            field_name: "温度",
+            field_value: microTemperature,
+            is_included_in_report: microCheckList[3],
+            is_required: true,
+        });
+        additionalFields.push({
+            field_name: "湿度",
+            field_value: microHumidity,
+            is_included_in_report: microCheckList[4],
+            is_required: true,
+        });
+        apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, microStandard, microManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+            apiGetTaskReport(accessToken, microId).then((res) => {
+                // console.log(res)
+                ipcRenderer.send("view-file-online", res.data.save_path);
+                setAttachmentDrawerUpdateToggle(attachmentDrawerUpdateToggle + 1);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }).catch((err) => {
+            notification.open({
+                message: "预览失败",
+                description: "网络错误。",
+            });
+            console.log(err);
+        });
+        
     }
 
     const onExamineAttachmentClick = (e) => {
@@ -349,7 +400,8 @@ export default function Micro(props) {
                     standard={microStandard}
                     manualResult={microManualResult}
                     checkList={microCheckList}
-                    isReportBtnActive={isReportBtnActive}
+                    isReportBtnActive={isReportBtnActive & isSaveBtnActive}
+                    isSaveBtnActive={isSaveBtnActive}
                     onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}
