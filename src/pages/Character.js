@@ -51,9 +51,8 @@ export default function Character(props) {
     const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
     const [isReportBtnActive, setIsReportBtnActive] = useState(false);
+    const [isSaveBtnActive, setIsSaveBtnActive] = useState(true);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
-
-
 
 
     useEffect(() => {
@@ -71,7 +70,7 @@ export default function Character(props) {
 
         apiGetTask(accessToken, characterId).then((res) => {
 
-            console.log(res.data);
+            // console.log(res.data);
 
             dispatch(setCharacterStandard(res.data.standard_desc));
             dispatch(setCharacterManualResult(res.data.desc_manual));
@@ -452,6 +451,7 @@ export default function Character(props) {
                     manualResult={characterManualResult}
                     checkList={characterCheckList}
                     isReportBtnActive={isReportBtnActive}
+                    isSaveBtnActive={isSaveBtnActive}
                     onSaveInfoClick={onSaveInfoClick}
                     onInputChange={onInputChange}
                     onSwitchClick={onSwitchClick}

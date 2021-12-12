@@ -18,3 +18,7 @@
 .mp-charinbox .invisible {
     visibility: hidden;
 }
+
+.mp-charinbox {
+    margin-top: 40px;
+}
