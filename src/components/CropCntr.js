@@ -21,10 +21,10 @@ export default function CropCntr(props) {
 
     useEffect(() => {
         // 存在快照则使用快照
-        if (props.snapshootRawImg !== null) {
-            setRawImg(props.snapshootRawImg);
+        if (props.snapshotRawImg !== null) {
+            setRawImg(props.snapshotRawImg);
         }
-    }, [props.snapshootRawImg]);
+    }, [props.snapshotRawImg]);
 
     //-- Protocol Begin
 

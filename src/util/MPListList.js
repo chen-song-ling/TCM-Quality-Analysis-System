@@ -36,12 +36,24 @@ class MPList {
 export class MPListList {
     // mpListGroup: [MPList], 标记点数组
     // fpListGroup: [[int]], 定位点数组, 用于记录定位点. 数组最后一位为最近一次标记点定位点, -1 为哨兵
-    constructor(num) {
-        this.mpListGroup = [];
-        this.fpListGroup = [];
-        for (let i = 0; i < num; i++) {
-            this.mpListGroup.push(new MPList());
-            this.fpListGroup.push([-1]);
+    constructor(x) {
+        if (typeof x === "number") {
+            this.mpListGroup = [];
+            this.fpListGroup = [];
+            for (let i = 0; i < x; i++) {
+                this.mpListGroup.push(new MPList());
+                this.fpListGroup.push([-1]);
+            }
+        } else if (typeof x === "string") {
+            let obj = JSON.parse(x);
+            this.mpListGroup = [];
+            this.fpListGroup = obj.fpListGroup;
+            for (let i = 0; i < obj.mpListGroup.length; i++) {
+                this.mpListGroup.push(new MPList());
+                for (let j = 0; j < obj.mpListGroup[i].list.length; j++) {
+                    this.mpListGroup[i].pushMp(new MPoint(obj.mpListGroup[i].list[j].x, obj.mpListGroup[i].list[j].y, obj.mpListGroup[i].list[j].type, obj.mpListGroup[i].list[j].link, obj.mpListGroup[i].list[j].color));
+                }
+            }
         }
     }
 

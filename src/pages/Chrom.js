@@ -40,25 +40,30 @@ export default function Chrom(props) {
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
     const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
-    // const [snapshootData, setSnapshootData] = useState("");
-    // const [snapshootRawImg, setSnapshootRawImg] = useState("https://s4.ax1x.com/2022/02/14/HyESqP.jpg");
-    // const [snapshootCropImgList, setSnapshootCropImgList] = useState(["https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png"]);
+    // const [snapshotData, setSnapshotData] = useState("");
+    // const [snapshotRawImg, setSnapshotRawImg] = useState("https://s4.ax1x.com/2022/02/14/HyESqP.jpg");
+    // const [snapshotCropImgList, setSnapshotCropImgList] = useState(["https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png"]);
 
-    const [snapshootData, setSnapshootData] = useState("");
-    const [snapshootRawImg, setSnapshootRawImg] = useState(null);
-    const [snapshootCropImgList, setSnapshootCropImgList] = useState([]);
+    const [snapshotData, setSnapshotData] = useState("");
+    const [snapshotRawImg, setSnapshotRawImg] = useState(null);
+    const [snapshotCropImgList, setSnapshotCropImgList] = useState([]);
 
     useEffect(() => {
         // 存在快照则使用快照
-        if (snapshootRawImg !== null) {
+        if (snapshotRawImg !== null) {
             setSizeboxData({width: "", height: "", err: "initErr"}); // TODO
-            setCropImgList(snapshootCropImgList);
+            setCropImgList(snapshotCropImgList);
             setImgNaturalSize(null); // TODO
             setCropBoxSizeList([]); // TODO
             setMarkedPoints(null); // TODO
             setScalingRatios([0, 0, 0, 0, 0]); // TODO
         }
-    }, [snapshootRawImg]);
+    }, [snapshotRawImg]);
+
+    // 获取快照
+    const snap = () => {
+        setSnapshotData(JSON.stringify(markedPoints));
+    }
 
     //-- Protocol Begin
 
@@ -135,7 +140,11 @@ export default function Chrom(props) {
     // 附件管理
     const triggerShowAttachment = () => {
         // setUpdateAttachmentToggle(updateAttachmentToggle+1);
-        setIsAttachmentDrawerVisible(true);
+        // setIsAttachmentDrawerVisible(true);
+        snap();
+        // console.log(snapshotData);
+        console.log(markedPoints);
+        console.log(new MPListList(JSON.stringify(markedPoints)));
     }
 
     //-- Protocol END
@@ -204,7 +213,7 @@ export default function Chrom(props) {
 
             <div className="mp-chrom-content">
                 <CropCntr 
-                    snapshootRawImg={snapshootRawImg}
+                    snapshotRawImg={snapshotRawImg}
 
                     sizeboxData={sizeboxData}
 

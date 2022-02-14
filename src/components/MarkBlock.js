@@ -43,9 +43,6 @@ export default function MarkBlock(props) {
 
         for (let idx=0; idx<5; idx++) {
             if (idx < props.cropImgList.length) {
-                console.log(props.cropImgList)
-                console.log(props.cropBoxSizeList)
-
                 reDrawImgAndPoints(idx, props.markedPoints);
                 // drawPointGroup(idx, markedPoints);
             } else {
