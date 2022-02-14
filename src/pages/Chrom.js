@@ -38,6 +38,26 @@ export default function Chrom(props) {
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
     const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
+    // const [snapshootData, setSnapshootData] = useState("");
+    // const [snapshootRawImg, setSnapshootRawImg] = useState("https://s4.ax1x.com/2022/02/14/HyESqP.jpg");
+    // const [snapshootCropImgList, setSnapshootCropImgList] = useState(["https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png"]);
+
+    const [snapshootData, setSnapshootData] = useState("");
+    const [snapshootRawImg, setSnapshootRawImg] = useState(null);
+    const [snapshootCropImgList, setSnapshootCropImgList] = useState([]);
+
+    useEffect(() => {
+        // 存在快照则使用快照
+        if (snapshootRawImg !== null) {
+            setSizeboxData({width: "", height: "", err: "initErr"}); // TODO
+            setCropImgList(snapshootCropImgList);
+            setImgNaturalSize(null); // TODO
+            setCropBoxSizeList([]); // TODO
+            setMarkedPoints(null); // TODO
+            setScalingRatios([0, 0, 0, 0, 0]); // TODO
+        }
+    }, [snapshootRawImg]);
+
     //-- Protocol Begin
 
     const uploadSizeboxData = (newSizeboxData) => {
@@ -92,8 +112,13 @@ export default function Chrom(props) {
     // 保存结果
     const triggerSaveResult = () => {
 
-        // 没输入尺寸, 不能计算、保存
+        // 没输入尺寸, 不能计算, 保存
         if (sizeboxData.err !== "none") {
+            return;
+        }
+
+        // 没原始尺寸, 不能计算, 保存
+        if (imgNaturalSize === null) {
             return;
         }
 
@@ -177,6 +202,10 @@ export default function Chrom(props) {
 
             <div className="mp-chrom-content">
                 <CropCntr 
+                    snapshootRawImg={snapshootRawImg}
+                    
+                    sizeboxData={sizeboxData}
+
                     ptc_uploadSizeboxData={uploadSizeboxData}
                     ptc_uploadCropImg={uploadCropImg}
                     ptc_uploadImgFileName={uploadImgFileName}
@@ -185,7 +214,7 @@ export default function Chrom(props) {
                     ptc_triggerUndoCrop={triggerUndoCrop}
                     ptc_triggerSetNewImg={triggerSetNewImg}
                 />
-                <MarkCntr 
+                <MarkCntr                     
                     ptc_triggerSaveResult={triggerSaveResult}
                     ptc_triggerShowAttachment={triggerShowAttachment}
                     ptc_uploadMarkedPoints={uploadMarkedPoints}

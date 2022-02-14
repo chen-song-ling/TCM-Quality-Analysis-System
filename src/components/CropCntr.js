@@ -19,6 +19,13 @@ export default function CropCntr(props) {
     const [rawImg, setRawImg] = useState(src_default_img);
     const [cropper, setCropper] = useState();
 
+    useEffect(() => {
+        // 存在快照则使用快照
+        if (props.snapshootRawImg !== null) {
+            setRawImg(props.snapshootRawImg);
+        }
+    }, [props.snapshootRawImg]);
+
     //-- Protocol Begin
 
     const uploadSizeboxData = (newSizeboxData) => {
@@ -84,6 +91,8 @@ export default function CropCntr(props) {
             />
 
             <CropDashboard 
+                sizeboxData={props.sizeboxData}
+
                 ptc_uploadSizeboxData={uploadSizeboxData} 
                 ptc_uploadImgFile={uploadImgFile}
                 ptc_uploadImgFileName={uploadImgFileName}

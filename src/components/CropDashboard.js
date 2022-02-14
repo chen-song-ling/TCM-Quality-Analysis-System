@@ -25,7 +25,7 @@ import { Button, Input, Alert } from 'antd';
 */
 
 export default function CropDashboard(props) {
-    const [sizeboxData, setSizeboxData] = useState({width: "", height: "", err: "initErr"});
+    // const [sizeboxData, setSizeboxData] = useState({width: "", height: "", err: "initErr"});
 
     const config = {
         text_sizebox_width_left: "宽",
@@ -40,7 +40,7 @@ export default function CropDashboard(props) {
 
     // 响应式修改薄层板大小
     const onSizeboxChange = (tag, e) => {
-        let newone = {...sizeboxData};
+        let newone = {...props.sizeboxData};
         if (tag === "width") {
             newone.width = e.target.value;
         } else if (tag === "height") {
@@ -69,7 +69,7 @@ export default function CropDashboard(props) {
             
         }
         // console.log(parseFloat(newone.width), parseFloat(newone.height));
-        setSizeboxData(newone);
+        // setSizeboxData(newone);
         props.ptc_uploadSizeboxData(newone);
     }
 
@@ -81,6 +81,9 @@ export default function CropDashboard(props) {
         } else if (e.target) {
           files = e.target.files;
         }
+        if (files[0] === undefined) {
+            return
+        }
         const reader = new FileReader();
         reader.onload = () => {
             props.ptc_uploadImgFile(reader.result);
@@ -91,9 +94,9 @@ export default function CropDashboard(props) {
 
     // 设置提示样式
     const setTipStyle = () => {
-        if (sizeboxData.err === "none") {
+        if (props.sizeboxData.err === "none") {
             return "display-none";
-        } else if (sizeboxData.err === "initErr") {
+        } else if (props.sizeboxData.err === "initErr") {
             return "bg-warning";
         } else {
             return "bg-danger";
@@ -101,15 +104,15 @@ export default function CropDashboard(props) {
     }
 
     const setTipText = () => {
-        if (sizeboxData.err === "none") {
+        if (props.sizeboxData.err === "none") {
             return "";
-        } else if (sizeboxData.err === "widthErr") {
+        } else if (props.sizeboxData.err === "widthErr") {
             return "输入的薄膜板宽度不合法，因为它不是数字";
-        } else if (sizeboxData.err === "heightErr") {
+        } else if (props.sizeboxData.err === "heightErr") {
             return "输入的薄膜板高度不合法，因为它不是数字";
-        } else if (sizeboxData.err === "bothErr") {
+        } else if (props.sizeboxData.err === "bothErr") {
             return "输入的薄膜板高度和宽度不合法，因为它们不是数字";
-        } else if (sizeboxData.err === "initErr") {
+        } else if (props.sizeboxData.err === "initErr") {
             return "薄膜板尺寸未输入完整";
         }
     }
@@ -132,7 +135,7 @@ export default function CropDashboard(props) {
                     addonBefore={config.text_sizebox_width_left}
                     addonAfter={config.text_sizebox_unit}
                     placeholder={config.text_sizebox_width_mid}
-                    value={sizeboxData.width}
+                    value={props.sizeboxData.width}
                     onChange={(e)=>onSizeboxChange("width", e)}
                 />
 
@@ -140,7 +143,7 @@ export default function CropDashboard(props) {
                     addonBefore={config.text_sizebox_height_left}
                     addonAfter={config.text_sizebox_unit}
                     placeholder={config.text_sizebox_height_mid}
-                    value={sizeboxData.height}
+                    value={props.sizeboxData.height}
                     onChange={(e)=>onSizeboxChange("height", e)}
                 />
 

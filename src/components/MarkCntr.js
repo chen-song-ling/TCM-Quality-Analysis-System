@@ -41,6 +41,11 @@ export default function MarkCntr(props) {
         props.ptc_uploadScalingRatios(newScalingRatios);
     }
 
+    // 上传 MarkBlock 的快照数据
+    const uploadMBSnapshootData = (newMBSnapshootData) => {
+        console.log(newMBSnapshootData)
+    }
+
     const triggerUndoMark = () => {
         doUndoMark(undoMark+1);
     }
@@ -69,6 +74,7 @@ export default function MarkCntr(props) {
 
                 ptc_uploadMarkedPoints={uploadMarkedPoints}
                 ptc_uploadScalingRatios={uploadScalingRatios}
+                ptc_uploadMBSnapshootData={uploadMBSnapshootData}
 
                 cropImgList={props.cropImgList}
                 cropBoxSizeList={props.cropBoxSizeList}

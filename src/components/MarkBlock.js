@@ -18,6 +18,7 @@ export default function MarkBlock(props) {
     const [focusedCv, setFocusedCv] = useState(-1);
     const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
     const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
+    const [mbSnapshootData, setMBSnapshootData] = useState({});
 
     const config = {
         num_canvas_width: 85,
@@ -41,6 +42,9 @@ export default function MarkBlock(props) {
 
         for (let idx=0; idx<5; idx++) {
             if (idx < props.cropImgList.length) {
+                console.log(props.cropImgList)
+                console.log(props.cropBoxSizeList)
+
                 reDrawImgAndPoints(idx, markedPoints);
                 // drawPointGroup(idx, markedPoints);
             } else {
@@ -88,7 +92,7 @@ export default function MarkBlock(props) {
         let ow = props.cropBoxSizeList[id].width;
         let oh = props.cropBoxSizeList[id].height;
         let scalingRatio = Math.min(config.num_canvas_height / oh, (config.num_canvas_width-config.num_canvas_padding_left) / ow);
-        
+
         let newScalingRatios = [...scalingRatios];
         newScalingRatios[id] = scalingRatio;
         setScalingRatios(newScalingRatios);

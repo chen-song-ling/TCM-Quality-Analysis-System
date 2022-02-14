@@ -46,7 +46,7 @@ export default function Login() {
         // -- BEGIN 测试用路径
 
         if (inputUsername === "t") {
-            setRedirect("/dev-test");
+            setRedirect("/chrom");
             return;
         }
 
