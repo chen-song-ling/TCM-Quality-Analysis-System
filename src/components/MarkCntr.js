@@ -79,6 +79,9 @@ export default function MarkCntr(props) {
                 cropImgList={props.cropImgList}
                 cropBoxSizeList={props.cropBoxSizeList}
 
+                markedPoints={props.markedPoints}
+                scalingRatios={props.scalingRatios}
+
                 markMode={markMode}
                 undoMark={undoMark}
                 clearMark={clearMark}

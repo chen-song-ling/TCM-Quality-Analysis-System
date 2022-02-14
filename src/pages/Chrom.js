@@ -11,6 +11,8 @@ import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import { SaveAsCsv } from "../util/Saver";
+import { MPListList } from "../util/MPListList";
+
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
@@ -30,7 +32,7 @@ export default function Chrom(props) {
     const [imgNaturalSize, setImgNaturalSize] = useState(null);
     const [cropBoxSizeList, setCropBoxSizeList] = useState([]);
 
-    const [markedPoints, setMarkedPoints] = useState(null);
+    const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
     const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
 
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
@@ -203,7 +205,7 @@ export default function Chrom(props) {
             <div className="mp-chrom-content">
                 <CropCntr 
                     snapshootRawImg={snapshootRawImg}
-                    
+
                     sizeboxData={sizeboxData}
 
                     ptc_uploadSizeboxData={uploadSizeboxData}
@@ -222,6 +224,9 @@ export default function Chrom(props) {
 
                     cropImgList={cropImgList}
                     cropBoxSizeList={cropBoxSizeList}
+
+                    markedPoints={markedPoints}
+                    scalingRatios={scalingRatios}
                 />
             </div>
 

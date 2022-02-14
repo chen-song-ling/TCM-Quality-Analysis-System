@@ -16,9 +16,8 @@ import { MPListList } from "../util/MPListList";
 
 export default function MarkBlock(props) {
     const [focusedCv, setFocusedCv] = useState(-1);
-    const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
-    const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
-    const [mbSnapshootData, setMBSnapshootData] = useState({});
+    // const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
+    // const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
 
     const config = {
         num_canvas_width: 85,
@@ -28,8 +27,10 @@ export default function MarkBlock(props) {
     }
 
     const reinit = () => {
-        setMarkedPoints(new MPListList(5));
-        setScalingRatios([0, 0, 0, 0, 0]);
+        // setMarkedPoints(new MPListList(5));
+        // setScalingRatios([0, 0, 0, 0, 0]);
+        props.ptc_uploadMarkedPoints(new MPListList(5));
+        props.ptc_uploadScalingRatios([0, 0, 0, 0, 0]);
         clearAll();
     }
 
@@ -45,7 +46,7 @@ export default function MarkBlock(props) {
                 console.log(props.cropImgList)
                 console.log(props.cropBoxSizeList)
 
-                reDrawImgAndPoints(idx, markedPoints);
+                reDrawImgAndPoints(idx, props.markedPoints);
                 // drawPointGroup(idx, markedPoints);
             } else {
                 clearCanvas(idx);
@@ -70,14 +71,14 @@ export default function MarkBlock(props) {
     }, [props.numberMark]);
 
     // 上传标记点信息
-    useEffect(() => {
-        props.ptc_uploadMarkedPoints(markedPoints);
-    }, [markedPoints])
+    // useEffect(() => {
+    //     props.ptc_uploadMarkedPoints(markedPoints);
+    // }, [markedPoints])
 
     // 上传缩放尺度信息
-    useEffect(() => {
-        props.ptc_uploadScalingRatios(scalingRatios);
-    }, [scalingRatios])
+    // useEffect(() => {
+    //     props.ptc_uploadScalingRatios(scalingRatios);
+    // }, [scalingRatios])
 
     //-- Draw Begin
 
@@ -93,9 +94,10 @@ export default function MarkBlock(props) {
         let oh = props.cropBoxSizeList[id].height;
         let scalingRatio = Math.min(config.num_canvas_height / oh, (config.num_canvas_width-config.num_canvas_padding_left) / ow);
 
-        let newScalingRatios = [...scalingRatios];
+        let newScalingRatios = [...props.scalingRatios];
         newScalingRatios[id] = scalingRatio;
-        setScalingRatios(newScalingRatios);
+        props.ptc_uploadScalingRatios(newScalingRatios);
+        // setScalingRatios(newScalingRatios);
 
         let w = ow*scalingRatio;
         let h = oh*scalingRatio;
@@ -222,13 +224,14 @@ export default function MarkBlock(props) {
             let cstr = "(" + color[0] + "; " + color[1] + "; " + color[2] + ")";
             
 
-            let imgw = props.cropBoxSizeList[id].width * scalingRatios[id];
+            let imgw = props.cropBoxSizeList[id].width * props.scalingRatios[id];
 
-            let newMarkedPoints = markedPoints.fakeCopy(); // { ...markedPoints }
+            let newMarkedPoints = props.markedPoints.fakeCopy(); // { ...markedPoints }
             // newMarkedPoints.push(id, config.num_canvas_width - (imgw / 2), e.pageY-objTop, props.markMode, cnum.toString(16).toUpperCase().padStart(6, "0"));
             newMarkedPoints.push(id, config.num_canvas_width - (imgw / 2), e.pageY-objTop, props.markMode, cstr);
 
-            setMarkedPoints(newMarkedPoints);
+            props.ptc_uploadMarkedPoints(newMarkedPoints);
+            // setMarkedPoints(newMarkedPoints);
 
             drawPoint(id, config.num_canvas_width - (imgw / 2), e.pageY-objTop, props.markMode);
         }
@@ -246,9 +249,10 @@ export default function MarkBlock(props) {
     // 执行撤销点
     const undoMarkPoint = () => {
         if (focusedCv !== -1) {
-            let newMarkedPoints = markedPoints.fakeCopy();
+            let newMarkedPoints = props.markedPoints.fakeCopy();
             newMarkedPoints.pop(focusedCv);
-            setMarkedPoints(newMarkedPoints);
+            props.ptc_uploadMarkedPoints(newMarkedPoints);
+            // setMarkedPoints(newMarkedPoints);
 
             reDrawImgAndPoints(focusedCv, newMarkedPoints);
         }
@@ -257,9 +261,10 @@ export default function MarkBlock(props) {
     // 执行清空点
     const clearMark = () => {
         if (focusedCv !== -1) {
-            let newMarkedPoints = markedPoints.fakeCopy();
+            let newMarkedPoints = props.markedPoints.fakeCopy();
             newMarkedPoints.clear(focusedCv);
-            setMarkedPoints(newMarkedPoints);
+            props.ptc_uploadMarkedPoints(newMarkedPoints);
+            // setMarkedPoints(newMarkedPoints);
 
             reDrawImgAndPoints(focusedCv, newMarkedPoints);
         }
@@ -267,7 +272,7 @@ export default function MarkBlock(props) {
 
     // 执行编号任务
     const numberMark = () => {
-        let ranking = markedPoints.getRanking();
+        let ranking = props.markedPoints.getRanking();
 
         for (let id = 0; id < 5; id++) {
             
@@ -285,7 +290,7 @@ export default function MarkBlock(props) {
 
             for (let j in ranking[id]) {
                 let num = parseInt(j)+1;
-                cv.fillText(num, 0, markedPoints.getPoint(id, ranking[id][j]).y + config.num_canvas_number_size / 2);
+                cv.fillText(num, 0, props.markedPoints.getPoint(id, ranking[id][j]).y + config.num_canvas_number_size / 2);
             }
             
         }
@@ -303,7 +308,7 @@ export default function MarkBlock(props) {
 
     return (
         <div className="chmt-markblk">
-            {/* {JSON.stringify(markedPoints)} */}
+            {/* {JSON.stringify(props.markedPoints)} */}
             <div className="chmt-markblk-group">
                 <canvas id="the-chmt-markblk-canvas-0" className="chmt-markblk-canvas" width={config.num_canvas_width} height={config.num_canvas_height} onClick={(e)=>handleCanvasClick(0, e)} ></canvas>
                 <button type="button" className={setBtnStyle(0)}  onClick={()=>handleBtnClick(0)}>样品1</button>
