@@ -54,6 +54,16 @@ export class MPListList {
                     this.mpListGroup[i].pushMp(new MPoint(obj.mpListGroup[i].list[j].x, obj.mpListGroup[i].list[j].y, obj.mpListGroup[i].list[j].type, obj.mpListGroup[i].list[j].link, obj.mpListGroup[i].list[j].color));
                 }
             }
+        } else if (typeof x === "object") {
+            let obj = x;
+            this.mpListGroup = [];
+            this.fpListGroup = obj.fpListGroup;
+            for (let i = 0; i < obj.mpListGroup.length; i++) {
+                this.mpListGroup.push(new MPList());
+                for (let j = 0; j < obj.mpListGroup[i].list.length; j++) {
+                    this.mpListGroup[i].pushMp(new MPoint(obj.mpListGroup[i].list[j].x, obj.mpListGroup[i].list[j].y, obj.mpListGroup[i].list[j].type, obj.mpListGroup[i].list[j].link, obj.mpListGroup[i].list[j].color));
+                }
+            }
         }
     }
 

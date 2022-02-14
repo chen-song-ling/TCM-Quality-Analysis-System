@@ -40,9 +40,9 @@ export default function Chrom(props) {
     const [isAttachmentDrawerVisible, setIsAttachmentDrawerVisible] = useState(false);
     const [attachmentDrawerUpdateToggle, setAttachmentDrawerUpdateToggle] = useState(0);
 
-    // const [snapshotData, setSnapshotData] = useState("");
+    // const [snapshotData, setSnapshotData] = useState('{"sizeboxData":{"width":"10","height":"10","err":"none"},"imgNaturalSize":{"width":473,"height":472},"cropBoxSizeList":[{"width":58.37632135306553,"height":389.1754756871035},{"width":58.37632135306553,"height":389.1754756871035},{"width":58.37632135306553,"height":389.1754756871035}],"markedPoints":{"fpListGroup":[[-1,0],[-1,0],[-1],[-1],[-1]],"mpListGroup":[{"list":[{"x":55,"y":219,"type":"fix","link":-1,"color":"(17; 110; 176)"},{"x":55,"y":375,"type":"key","link":0,"color":"(5; 35; 60)"},{"x":55,"y":129,"type":"key","link":0,"color":"(7; 45; 80)"},{"x":55,"y":129,"type":"key","link":0,"color":"(44; 98; 41)"}]},{"list":[{"x":55,"y":130,"type":"fix","link":-1,"color":"(8; 25; 46)"},{"x":55,"y":379,"type":"key","link":0,"color":"(17; 16; 28)"}]},{"list":[{"x":55,"y":218,"type":"key","link":-1,"color":"(8; 53; 91)"}]},{"list":[]},{"list":[]}]},"scalingRatios":[1.027813993915689,1.027813993915689,1.027813993915689,0,0]}');
     // const [snapshotRawImg, setSnapshotRawImg] = useState("https://s4.ax1x.com/2022/02/14/HyESqP.jpg");
-    // const [snapshotCropImgList, setSnapshotCropImgList] = useState(["https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png"]);
+    // const [snapshotCropImgList, setSnapshotCropImgList] = useState(["https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png", "https://s4.ax1x.com/2022/02/14/HyAjxA.png"]);
 
     const [snapshotData, setSnapshotData] = useState("");
     const [snapshotRawImg, setSnapshotRawImg] = useState(null);
@@ -51,18 +51,28 @@ export default function Chrom(props) {
     useEffect(() => {
         // 存在快照则使用快照
         if (snapshotRawImg !== null) {
-            setSizeboxData({width: "", height: "", err: "initErr"}); // TODO
+            let snapshot = JSON.parse(snapshotData);
+
+            setScalingRatios(snapshot.scalingRatios);
+            setSizeboxData(snapshot.sizeboxData);
+            setImgNaturalSize(snapshot.imgNaturalSize);
+            setCropBoxSizeList(snapshot.cropBoxSizeList);
+            setMarkedPoints(new MPListList(snapshot.markedPoints));
             setCropImgList(snapshotCropImgList);
-            setImgNaturalSize(null); // TODO
-            setCropBoxSizeList([]); // TODO
-            setMarkedPoints(null); // TODO
-            setScalingRatios([0, 0, 0, 0, 0]); // TODO
         }
     }, [snapshotRawImg]);
 
     // 获取快照
     const snap = () => {
-        setSnapshotData(JSON.stringify(markedPoints));
+        let snapshot = {};
+        snapshot.sizeboxData = sizeboxData;
+        snapshot.imgNaturalSize = imgNaturalSize;
+        snapshot.cropBoxSizeList = cropBoxSizeList;
+
+        snapshot.markedPoints = markedPoints;
+        snapshot.scalingRatios = scalingRatios;
+
+        return JSON.stringify(snapshot);
     }
 
     //-- Protocol Begin
@@ -140,11 +150,9 @@ export default function Chrom(props) {
     // 附件管理
     const triggerShowAttachment = () => {
         // setUpdateAttachmentToggle(updateAttachmentToggle+1);
-        // setIsAttachmentDrawerVisible(true);
-        snap();
-        // console.log(snapshotData);
-        console.log(markedPoints);
-        console.log(new MPListList(JSON.stringify(markedPoints)));
+        setIsAttachmentDrawerVisible(true);
+        
+        // console.log(snap());
     }
 
     //-- Protocol END
