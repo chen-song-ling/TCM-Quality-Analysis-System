@@ -7,7 +7,7 @@ import './Character.css';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
-import { Modal, notification, Space } from 'antd';
+import { Button, Upload, Modal, notification, Space } from 'antd';
 import { setLastCharacterId, setCharacterDate, setCharacterTemperature, setCharacterHumidity, setCharacterStandard, setCharacterManualResult, setCharacterCheckList, setCharacterSampleImg, setCharacterImgGroup, setCharacterImgAiInfo, setCharacterStandardImgGroup } from '../slices/characterSlice';
 import { apiRunCharacterTask, apiGetTask, apiUpdateTask, apiGetTaskReport } from '../util/api';
 import MpHeader from '../components/MpHeader';
@@ -190,6 +190,7 @@ export default function Character(props) {
 
     const onUploadSampleImgClick = (e) => {
         let ele = document.getElementById("the-ghost-uploadSampleImg");
+        console.log(ele);
         ele.click();
     }
 
@@ -362,6 +363,20 @@ export default function Character(props) {
             ele.value = "";
         };
         reader.readAsDataURL(files[0]);
+    }
+
+    const customRequest = (options) => {
+        const { onSuccess, onError, file, onProgress } = options;
+        const reader = new FileReader();
+        reader.onload = () => {
+            dispatch(setCharacterSampleImg({
+                ...characterSampleImg,
+                sampleImg: reader.result,
+                sampleImgName: file.name,
+            }))
+            setIsCroplMoadlVisible(true);
+        };
+        reader.readAsDataURL(file);
     }
 
     const onExamineStandardImgClick = (e) => {
@@ -573,7 +588,16 @@ export default function Character(props) {
             // cropBoxSize={characterSampleImg.cropSize}
             />
 
-            <input type="file" id="the-ghost-uploadSampleImg" style={{ display: "none" }} onChange={onSampleImgChange} />
+            {/* <input type="file" id="the-ghost-uploadSampleImg" style={{ display: "none" }} onChange={onSampleImgChange} /> */}
+
+            <Upload
+                accept="image/*"
+                listType="picture"
+                fileList={[]}
+                customRequest={customRequest}
+            >
+                <Button id="the-ghost-uploadSampleImg"></Button>
+            </Upload>
 
             {/* <AttachmentDrawer
                 visible={isAttachmentDrawerVisible}

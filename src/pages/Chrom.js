@@ -94,7 +94,11 @@ export default function Chrom(props) {
     }
 
     const uploadImgNaturalSize = (newImgNaturalSize) => {
-        setImgNaturalSize(newImgNaturalSize)
+        setImgNaturalSize(newImgNaturalSize);
+    }
+
+    const uploadSnapshot = () => {
+        console.log(snap());
     }
 
     // 重新裁剪, 清空所有数据
@@ -238,6 +242,7 @@ export default function Chrom(props) {
                     ptc_triggerShowAttachment={triggerShowAttachment}
                     ptc_uploadMarkedPoints={uploadMarkedPoints}
                     ptc_uploadScalingRatios={uploadScalingRatios}
+                    ptc_triggerUploadResult={uploadSnapshot}
 
                     cropImgList={cropImgList}
                     cropBoxSizeList={cropBoxSizeList}

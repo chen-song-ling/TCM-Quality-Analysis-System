@@ -66,6 +66,10 @@ export default function MarkCntr(props) {
         props.ptc_triggerShowAttachment();
     }
 
+    const triggerUploadResult = () => {
+        props.ptc_triggerUploadResult();
+    }
+
     //-- Protocol End
 
     return (
@@ -93,6 +97,7 @@ export default function MarkCntr(props) {
                 ptc_triggerclearMark={triggerclearMark}
                 ptc_triggerNumberMark={triggerNumberMark}
                 ptc_triggerSaveResult={triggerSaveResult}
+                ptc_triggerUploadResult={triggerUploadResult}
                 ptc_triggerShowAttachment={triggerShowAttachment}
             />
         </div>

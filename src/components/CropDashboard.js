@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './CropDashboard.css';
-import { Button, Input, Alert } from 'antd';
+import { Upload, Button, Input, Alert } from 'antd';
 
 
 /* StateType
@@ -92,6 +92,16 @@ export default function CropDashboard(props) {
         reader.readAsDataURL(files[0]);
     }
 
+    const customRequest = (options) => {
+        const { onSuccess, onError, file, onProgress } = options;
+        const reader = new FileReader();
+        reader.onload = () => {
+            props.ptc_uploadImgFile(reader.result);
+            props.ptc_uploadImgFileName(file.name);
+        };
+        reader.readAsDataURL(file);
+    }
+
     // 设置提示样式
     const setTipStyle = () => {
         if (props.sizeboxData.err === "none") {
@@ -160,7 +170,15 @@ export default function CropDashboard(props) {
 
             <div className="chmt-cropdb-instruct">
                 {/* <p> 薄层色谱图裁剪 </p> */}
-                <input type="file" onChange={onImgFileChange} />
+                {/* <input type="file" onChange={onImgFileChange} /> */}
+                <Upload
+                    accept="image/*"
+                    listType="picture"
+                    fileList={[]}
+                    customRequest={customRequest}
+                >
+                    <Button>上传图片</Button>
+                </Upload>
                 <button className="btn btn-default"
                     onClick={props.ptc_triggerDoCrop} >{config.text_instruct_do}</button>
                 <button className="btn btn-default" style={{ marginLeft: 8 }}

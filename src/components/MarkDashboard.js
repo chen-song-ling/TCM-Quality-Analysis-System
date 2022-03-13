@@ -23,14 +23,14 @@ export default function MarkDashboard(props) {
     const [markMode, setMarkMode] = useState("none"); 
 
     const config = {
-        text_fixbtn_active: "正在标记定位点(红色)",
-        text_fixbtn_fallow: "开始标记定位点(红色)",
-        text_keybtn_active: "正在标记关键点(绿色)",
-        text_keybtn_fallow: "开始标记关键点(绿色)",
+        text_fixbtn_active: "标记定位点(红色)",
+        text_fixbtn_fallow: "标记定位点(红色)",
+        text_keybtn_active: "标记关键点(绿色)",
+        text_keybtn_fallow: "标记关键点(绿色)",
         text_undobtn: "撤销标记",
         text_clearbtn: "清空标记",
         text_numberbtn: "开始标号",
-        text_savebtn: "保存结果",
+        text_savebtn: "导出结果",
     }
 
     const handleFKBtnClick = (tag) => {
@@ -100,6 +100,10 @@ export default function MarkDashboard(props) {
         props.ptc_triggerSaveResult();
     }
 
+    const handleUploadBtn = () => {
+        props.ptc_triggerUploadResult();
+    }
+
     const handleReportBtn = () => {
         console.log("handleReportBtn");
     }
@@ -114,6 +118,7 @@ export default function MarkDashboard(props) {
                 <button type="button" className={setFixBtnStyle()} onClick={()=>handleFKBtnClick("fix")}>{setFixBtnText()}</button>
                 <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")}>{setKeyBtnText()}</button>
                 <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>
+                <button type="button" className="btn btn-primary"  onClick={handleUploadBtn}>{"保存"}</button>
             </div>
             <div className="chmt-markdb-btnlist">
                 <button type="button" className="btn btn-default" onClick={handleUndoBtn}>{config.text_undobtn}</button>
