@@ -256,7 +256,7 @@ export default function Micro(props) {
             is_included_in_report: microCheckList[4],
             is_required: true,
         });
-        apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, microStandard, microManualResult, additionalFields, res.data.attachments, res.data.result, res.data.sub_type).then((res) => {
+        apiUpdateTask(accessToken, cache.name, cache.type, cache.id, microStandard, microManualResult, additionalFields, cache.attachments, cache.result, cache.sub_type).then((res) => {
             apiGetTaskReport(accessToken, microId).then((res) => {
                 // console.log(res)
                 ipcRenderer.send("view-file-online", res.data.save_path);

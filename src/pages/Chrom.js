@@ -4,14 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Chrom.css';
 
-// import { Modal, Space, notification } from 'antd';
+import { Modal, Space, notification } from 'antd';
 import MpHeader from '../components/MpHeader';
 
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
-import { SaveAsCsv } from "../util/Saver";
+import { SaveAsCsv, SaveAsXlsx } from "../util/Saver";
 import { MPListList } from "../util/MPListList";
+import { apiGetTask, apiUpdateTask, apiGetTaskReport } from '../util/api';
 
 
 const electron = window.require('electron');
@@ -47,6 +48,15 @@ export default function Chrom(props) {
     const [snapshotData, setSnapshotData] = useState("");
     const [snapshotRawImg, setSnapshotRawImg] = useState(null);
     const [snapshotCropImgList, setSnapshotCropImgList] = useState([]);
+
+    useEffect(() => {
+        apiGetTask(accessToken, chromId).then((res) => {
+
+            console.log(res.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
 
     useEffect(() => {
         // 存在快照则使用快照
@@ -99,6 +109,27 @@ export default function Chrom(props) {
 
     const uploadSnapshot = () => {
         console.log(snap());
+
+        apiGetTask(accessToken, chromId).then((res) => {
+            let result = {...res.data.result}
+            result.result_str="1";
+            console.log(result);
+            apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, "characterStandard", "characterManualResult", [], res.data.attachments, result, res.data.sub_type).then((res) => {
+                notification.open({
+                    message: "保存成功",
+                });
+                console.log(res)
+            }).catch((err) => {
+                notification.open({
+                    message: "保存失败",
+                    description: "网络错误。",
+                });
+                console.log(err);
+            });
+            
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     // 重新裁剪, 清空所有数据
@@ -145,8 +176,9 @@ export default function Chrom(props) {
 
         let defaultFileName = imgFileName.current;
         let csv = SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
-
-        ipcRenderer.send("save-chrom-csv-with-dialog", {csv: csv, defaultFileName: defaultFileName});
+        let xlsx = SaveAsXlsx (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        // ipcRenderer.send("save-chrom-csv-with-dialog", {csv: csv, defaultFileName: defaultFileName});
+        ipcRenderer.send("save-chrom-xlsx-with-dialog", {xlsx: xlsx, csv: csv, defaultFileName: defaultFileName});
         
 
     }

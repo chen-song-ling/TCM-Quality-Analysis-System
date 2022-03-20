@@ -4,9 +4,12 @@ const { download } = require("electron-dl");
 const path = require('path');
 const fs = require('fs');
 const PDFWindow = require('electron-pdf-window');
+const XLSX = require("xlsx");
+
 
 // const baseApiUrl = "https://lab.tery.top:8000/static/";
-const baseApiUrl = "http://10.249.43.41:8080/static/";
+const baseApiUrl = "http://lab2.tery.top:8000/static/";
+// const baseApiUrl = "http://10.249.43.41:8080/static/";
 
 const joinAndMkdir = (arg, isFile = false) => {
   let dir = path.join(app.getAppPath(), '..');
@@ -134,6 +137,47 @@ const initFileIpc = () => {
     let file = path.resolve(res);
     fs.writeFile(file, csv, { encoding: 'utf8' }, err => { });
 
+  });
+
+  ipcMain.on("save-chrom-xlsx-with-dialog", (event, arg) => {
+    let xlsx = arg.xlsx;
+    let csv = arg.csv;
+
+    var workbook = XLSX.utils.book_new();
+    workbook.SheetNames.push("Sheet1");
+    var worksheet = XLSX.utils.aoa_to_sheet(xlsx);
+    workbook.Sheets["Sheet1"] = worksheet;
+
+    let defaultFileName = arg.defaultFileName;
+    let dotIdx = defaultFileName.lastIndexOf(".");
+    if (dotIdx !== -1) {
+      defaultFileName = defaultFileName.substring(0, dotIdx);
+    }
+
+    const res = dialog.showSaveDialogSync({
+      title: "保存标记结果",
+      defaultPath: defaultFileName,
+      buttonLabel: "储存",
+      filters: [
+        { name: "Excel 工作簿", extensions: ["xlsx"] },
+        { name: "CSV UTF-8 (逗号分隔)", extensions: ["csv"] },
+      ],
+      nameFieldLabel: "存储为",
+      showsTagField: true,
+    });
+
+    if (res === undefined) {
+      return;
+    }
+    let filePath = path.resolve(res);
+    let index= filePath.lastIndexOf(".");
+    let ext = filePath.substr(index+1);
+    if (ext === "csv") {
+      fs.writeFile(filePath, csv, { encoding: 'utf8' }, err => { });
+    } else {
+      XLSX.writeFile(workbook, filePath);
+    }
+    
   });
 
   ipcMain.on("sync-open-save-dialog", (event, arg) => {
