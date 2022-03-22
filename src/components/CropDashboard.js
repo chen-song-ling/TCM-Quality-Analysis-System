@@ -129,44 +129,6 @@ export default function CropDashboard(props) {
  
     return (
         <div className="chmt-cropdb">
-            
-            <div className="chmt-cropdb-sizebox">
-                {/* <div className="input-group">
-                    <div className="input-group-addon">{config.text_sizebox_width_left}</div>
-                    <Input type="text" 
-                        className="form-control chmt-cropdb-sizebox-input"
-                        placeholder={config.text_sizebox_width_mid}
-                        value={sizeboxData.width}
-                        onChange={(e)=>onSizeboxChange("width", e)} />
-                    <div className="input-group-addon">{config.text_sizebox_unit}</div>
-                </div> */}
-
-                <Input className="mp-chmt-cropdb-input"
-                    addonBefore={config.text_sizebox_width_left}
-                    addonAfter={config.text_sizebox_unit}
-                    placeholder={config.text_sizebox_width_mid}
-                    value={props.sizeboxData.width}
-                    onChange={(e)=>onSizeboxChange("width", e)}
-                />
-
-                <Input className="mp-chmt-cropdb-input"
-                    addonBefore={config.text_sizebox_height_left}
-                    addonAfter={config.text_sizebox_unit}
-                    placeholder={config.text_sizebox_height_mid}
-                    value={props.sizeboxData.height}
-                    onChange={(e)=>onSizeboxChange("height", e)}
-                />
-
-                {/* <div className="input-group">
-                    <div className="input-group-addon">{config.text_sizebox_height_left}</div>
-                    <Input type="text" 
-                        className="form-control chmt-cropdb-sizebox-input" 
-                        placeholder={config.text_sizebox_height_mid}
-                        value={sizeboxData.height}
-                        onChange={(e)=>onSizeboxChange("height", e)} />
-                    <div className="input-group-addon">cm</div>
-                </div> */}
-            </div>
 
             <div className="chmt-cropdb-instruct">
                 {/* <p> 薄层色谱图裁剪 </p> */}
@@ -183,6 +145,24 @@ export default function CropDashboard(props) {
                     onClick={props.ptc_triggerDoCrop} >{config.text_instruct_do}</button>
                 <button className="btn btn-default" style={{ marginLeft: 8 }}
                     onClick={props.ptc_triggerUndoCrop} >{config.text_instruct_undo}</button>
+            </div>
+
+            <div className="chmt-cropdb-sizebox">
+                <Input className="mp-chmt-cropdb-input"
+                    addonBefore={config.text_sizebox_width_left}
+                    addonAfter={config.text_sizebox_unit}
+                    placeholder={config.text_sizebox_width_mid}
+                    value={props.sizeboxData.width}
+                    onChange={(e)=>onSizeboxChange("width", e)}
+                />
+
+                <Input className="mp-chmt-cropdb-input"
+                    addonBefore={config.text_sizebox_height_left}
+                    addonAfter={config.text_sizebox_unit}
+                    placeholder={config.text_sizebox_height_mid}
+                    value={props.sizeboxData.height}
+                    onChange={(e)=>onSizeboxChange("height", e)}
+                />
             </div>
 
             <Alert className={setTipStyle()} message={setTipText()} type="error" />

@@ -27,6 +27,8 @@ export default function MarkDashboard(props) {
         text_fixbtn_fallow: "标记定位点(红色)",
         text_keybtn_active: "标记关键点(绿色)",
         text_keybtn_fallow: "标记关键点(绿色)",
+        text_oribtn_active: "标记关键点(黄色)",
+        text_oribtn_fallow: "标记关键点(黄色)",
         text_undobtn: "撤销标记",
         text_clearbtn: "清空标记",
         text_numberbtn: "开始标号",
@@ -46,6 +48,12 @@ export default function MarkDashboard(props) {
                 newone = "none";
             } else {
                 newone = "fix";
+            }
+        } else if (tag === "ori") {
+            if (markMode === "ori") {
+                newone = "none";
+            } else {
+                newone = "ori";
             }
         }
         setMarkMode(newone);
@@ -68,6 +76,14 @@ export default function MarkDashboard(props) {
         }
     }
 
+    const setOriBtnStyle = () => {
+        if (markMode === "ori") {
+            return "btn btn-warning";
+        } else {
+            return "btn btn-default";
+        }
+    }
+
     const setFixBtnText = () => {
         if (markMode === "fix") {
             return config.text_fixbtn_active;
@@ -83,6 +99,14 @@ export default function MarkDashboard(props) {
             return config.text_keybtn_fallow;
         }
     }
+
+    const setOriBtnText = () => {
+        if (markMode === "ori") {
+            return config.text_oribtn_active;
+        } else {
+            return config.text_oribtn_fallow;
+        }
+    } 
 
     const handleUndoBtn = () => {
         props.ptc_triggerUndoMark();
@@ -117,6 +141,7 @@ export default function MarkDashboard(props) {
             <div className="chmt-markdb-btnlist">
                 <button type="button" className={setFixBtnStyle()} onClick={()=>handleFKBtnClick("fix")}>{setFixBtnText()}</button>
                 <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")}>{setKeyBtnText()}</button>
+                <button type="button" className={setOriBtnStyle()} onClick={()=>handleFKBtnClick("ori")}>{setOriBtnText()}</button>
                 <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleUploadBtn}>{"保存"}</button>
             </div>

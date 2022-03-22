@@ -10,7 +10,7 @@ import MpHeader from '../components/MpHeader';
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
-import { SaveAsCsv, SaveAsXlsx } from "../util/Saver";
+import { SaveAsCsv, SaveAsXlsx, SaveAsCsvPlus, SaveAsXlsxPlus } from "../util/Saver";
 import { MPListList } from "../util/MPListList";
 import { apiGetTask, apiUpdateTask, apiGetTaskReport } from '../util/api';
 
@@ -175,8 +175,11 @@ export default function Chrom(props) {
         }
 
         let defaultFileName = imgFileName.current;
-        let csv = SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
-        let xlsx = SaveAsXlsx (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        // let csv = SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        // let xlsx = SaveAsXlsx (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        let csv = SaveAsCsvPlus(sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        let xlsx = SaveAsXlsxPlus(sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
+        console.log(xlsx);
         // ipcRenderer.send("save-chrom-csv-with-dialog", {csv: csv, defaultFileName: defaultFileName});
         ipcRenderer.send("save-chrom-xlsx-with-dialog", {xlsx: xlsx, csv: csv, defaultFileName: defaultFileName});
         

@@ -145,6 +145,8 @@ export default function MarkBlock(props) {
             cv.strokeStyle = "red";
         } else if (type === "key") {
             cv.strokeStyle = "rgb(95, 207, 82)";
+        } else if (type === "ori") {
+            cv.strokeStyle = "yellow";
         }
 
         cv.moveTo(x, y);
@@ -200,13 +202,18 @@ export default function MarkBlock(props) {
     // }
     // 拉直
     const handleCanvasClick = (id, e) => {
-        if (focusedCv === id && (props.markMode === "fix" || props.markMode === "key") && id < props.cropImgList.length) {
+        if (focusedCv === id && (props.markMode === "fix" || props.markMode === "key" || props.markMode === "ori") && id < props.cropImgList.length) {
             let ele = document.getElementById('the-chmt-markblk-canvas-' + id);
             let objLeft = ele.offsetLeft;
             let objTop = ele.offsetTop;
 
             // 拒绝在左侧空白区标记的请求
             if (e.pageX-objLeft < config.num_canvas_padding_left) {
+                return;
+            }
+
+            // 已经有原点了
+            if (props.markedPoints.isOriginPointExisted(id) && props.markMode === "ori") {
                 return;
             }
 
@@ -269,7 +276,9 @@ export default function MarkBlock(props) {
 
     // 执行编号任务
     const numberMark = () => {
-        let ranking = props.markedPoints.getRanking();
+        // let ranking = props.markedPoints.getRanking();
+        let rankingAndGroup = props.markedPoints.getRankingAndGroup();
+        console.log(rankingAndGroup);
 
         for (let id = 0; id < 5; id++) {
             
@@ -285,11 +294,16 @@ export default function MarkBlock(props) {
             cv.fillStyle = "black";
             // ctx.textBaseline = "hanging";
 
-            for (let j in ranking[id]) {
-                let num = parseInt(j)+1;
-                cv.fillText(num, 0, props.markedPoints.getPoint(id, ranking[id][j]).y + config.num_canvas_number_size / 2);
+            // for (let j in ranking[id]) {
+            //     let num = parseInt(j)+1;
+            //     cv.fillText(num, 0, props.markedPoints.getPoint(id, ranking[id][j]).y + config.num_canvas_number_size / 2);
+            // }
+
+            for (let p = 0; p < rankingAndGroup[id].length; p++) {
+                let item = rankingAndGroup[id][p];
+                let num = parseInt(item.rank)+1;
+                cv.fillText(`${item.group}${num}`, 0, props.markedPoints.getPoint(id, p).y + config.num_canvas_number_size / 2); 
             }
-            
         }
     }
 
