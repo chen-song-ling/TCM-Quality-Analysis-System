@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./MarkBlock.css";
 import { MPListList } from "../util/MPListList";
+import { chromConfig } from '../util/const';
 
 /* StateType
     focusedCv: 目前聚焦的canvas编号
@@ -15,15 +16,15 @@ import { MPListList } from "../util/MPListList";
 */
 
 export default function MarkBlock(props) {
-    const [focusedCv, setFocusedCv] = useState(-1);
+    // const [focusedCv, setFocusedCv] = useState(-1);
     // const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
     // const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
 
     const config = {
-        num_canvas_width: 85,
-        num_canvas_height: 400, // ../util/Saver 下也有这个依赖
-        num_canvas_padding_left: 25,
-        num_canvas_number_size: 18,
+        num_canvas_width: chromConfig.standardMarkCanvasWidth,
+        num_canvas_height: chromConfig.standardMarkCanvasHeight, // ../util/Saver 下也有这个依赖
+        num_canvas_padding_left: chromConfig.standardMarkCanvasPaddingLeft,
+        num_canvas_number_size: chromConfig.standardMarkCanvasFontsize,
     }
 
     const reinit = () => {
@@ -66,6 +67,14 @@ export default function MarkBlock(props) {
     useEffect(() => {
         numberMark();
     }, [props.numberMark]);
+
+    useEffect(() => {
+        if (props.standardDrawInfo.id < 0 || props.standardDrawInfo.x < 0 || props.standardDrawInfo.y < 0) {
+            return;
+        } else {
+            drawPoint(props.standardDrawInfo.id, props.standardDrawInfo.x, props.standardDrawInfo.y, props.standardDrawInfo.type);
+        }
+    }, [props.standardDrawInfo])
 
     // 上传标记点信息
     // useEffect(() => {
@@ -142,11 +151,11 @@ export default function MarkBlock(props) {
         cv.beginPath();
         cv.lineWidth = 2;
         if (type === "fix") {
-            cv.strokeStyle = "red";
+            cv.strokeStyle = chromConfig.fixPointColor;
         } else if (type === "key") {
-            cv.strokeStyle = "rgb(95, 207, 82)";
+            cv.strokeStyle = chromConfig.keyPointColor;
         } else if (type === "ori") {
-            cv.strokeStyle = "yellow";
+            cv.strokeStyle = chromConfig.oriPointColor;
         }
 
         cv.moveTo(x, y);
@@ -202,7 +211,7 @@ export default function MarkBlock(props) {
     // }
     // 拉直
     const handleCanvasClick = (id, e) => {
-        if (focusedCv === id && (props.markMode === "fix" || props.markMode === "key" || props.markMode === "ori") && id < props.cropImgList.length) {
+        if (props.focusedCv === id && (props.markMode === "fix" || props.markMode === "key" || props.markMode === "ori") && id < props.cropImgList.length) {
             let ele = document.getElementById('the-chmt-markblk-canvas-' + id);
             let objLeft = ele.offsetLeft;
             let objTop = ele.offsetTop;
@@ -238,39 +247,43 @@ export default function MarkBlock(props) {
             // setMarkedPoints(newMarkedPoints);
 
             drawPoint(id, config.num_canvas_width - (imgw / 2), e.pageY-objTop, props.markMode);
+
+            props.ptc_uploadDrawPointToPreciseCanvas(id, config.num_canvas_width - (imgw / 2), e.pageY-objTop, props.markMode, null, null);
         }
     }
 
     // 处理按钮点击事件
     const handleBtnClick = (id) => {
-        if (id === focusedCv) {
-            setFocusedCv(-1);
+        if (id === props.focusedCv) {
+            // setFocusedCv(-1);
+            props.ptc_uploadFocusedCv(-1);
         } else {
-            setFocusedCv(id);
+            props.ptc_uploadFocusedCv(id);
+            // setFocusedCv(id);
         }
     }
 
     // 执行撤销点
     const undoMarkPoint = () => {
-        if (focusedCv !== -1) {
+        if (props.focusedCv !== -1) {
             let newMarkedPoints = props.markedPoints.fakeCopy();
-            newMarkedPoints.pop(focusedCv);
+            newMarkedPoints.pop(props.focusedCv);
             props.ptc_uploadMarkedPoints(newMarkedPoints);
             // setMarkedPoints(newMarkedPoints);
-
-            reDrawImgAndPoints(focusedCv, newMarkedPoints);
+            props.ptc_uploadDrawPointToPreciseCanvas(props.focusedCv, null, null, null, "undo", newMarkedPoints);
+            reDrawImgAndPoints(props.focusedCv, newMarkedPoints);
         }
     }
 
     // 执行清空点
     const clearMark = () => {
-        if (focusedCv !== -1) {
+        if (props.focusedCv !== -1) {
             let newMarkedPoints = props.markedPoints.fakeCopy();
-            newMarkedPoints.clear(focusedCv);
+            newMarkedPoints.clear(props.focusedCv);
             props.ptc_uploadMarkedPoints(newMarkedPoints);
             // setMarkedPoints(newMarkedPoints);
-
-            reDrawImgAndPoints(focusedCv, newMarkedPoints);
+            props.ptc_uploadDrawPointToPreciseCanvas(props.focusedCv, null, null, null, "clear", newMarkedPoints);
+            reDrawImgAndPoints(props.focusedCv, newMarkedPoints);
         }
     }
 
@@ -278,7 +291,8 @@ export default function MarkBlock(props) {
     const numberMark = () => {
         // let ranking = props.markedPoints.getRanking();
         let rankingAndGroup = props.markedPoints.getRankingAndGroup();
-        console.log(rankingAndGroup);
+        // console.log(props.markedPoints);
+        // console.log(rankingAndGroup);
 
         for (let id = 0; id < 5; id++) {
             
@@ -305,11 +319,12 @@ export default function MarkBlock(props) {
                 cv.fillText(`${item.group}${num}`, 0, props.markedPoints.getPoint(id, p).y + config.num_canvas_number_size / 2); 
             }
         }
+        props.ptc_uploadDrawPointToPreciseCanvas(props.focusedCv, null, null, null, "number", null);
     }
 
 
     const setBtnStyle = (id) => {
-        if (id === focusedCv) {
+        if (id === props.focusedCv) {
             return "btn btn-success chmt-markblk-btn";
         } else {
             return "btn btn-default chmt-markblk-btn";

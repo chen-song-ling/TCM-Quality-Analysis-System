@@ -9,6 +9,7 @@ import MpHeader from '../components/MpHeader';
 
 import CropCntr from "../components/CropCntr";
 import MarkCntr from "../components/MarkCntr";
+import HighPrecCntr from '../components/HighPrecCntr';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
 import { SaveAsCsv, SaveAsXlsx, SaveAsCsvPlus, SaveAsXlsxPlus } from "../util/Saver";
 import { MPListList } from "../util/MPListList";
@@ -35,6 +36,12 @@ export default function Chrom(props) {
 
     const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
     const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
+    const [focusedCv, setFocusedCv] = useState(-1);
+    const [markMode, setMarkMode] = useState("none");
+
+    const [standardDrawInfo, setStandardDrawInfo] = useState({id: -1, x: -1, y: -1, type: "none"});
+    const [preciseDrawInfo, setPreciseDrawInfo] = useState({id: -1, x: -1, y: -1, type: "none", func: null, mps: null});
+
 
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
 
@@ -151,6 +158,16 @@ export default function Chrom(props) {
         setCropBoxSizeList([]);
     }
 
+    // 上传标记模式
+    const uploadMarkMode = (newMarkMode) => {
+        setMarkMode(newMarkMode);
+    }
+
+    // 上传受注意的画布编号
+    const uploadFocusedCv = (newFocusedCv) => {
+        setFocusedCv(newFocusedCv);
+    }
+
     // 上传标记点数据
     const uploadMarkedPoints = (newMarkedPoints) => {
         setMarkedPoints(newMarkedPoints);
@@ -159,6 +176,27 @@ export default function Chrom(props) {
     // 上传色谱缩放尺度信息
     const uploadScalingRatios = (newScalingRatios) => {
         setScalingRatios(newScalingRatios)
+    }
+
+    // 上传绘点信息
+    const uploadDrawPointToStandardCanvas = (id, x, y, type) => {
+        setStandardDrawInfo({
+            id: id,
+            x: x,
+            y: y,
+            type: type,
+        });
+    }
+    // 上传绘点信息
+    const uploadDrawPointToPreciseCanvas = (id, x, y, type, func, mps) => {
+        setPreciseDrawInfo({
+            id: id,
+            x: x,
+            y: y,
+            type: type,
+            func: func,
+            mps: mps,
+        });
     }
 
     // 保存结果
@@ -258,32 +296,51 @@ export default function Chrom(props) {
                 ]}
             />
 
-            <div className="mp-chrom-content">
-                <CropCntr 
-                    snapshotRawImg={snapshotRawImg}
+            <div className='mp-vlist'>
+                <div className="mp-chrom-content">
+                    <CropCntr 
+                        snapshotRawImg={snapshotRawImg}
+                        sizeboxData={sizeboxData}
+                        ptc_uploadSizeboxData={uploadSizeboxData}
+                        ptc_uploadCropImg={uploadCropImg}
+                        ptc_uploadImgFileName={uploadImgFileName}
+                        ptc_uploadImgNaturalSize={uploadImgNaturalSize}
+                        ptc_uploadCropBoxSize={uploadCropBoxSize}
+                        ptc_triggerUndoCrop={triggerUndoCrop}
+                        ptc_triggerSetNewImg={triggerSetNewImg}
+                    />
+                    <MarkCntr                     
+                        ptc_triggerSaveResult={triggerSaveResult}
+                        ptc_triggerShowAttachment={triggerShowAttachment}
+                        ptc_uploadMarkMode={uploadMarkMode}
+                        ptc_uploadFocusedCv={uploadFocusedCv}
+                        ptc_uploadMarkedPoints={uploadMarkedPoints}
+                        ptc_uploadScalingRatios={uploadScalingRatios}
+                        ptc_uploadDrawPointToPreciseCanvas={uploadDrawPointToPreciseCanvas}
+                        ptc_triggerUploadResult={uploadSnapshot}
 
-                    sizeboxData={sizeboxData}
+                        cropImgList={cropImgList}
+                        cropBoxSizeList={cropBoxSizeList}
 
-                    ptc_uploadSizeboxData={uploadSizeboxData}
-                    ptc_uploadCropImg={uploadCropImg}
-                    ptc_uploadImgFileName={uploadImgFileName}
-                    ptc_uploadImgNaturalSize={uploadImgNaturalSize}
-                    ptc_uploadCropBoxSize={uploadCropBoxSize}
-                    ptc_triggerUndoCrop={triggerUndoCrop}
-                    ptc_triggerSetNewImg={triggerSetNewImg}
-                />
-                <MarkCntr                     
-                    ptc_triggerSaveResult={triggerSaveResult}
-                    ptc_triggerShowAttachment={triggerShowAttachment}
+                        focusedCv={focusedCv}
+                        markMode={markMode}
+                        markedPoints={markedPoints}
+                        scalingRatios={scalingRatios}
+
+                        standardDrawInfo={standardDrawInfo}
+                    />
+                </div>
+                <HighPrecCntr
                     ptc_uploadMarkedPoints={uploadMarkedPoints}
-                    ptc_uploadScalingRatios={uploadScalingRatios}
-                    ptc_triggerUploadResult={uploadSnapshot}
+                    ptc_uploadDrawPointToStandardCanvas={uploadDrawPointToStandardCanvas}
 
-                    cropImgList={cropImgList}
                     cropBoxSizeList={cropBoxSizeList}
-
+                    cropImgList={cropImgList}
                     markedPoints={markedPoints}
+                    markMode={markMode}
+                    focusedCv={focusedCv}
                     scalingRatios={scalingRatios}
+                    preciseDrawInfo={preciseDrawInfo}
                 />
             </div>
 

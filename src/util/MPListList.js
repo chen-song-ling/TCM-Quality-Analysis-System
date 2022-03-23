@@ -155,12 +155,12 @@ export class MPListList {
     // 与 getRanking() 命名类似, 但意思不一致, 具有迷惑性
     getRankingAndGroup() {
         let rankingAndGroup = [];
-        let groupLinks = [];
         let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let ranking = this.getRanking();
-        console.log(ranking);
-        console.log(this);
+        // console.log(ranking);
+        // console.log(this);
         for (let i = 0; i < this.mpListGroup.length; i++) {
+            let groupLinks = [];
             rankingAndGroup.push([]);
             for (let j = 0; j < this.mpListGroup[i].list.length; j++) {
                 let r = ranking[i].findIndex((x) => x == j);
@@ -179,7 +179,6 @@ export class MPListList {
             groupLinks.sort((a, b) => {
                 return a - b;
             });
-
             for (let j = 0; j < this.mpListGroup[i].list.length; j++) {
                 if (rankingAndGroup[i][j].group === -1) {
                     rankingAndGroup[i][j].group = "";

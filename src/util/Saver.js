@@ -1,3 +1,6 @@
+import { chromConfig } from './const';
+
+
 function getCsvHeaderType1 (num) {
     let ans = "第一种相对距离";
     for (let i = 0; i < num; i++) {
@@ -86,7 +89,7 @@ function getXlsxHeaderType5 (num) {
 }
 
 export function SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios) {
-    const num_canvas_height = 400; // 源于 ../components/MarkBlock, 要改一起改
+    const num_canvas_height = chromConfig.standardMarkCanvasHeight; // 源于 ../components/MarkBlock, 要改一起改
     
     let csv = "";
     
@@ -205,7 +208,7 @@ export function SaveAsCsv (sizeboxData, imgNaturalSize, cropBoxSizeList, markedP
 }
 
 export function SaveAsXlsx (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios) {
-    const num_canvas_height = 400; // 源于 ../components/MarkBlock, 要改一起改
+    const num_canvas_height = chromConfig.standardMarkCanvasHeight; // 源于 ../components/MarkBlock, 要改一起改
     
     let xlsx = [];
     let row = [];
@@ -331,7 +334,7 @@ export function SaveAsXlsx (sizeboxData, imgNaturalSize, cropBoxSizeList, marked
 
 
 export function SaveAsCsvPlus (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios) {
-    const num_canvas_height = 400; // 源于 ../components/MarkBlock, 要改一起改
+    const num_canvas_height = chromConfig.standardMarkCanvasHeight; // 源于 ../components/MarkBlock, 要改一起改
     
     let csv = "";
     
@@ -491,7 +494,7 @@ export function SaveAsCsvPlus (sizeboxData, imgNaturalSize, cropBoxSizeList, mar
 }
 
 export function SaveAsXlsxPlus (sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios) {
-    const num_canvas_height = 400; // 源于 ../components/MarkBlock, 要改一起改
+    const num_canvas_height = chromConfig.standardMarkCanvasHeight; // 源于 ../components/MarkBlock, 要改一起改
     
     let xlsx = [];
     let row = []

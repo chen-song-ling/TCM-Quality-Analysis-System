@@ -1,0 +1,12 @@
+.chmt-highpreccntr {
+    background-color: #eeeeee;
+    width: 1250px;
+    height: 200px;
+    margin-top: 10px;
+}
+
+.chmt-markblk-prec-canvas {
+    border-style: solid;
+    border-width: 1px;
+    cursor: crosshair;
+}

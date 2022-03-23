@@ -21,7 +21,7 @@ import MarkDashboard from "./MarkDashboard";
 */
 
 export default function MarkCntr(props) {
-    const [markMode, setMarkMode] = useState("none");
+    // const [markMode, setMarkMode] = useState("none");
 
     const [undoMark, doUndoMark] = useState(0);
     const [clearMark, doClearMark] = useState(0);
@@ -30,7 +30,8 @@ export default function MarkCntr(props) {
     //-- Protocol Begin
 
     const uploadMarkMode = (newMarkMode) => {
-        setMarkMode(newMarkMode);
+        // setMarkMode(newMarkMode);
+        props.ptc_uploadMarkMode(newMarkMode);
     }
 
     const uploadMarkedPoints = (newMarkedPoints) => {
@@ -39,6 +40,10 @@ export default function MarkCntr(props) {
 
     const uploadScalingRatios = (newScalingRatios) => {
         props.ptc_uploadScalingRatios(newScalingRatios);
+    }
+
+    const uploadFocusedCv = (newFocusedCv) => {
+        props.ptc_uploadFocusedCv(newFocusedCv);
     }
 
     // 上传 MarkBlock 的快照数据
@@ -70,6 +75,10 @@ export default function MarkCntr(props) {
         props.ptc_triggerUploadResult();
     }
 
+    // const uploadDrawPointToPreciseCanvas = (newPrecDrawInfo) => {
+    //     props.ptc_uploadDrawPointToPreciseCanvas(newPrecDrawInfo);
+    // }
+
     //-- Protocol End
 
     return (
@@ -79,17 +88,22 @@ export default function MarkCntr(props) {
                 ptc_uploadMarkedPoints={uploadMarkedPoints}
                 ptc_uploadScalingRatios={uploadScalingRatios}
                 ptc_uploadMBSnapshootData={uploadMBSnapshootData}
+                ptc_uploadFocusedCv={uploadFocusedCv}
+                ptc_uploadDrawPointToPreciseCanvas={props.ptc_uploadDrawPointToPreciseCanvas}
 
                 cropImgList={props.cropImgList}
                 cropBoxSizeList={props.cropBoxSizeList}
 
                 markedPoints={props.markedPoints}
                 scalingRatios={props.scalingRatios}
+                markMode={props.markMode}
+                focusedCv={props.focusedCv}
 
-                markMode={markMode}
                 undoMark={undoMark}
                 clearMark={clearMark}
                 numberMark={numberMark}
+
+                standardDrawInfo={props.standardDrawInfo}
             />
             <MarkDashboard 
                 ptc_uploadMarkMode={uploadMarkMode}
