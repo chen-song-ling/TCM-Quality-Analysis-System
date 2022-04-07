@@ -23,12 +23,12 @@ export default function MarkDashboard(props) {
     const [markMode, setMarkMode] = useState("none"); 
 
     const config = {
-        text_fixbtn_active: "标记定位点(红色)",
-        text_fixbtn_fallow: "标记定位点(红色)",
-        text_keybtn_active: "标记关键点(绿色)",
-        text_keybtn_fallow: "标记关键点(绿色)",
-        text_oribtn_active: "标记关键点(黄色)",
-        text_oribtn_fallow: "标记关键点(黄色)",
+        text_fixbtn_active: "标记定位斑点(红色)",
+        text_fixbtn_fallow: "标记定位斑点(红色)",
+        text_keybtn_active: "标记鉴别斑点(绿色)",
+        text_keybtn_fallow: "标记鉴别斑点(绿色)",
+        text_oribtn_active: "标记原点(黄色)",
+        text_oribtn_fallow: "标记原点(黄色)",
         text_undobtn: "撤销标记",
         text_clearbtn: "清空标记",
         text_numberbtn: "开始标号",

@@ -131,6 +131,8 @@ export default function PictureWall(props) {
                 <Cropper
                     style={{ height: 400, width: "100%" }}
                     zoomable={false}
+                    modal={false}
+                    highlight={false}
                     zoomTo={0.5} //
                     initialAspectRatio={0}
                     preview=".img-preview"

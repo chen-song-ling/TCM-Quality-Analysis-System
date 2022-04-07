@@ -124,7 +124,8 @@ export default function HighPrecCntr(props) {
         let leftSpaceWidth = chromConfig.precisedMarkCanvasWidth - props.cropBoxSizeList[props.focusedCv].height * precScalingRatio;
 
         let px = (y - topSpaceHeightInStandardMarkCanvase) / a + leftSpaceWidth;
-        let py = (imgwInStandardMarkCanvase - (x - chromConfig.standardMarkCanvasPaddingLeft)) / a;
+        // let py = (imgwInStandardMarkCanvase - (x - chromConfig.standardMarkCanvasPaddingLeft)) / a;
+        let py = imgwInStandardMarkCanvase/a/2;
 
         let cv = document.getElementById(preccid)?.getContext('2d');
         if (cv === undefined) {

@@ -617,6 +617,8 @@ export default function Character(props) {
                 <Cropper
                     style={{ height: 400, width: "100%" }}
                     zoomable={false}
+                    modal={false}
+                    highlight={false}
                     zoomTo={0.5} //
                     initialAspectRatio={1}
                     preview=".img-preview"
