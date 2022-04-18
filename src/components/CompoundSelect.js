@@ -5,6 +5,7 @@ import { Space, Select } from 'antd';
 export default function CompoundSelect(props) {
     var textAreaWidth = 300;
     var fieldWidth = 100;
+    var isDisabled = false;
     var options = [];
 
     if (props.textWidth !== undefined) {
@@ -23,6 +24,10 @@ export default function CompoundSelect(props) {
         }
     }
 
+    if (props.isDisabled !== undefined) {
+        isDisabled = props.isDisabled;
+    }
+
 
     return (
         <div className="mp-c-cpdslt">
@@ -33,7 +38,7 @@ export default function CompoundSelect(props) {
                         {props.fieldName}
                     </h3>
                 </div>
-                <Select className=".mp-c-cpdslt-select" defaultValue={props.defaultValue} style={{ width: textAreaWidth }} onChange={props.onSelectChange}>
+                <Select className=".mp-c-cpdslt-select" defaultValue={props.defaultValue} style={{ width: textAreaWidth }} onChange={props.onSelectChange} disabled={isDisabled}>
                     {options}
                 </Select>
             </Space>

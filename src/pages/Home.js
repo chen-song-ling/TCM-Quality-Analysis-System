@@ -281,6 +281,8 @@ export default function Home(props) {
         // console.log(idx);
         if (idx === '0') {
             setRedirect("/me");
+        } else if (idx === '2') {
+            setRedirect("/bank");
         }
     }
 

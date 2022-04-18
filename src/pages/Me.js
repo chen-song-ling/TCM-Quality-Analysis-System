@@ -51,10 +51,12 @@ export default function Me(props) {
     const handleMenuItemClick = (idx, e) => {
         if (idx === '1') {
             setRedirect("/home");
+        } else if (idx === '2') {
+            setRedirect("/bank");
         }
     }
 
-    const onAddRecordInputChange = (e, tag) => {
+    const onInputChange = (e, tag) => {
         if (tag === "name") {
             setInputName(e.target.value);
         } else if (tag === "username") {
@@ -161,7 +163,7 @@ export default function Me(props) {
                         textWidth={200}
                         maxLength={30}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "name")}
+                        onInputChange={(e) => onInputChange(e, "name")}
                     />
 
                     <CompoundInput
@@ -172,7 +174,7 @@ export default function Me(props) {
                         textWidth={200}
                         maxLength={30}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "username")}
+                        onInputChange={(e) => onInputChange(e, "username")}
                     />
 
                     <CompoundInput
@@ -184,7 +186,7 @@ export default function Me(props) {
                         maxLength={30}
                         isDisabled={true}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "isadministrator")}
+                        onInputChange={(e) => onInputChange(e, "isadministrator")}
                     />
 
                     <CompoundInput
@@ -196,7 +198,7 @@ export default function Me(props) {
                         maxLength={30}
                         isPassword={true}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "password1")}
+                        onInputChange={(e) => onInputChange(e, "password1")}
                     />
 
                     <CompoundInput
@@ -208,7 +210,7 @@ export default function Me(props) {
                         maxLength={30}
                         isPassword={true}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "password2")}
+                        onInputChange={(e) => onInputChange(e, "password2")}
                     />
 
                     <Button type="primary" size={'large'} onClick={onUpdateInfoClick} style={{ marginBottom: 40 }}>

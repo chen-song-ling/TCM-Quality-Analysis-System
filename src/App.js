@@ -10,6 +10,7 @@ import Chrom from './pages/Chrom';
 import Micro from './pages/Micro';
 import Test from './pages/Test';
 import Me from './pages/Me';
+import Bank from './pages/Bank';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/register" component={Register} />
           <Route exact path="/admin-register" component={AdminLogin} />
           <Route path="/me" component={Me} />
+          <Route path="/bank" component={Bank} />
           <Route path="/" component={Login} />
         </Switch>
       </div>

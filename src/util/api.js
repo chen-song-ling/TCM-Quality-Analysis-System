@@ -491,3 +491,92 @@ export const apiPutUserMe = (accessToken, fullName, email, password) => {
         });
     });
 }
+
+export const apiGetAccountList = (accessToken, skip, limit, sortField, sortOrder, searchKey) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users`,
+            params: {
+                skip: skip,
+                limit: limit,
+                // sort_by_field: sortField,
+                // sort_order: sortOrder,
+                // search_key: searchKey,
+            },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiAddAccount = (accessToken, name, username, password, isadministrator) => {
+    let jsonData = {
+        full_name: name,
+        email: username,
+        password: password,
+        is_active: true,
+        is_superuser: isadministrator,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users`,
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiUpdateAccount = (accessToken, name, username, password, isadministrator, userId) => {
+    let jsonData = {
+        full_name: name,
+        email: username,
+        password: password,
+        is_active: true,
+        is_superuser: isadministrator,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users/${userId}`,
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteAccount = (accessToken, userId) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users/${userId}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
