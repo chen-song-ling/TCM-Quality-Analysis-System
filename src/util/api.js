@@ -452,3 +452,42 @@ export const apiDeleteProjectAttachment = (accessToken, projrctId, fileUuid) => 
         });
     });
 }
+
+export const apiGetUserMe = (accessToken) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users/me`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiPutUserMe = (accessToken, fullName, email, password) => {
+    let jsonData = {
+        password: password,
+        full_name: fullName,
+        email: email,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/users/me`,
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}

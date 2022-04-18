@@ -18,7 +18,11 @@ import ProjectTable from '../components/ProjectTable';
 import CompoundInput from '../components/CompoundInput';
 import CompoundSelect from '../components/CompoundSelect';
 import AttachmentDrawerPlus from '../components/AttachmentDrawerPlus';
-import { Button, Modal, Space, notification } from 'antd';
+import { Layout, Menu, Button, Modal, Space, notification } from 'antd';
+
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
+
 
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;

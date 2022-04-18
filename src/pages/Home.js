@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Home.css';
 
-import { Modal, Space, notification } from 'antd';
+import { Layout, Menu, Modal, Space, notification } from 'antd';
 import CompoundInput from '../components/CompoundInput';
 import { setProjectId } from '../slices/projectSlice';
-import { apiGetProjectList, apiAddProject, apiDeleteProject, apiUpdateProject } from '../util/api';
+import { apiGetUserMe, apiGetProjectList, apiAddProject, apiDeleteProject, apiUpdateProject } from '../util/api';
 import HomeHeader from '../components/HomeHeader';
 import HomeTable from '../components/HomeTable';
+import HomeSider from '../components/HomeSider';
+
+const { Header, Content, Sider } = Layout;
 
 export default function Home(props) {
     const [redirect, setRedirect] = useState(null);
@@ -39,14 +42,17 @@ export default function Home(props) {
     const [sortOrder, setSortOrder] = useState("descend");
     const [sortField, setSortField] = useState("creation_time");
 
+    const [isAdministrator, setIsAdministrator] = useState(false);
+
+
     const updateProjectList = () => {
-        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sortField, sortOrder, searchKey).then((res) => {
+        apiGetProjectList(accessToken, (pagination.current - 1) * pagination.pageSize, pagination.pageSize, sortField, sortOrder, searchKey).then((res) => {
             // console.log(res.data);
             let data = res.data;
             let newData = [];
             data.data.forEach(item => {
                 let date = new Date(item.creation_time);
-                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth() + 1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
                 newData.push({
                     key: item.id,
                     id: item.id,
@@ -73,6 +79,17 @@ export default function Home(props) {
         });
     };
 
+    const updateSiderItem = () => {
+        apiGetUserMe(accessToken).then((res) => {
+            // console.log(res);
+            if (res.data.is_superuser === true) {
+                setIsAdministrator(true);
+            }
+        }).catch((err) => {
+            console.log(err);
+        }); 
+    }
+
     useEffect(() => {
 
         updateProjectList();
@@ -81,6 +98,7 @@ export default function Home(props) {
 
     useEffect(() => {
         updateProjectList();
+        updateSiderItem();
 
     }, []);
 
@@ -120,7 +138,7 @@ export default function Home(props) {
         setInputStandard(record.standard);
         setInputNote(record.note);
         setIsEditModalVisible(true);
-       
+
     }
 
     const onDeleteClick = (record) => {
@@ -143,14 +161,14 @@ export default function Home(props) {
         }
         setSortOrder(sorter.order);
 
-        apiGetProjectList(accessToken, (pagination.current-1)*pagination.pageSize, pagination.pageSize, sort_by_field, sorter.order, searchKey).then((res) => {
+        apiGetProjectList(accessToken, (pagination.current - 1) * pagination.pageSize, pagination.pageSize, sort_by_field, sorter.order, searchKey).then((res) => {
             // console.log(res.data);
             let data = res.data;
 
             let newData = [];
             data.data.forEach(item => {
                 let date = new Date(item.creation_time);
-                let dateStr = date.getFullYear() + "-" + `${date.getMonth()+1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
+                let dateStr = date.getFullYear() + "-" + `${date.getMonth() + 1}`.padStart(2, '0') + "-" + `${date.getDate()}`.padStart(2, '0');
                 newData.push({
                     key: item.id,
                     id: item.id,
@@ -236,7 +254,7 @@ export default function Home(props) {
             setIsAddModalVisible(false);
         }
 
-        
+
     }
 
     const onAddProjectCancel = () => {
@@ -257,6 +275,17 @@ export default function Home(props) {
 
     // -- END -- AddModal相关
 
+    // -- BEGIN -- Sider相关
+
+    const handleMenuItemClick = (idx, e) => {
+        // console.log(idx);
+        if (idx === '0') {
+            setRedirect("/me");
+        }
+    }
+
+    // -- END -- Sider相关
+
     if (redirect !== null) {
         return (
             <Redirect push to={redirect} />
@@ -264,134 +293,155 @@ export default function Home(props) {
     }
 
     return (
-        <div className="mp-home">
-            <HomeHeader
-                username={username}
-                onQuitClick={onQuitClick}
-                onAddClick={onAddClick}
-                onSearch={onSearch}
-            />
-            <HomeTable 
-                onExamineClick={onExamineClick}
-                onEditClick={onEditClick}
-                onDeleteClick={onDeleteClick}
-                onTableChange={onTableChange}
-                data={data}
-                pagination={pagination}
-                loading={loading}
+        <Layout
+            className="mp-home-layout"
+        >
+
+            <HomeSider 
+                defaultSelectedKey='1'
+                isAdministrator={isAdministrator}
+                handleMenuItemClick={handleMenuItemClick}
             />
 
-            <Modal
-                title="编辑项目"
-                visible={isEditModalVisible}
-                onOk={onEditProjectOk}
-                onCancel={onEditProjectCancel}
-                okText="确认"
-                cancelText="取消"
+            <Content
+                className="site-layout-background"
+                style={{
+                    padding: 24,
+                    margin: 0,
+                    minHeight: 280,
+                }}
             >
-                <Space className="mp-vlist" direction="vertical" size={'small'}>
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="检品名称"
-                        text={inputName}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={10}
 
-                        onInputChange={(e) => onEditRecordInputChange(e, "name")}
+                <div className="mp-home">
+                    <HomeHeader
+                        username={username}
+                        onQuitClick={onQuitClick}
+                        onAddClick={onAddClick}
+                        onSearch={onSearch}
+                    />
+                    <HomeTable
+                        onExamineClick={onExamineClick}
+                        onEditClick={onEditClick}
+                        onDeleteClick={onDeleteClick}
+                        onTableChange={onTableChange}
+                        data={data}
+                        pagination={pagination}
+                        loading={loading}
                     />
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="项目编号"
-                        text={inputSampleId}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={30}
+                    <Modal
+                        title="编辑项目"
+                        visible={isEditModalVisible}
+                        onOk={onEditProjectOk}
+                        onCancel={onEditProjectCancel}
+                        okText="确认"
+                        cancelText="取消"
+                    >
+                        <Space className="mp-vlist" direction="vertical" size={'small'}>
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="检品名称"
+                                text={inputName}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={10}
 
-                        onInputChange={(e) => onEditRecordInputChange(e, "sampleId")}
-                    />
+                                onInputChange={(e) => onEditRecordInputChange(e, "name")}
+                            />
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="执行标准"
-                        text={inputStandard}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={10}
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="项目编号"
+                                text={inputSampleId}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={30}
 
-                        onInputChange={(e) => onEditRecordInputChange(e, "standard")}
-                    />
+                                onInputChange={(e) => onEditRecordInputChange(e, "sampleId")}
+                            />
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="备注"
-                        text={inputNote}
-                        isRequired={false}
-                        textWidth={200}
-                        maxLength={100}
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="执行标准"
+                                text={inputStandard}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={10}
 
-                        onInputChange={(e) => onEditRecordInputChange(e, "note")}
-                    />
-                </Space>
-                
-            </Modal>
+                                onInputChange={(e) => onEditRecordInputChange(e, "standard")}
+                            />
 
-            <Modal
-                title="添加项目"
-                visible={isAddModalVisible}
-                onOk={onAddProjectOk}
-                onCancel={onAddProjectCancel}
-                okText="确认"
-                cancelText="取消"
-            >
-                <Space className="mp-vlist" direction="vertical" size={'small'}>
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="检品名称"
-                        text={inputName}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={10}
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="备注"
+                                text={inputNote}
+                                isRequired={false}
+                                textWidth={200}
+                                maxLength={100}
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "name")}
-                    />
+                                onInputChange={(e) => onEditRecordInputChange(e, "note")}
+                            />
+                        </Space>
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="项目编号"
-                        text={inputSampleId}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={30}
+                    </Modal>
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "sampleId")}
-                    />
+                    <Modal
+                        title="添加项目"
+                        visible={isAddModalVisible}
+                        onOk={onAddProjectOk}
+                        onCancel={onAddProjectCancel}
+                        okText="确认"
+                        cancelText="取消"
+                    >
+                        <Space className="mp-vlist" direction="vertical" size={'small'}>
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="检品名称"
+                                text={inputName}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={10}
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="执行标准"
-                        text={inputStandard}
-                        isRequired={true}
-                        textWidth={200}
-                        maxLength={10}
+                                onInputChange={(e) => onAddRecordInputChange(e, "name")}
+                            />
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "standard")}
-                    />
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="项目编号"
+                                text={inputSampleId}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={30}
 
-                    <CompoundInput
-                        isSwitchHidden={true}
-                        fieldName="备注"
-                        text={inputNote}
-                        isRequired={false}
-                        textWidth={200}
-                        maxLength={100}
+                                onInputChange={(e) => onAddRecordInputChange(e, "sampleId")}
+                            />
 
-                        onInputChange={(e) => onAddRecordInputChange(e, "note")}
-                    />
-                </Space>
-                
-            </Modal>
-        </div>
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="执行标准"
+                                text={inputStandard}
+                                isRequired={true}
+                                textWidth={200}
+                                maxLength={10}
+
+                                onInputChange={(e) => onAddRecordInputChange(e, "standard")}
+                            />
+
+                            <CompoundInput
+                                isSwitchHidden={true}
+                                fieldName="备注"
+                                text={inputNote}
+                                isRequired={false}
+                                textWidth={200}
+                                maxLength={100}
+
+                                onInputChange={(e) => onAddRecordInputChange(e, "note")}
+                            />
+                        </Space>
+
+                    </Modal>
+                </div>
+            </Content>
+        </Layout>
     );
 }

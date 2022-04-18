@@ -9,6 +9,8 @@ import AdminLogin from './pages/AdminLogin';
 import Chrom from './pages/Chrom';
 import Micro from './pages/Micro';
 import Test from './pages/Test';
+import Me from './pages/Me';
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
           <Route exact path="/home" component={Home} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/admin-register" component={AdminLogin} />
+          <Route path="/me" component={Me} />
           <Route path="/" component={Login} />
         </Switch>
       </div>
