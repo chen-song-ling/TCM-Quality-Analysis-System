@@ -12,6 +12,7 @@ import Test from './pages/Test';
 import Me from './pages/Me';
 import Bank from './pages/Bank';
 import Clist from './pages/Clist';
+import Ctmpl from './pages/Ctmpl';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/me" component={Me} />
           <Route path="/bank" component={Bank} />
           <Route path="/clist" component={Clist} />
+          <Route path="/ctmpl" component={Ctmpl} />
           <Route path="/" component={Login} />
         </Switch>
       </div>

@@ -626,10 +626,104 @@ export const apiAddFunction = (accessToken, name, standard) => {
     });
 }
 
-export const apiDeleteFunction = (accessToken, userId) => {
+export const apiDeleteFunction = (accessToken, functionId) => {
     return new Promise((resolve, reject) => {
         axios({
-            url: `${baseUrl}/api/${version}/functions/${userId}`,
+            url: `${baseUrl}/api/${version}/functions/${functionId}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiGetFunction = (accessToken, id) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${id}`,
+            params: {
+            },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiUpdateFunction = (accessToken, name, standard, functionId) => {
+
+    let jsonData = {
+        name: name,
+        standard_desc: standard,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${functionId}`,
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiUpdateVariable = (accessToken, variable, functionId) => {
+
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${functionId}/variables`,
+            data: JSON.stringify(variable),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "put",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiAddFunctionExcel = (accessToken, functionId, formData) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${functionId}/excel_file`,
+            data: formData,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteFunctionExcel = (accessToken, functionId) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${functionId}/excel_file`,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import './Clist.css';
 
+import { setCtmplId } from '../slices/ctmplSlice';
 import { Button, Layout, Menu, Modal, Space, notification } from 'antd';
 import { apiGetFunctionList, apiAddFunction, apiDeleteFunction } from '../util/api';
 import HomeSider from '../components/HomeSider';
@@ -99,7 +100,8 @@ export default function Clist(props) {
     // -- BEGIN -- ClistTable相关
 
     const onEditClick = (record) => {
-
+        dispatch(setCtmplId(record.id));
+        setRedirect("/ctmpl");
     }
 
     const onDeleteClick = (record) => {
@@ -229,7 +231,7 @@ export default function Clist(props) {
                     <Space className="mp-vlist" direction="vertical" size={'small'}>
                         <CompoundInput
                             isSwitchHidden={true}
-                            fieldName="模版名"
+                            fieldName="模版名称"
                             text={inputName}
                             isRequired={true}
                             textWidth={200}
