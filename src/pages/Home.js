@@ -283,6 +283,8 @@ export default function Home(props) {
             setRedirect("/me");
         } else if (idx === '2') {
             setRedirect("/bank");
+        } else if (idx === '3') {
+            setRedirect("/clist");
         }
     }
 

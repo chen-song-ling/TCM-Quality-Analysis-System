@@ -580,3 +580,64 @@ export const apiDeleteAccount = (accessToken, userId) => {
         });
     });
 }
+
+export const apiGetFunctionList = (accessToken, skip, limit, sortField, sortOrder, searchKey) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions`,
+            params: {
+                skip: skip,
+                limit: limit,
+                sort_by_field: sortField,
+                sort_order: sortOrder,
+                // search_key: searchKey,
+            },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "get",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiAddFunction = (accessToken, name, standard) => {
+    let jsonData = {
+        name: name,
+        standard_desc: standard,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions`,
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json;'
+            },
+            method: "post",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+export const apiDeleteFunction = (accessToken, userId) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: `${baseUrl}/api/${version}/functions/${userId}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            method: "delete",
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}

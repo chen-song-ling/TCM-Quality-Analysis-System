@@ -90,6 +90,8 @@ export default function Bank(props) {
             setRedirect("/me");
         } else if (idx === '1') {
             setRedirect("/home");
+        } else if (idx === '3') {
+            setRedirect("/clist");
         }
     }
 

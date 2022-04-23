@@ -11,6 +11,7 @@ import Micro from './pages/Micro';
 import Test from './pages/Test';
 import Me from './pages/Me';
 import Bank from './pages/Bank';
+import Clist from './pages/Clist';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/admin-register" component={AdminLogin} />
           <Route path="/me" component={Me} />
           <Route path="/bank" component={Bank} />
+          <Route path="/clist" component={Clist} />
           <Route path="/" component={Login} />
         </Switch>
       </div>

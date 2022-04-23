@@ -53,6 +53,8 @@ export default function Me(props) {
             setRedirect("/home");
         } else if (idx === '2') {
             setRedirect("/bank");
+        } else if (idx === '3') {
+            setRedirect("/clist");
         }
     }
 
