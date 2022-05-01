@@ -29,6 +29,8 @@ export default function MarkDashboard(props) {
         text_keybtn_fallow: "标记鉴别斑点(绿色)",
         text_oribtn_active: "标记原点(黄色)",
         text_oribtn_fallow: "标记原点(黄色)",
+        text_escbtn_fallow: "标记逃逸点(橙色)",
+        text_escbtn_active: "标记逃逸点(橙色)",
         text_undobtn: "撤销标记",
         text_clearbtn: "清空标记",
         text_numberbtn: "开始标号",
@@ -54,6 +56,12 @@ export default function MarkDashboard(props) {
                 newone = "none";
             } else {
                 newone = "ori";
+            }
+        } else if (tag === "esc") {
+            if (markMode === "esc") {
+                newone = "none";
+            } else {
+                newone = "esc";
             }
         }
         setMarkMode(newone);
@@ -84,6 +92,14 @@ export default function MarkDashboard(props) {
         }
     }
 
+    const setEscBtnStyle = () => {
+        if (markMode === "esc") {
+            return "btn btn-esc";
+        } else {
+            return "btn btn-default";
+        }
+    }
+
     const setFixBtnText = () => {
         if (markMode === "fix") {
             return config.text_fixbtn_active;
@@ -105,6 +121,14 @@ export default function MarkDashboard(props) {
             return config.text_oribtn_active;
         } else {
             return config.text_oribtn_fallow;
+        }
+    } 
+
+    const setEscBtnText = () => {
+        if (markMode === "esc") {
+            return config.text_escbtn_active;
+        } else {
+            return config.text_escbtn_fallow;
         }
     } 
 
@@ -142,7 +166,7 @@ export default function MarkDashboard(props) {
                 <button type="button" className={setFixBtnStyle()} onClick={()=>handleFKBtnClick("fix")}>{setFixBtnText()}</button>
                 <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")}>{setKeyBtnText()}</button>
                 <button type="button" className={setOriBtnStyle()} onClick={()=>handleFKBtnClick("ori")}>{setOriBtnText()}</button>
-                <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>
+                <button type="button" className={setEscBtnStyle()} onClick={()=>handleFKBtnClick("esc")}>{setEscBtnText()}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleUploadBtn}>{"保存"}</button>
             </div>
             <div className="chmt-markdb-btnlist">
@@ -151,6 +175,7 @@ export default function MarkDashboard(props) {
                 <button type="button" className="btn btn-default" onClick={handleNumberBtn}>{config.text_numberbtn}</button>
                 <button type="button" className="btn btn-default" disabled="disabled" onClick={handleReportBtn}>{"预览报告"}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleSaveBtn}>{config.text_savebtn}</button>
+                <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>
             </div>
         </div>
     );

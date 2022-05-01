@@ -156,6 +156,8 @@ export default function MarkBlock(props) {
             cv.strokeStyle = chromConfig.keyPointColor;
         } else if (type === "ori") {
             cv.strokeStyle = chromConfig.oriPointColor;
+        } else if (type === "esc") {
+            cv.strokeStyle = chromConfig.escPointColor;
         }
 
         cv.moveTo(x, y);
@@ -211,7 +213,7 @@ export default function MarkBlock(props) {
     // }
     // 拉直
     const handleCanvasClick = (id, e) => {
-        if (props.focusedCv === id && (props.markMode === "fix" || props.markMode === "key" || props.markMode === "ori") && id < props.cropImgList.length) {
+        if (props.focusedCv === id && (props.markMode === "fix" || props.markMode === "key" || props.markMode === "ori" || props.markMode === "esc") && id < props.cropImgList.length) {
             let ele = document.getElementById('the-chmt-markblk-canvas-' + id);
             let objLeft = ele.offsetLeft;
             let objTop = ele.offsetTop;

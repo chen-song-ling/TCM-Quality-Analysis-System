@@ -2,6 +2,7 @@ class MPoint {
     // link: int, 关键点的关联定位点
     // type: "fix" or "key", 指明点点类型是定位点亦或者是关键点
     // type: "ori", 原点
+    // type: "esc", 逃逸点
     constructor(x, y, type, link, color) {
         this.x = x;
         this.y = y;
@@ -95,6 +96,8 @@ export class MPListList {
         } else if (type === "ori") {
             link = -1;
             this.originIdx[idx] = this.mpListGroup[idx].list.length;
+        } else if (type === "esc") {
+            link = this.fpListGroup[idx][this.fpListGroup[idx].length-1];
         }
         this.mpListGroup[idx].pushMp(new MPoint(x, y, type, link, color));
     }
@@ -185,9 +188,17 @@ export class MPListList {
                 } else {
                     let index = groupLinks.findIndex((x) => x == rankingAndGroup[i][j].group);
                     if (index < alphabet.length) {
-                        rankingAndGroup[i][j].group = alphabet.charAt(index);
+                        if (this.mpListGroup[i].list[j].type === 'esc') {
+                            rankingAndGroup[i][j].group = alphabet.charAt(index) + "'";
+                        } else {
+                            rankingAndGroup[i][j].group = alphabet.charAt(index);
+                        }
                     } else {
-                        rankingAndGroup[i][j].group = "XX";
+                        if (this.mpListGroup[i].list[j].type === 'esc') {
+                            rankingAndGroup[i][j].group = "XX'";
+                        } else {
+                            rankingAndGroup[i][j].group = "XX";
+                        }
                     }
                 }
             }

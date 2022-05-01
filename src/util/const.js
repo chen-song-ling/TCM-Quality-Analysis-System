@@ -10,6 +10,7 @@ export const chromConfig = {
     fixPointColor: "red",
     keyPointColor: "rgb(95, 207, 82)",
     oriPointColor: "yellow",
+    escPointColor: "rgb(255, 153, 18)",
 
     standardMarkCanvasWidth: 90,
     standardMarkCanvasHeight: 400,

@@ -111,23 +111,42 @@
     border-color: #398439;
 }
 
+.btn-esc {
+    color: #fff;
+    background-color: #ff9912;
+    border-color: #c47d21;
+}
+
+.btn-esc:hover {
+    color: #fff;
+    background-color: #eb8e55;
+    border-color: #c07b50;
+}
+
+.btn-esc:active{
+    color: #fff;
+    background-color: #eb8e55;
+    background-image: none;
+    border-color: #c07b50;
+}
+
 .btn-warning {
     color: #fff;
-    background-color: #f0ad4e;
-    border-color: #eea236;
+    background-color: #ffe384;
+    border-color: #d5bd6d;
 }
 
 .btn-warning:hover {
     color: #fff;
-    background-color: #ec971f;
-    border-color: #d58512;
+    background-color: #ceb870;
+    border-color: #ac9a5d;
 }
 
 .btn-warning:active{
     color: #fff;
-    background-color: #449d44;
+    background-color: #ceb870;
     background-image: none;
-    border-color: #398439;
+    border-color: #ac9a5d;
 }
 
 .btn-primary {
