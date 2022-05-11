@@ -29,18 +29,20 @@ export default function Chrom(props) {
 
     const chromId = useSelector(state => state.chrom.chromId);
 
-    const [sizeboxData, setSizeboxData] = useState({width: "", height: "", err: "initErr"});
+    const [sizeboxData, setSizeboxData] = useState({ width: "", height: "", err: "initErr" });
     const [cropImgList, setCropImgList] = useState([]);
     const [imgNaturalSize, setImgNaturalSize] = useState(null);
     const [cropBoxSizeList, setCropBoxSizeList] = useState([]);
+
+    const [isColorPickerModalVisible, setIsColorPickerModalVisible] = useState(false);
 
     const [markedPoints, setMarkedPoints] = useState(new MPListList(5));
     const [scalingRatios, setScalingRatios] = useState([0, 0, 0, 0, 0]);
     const [focusedCv, setFocusedCv] = useState(-1);
     const [markMode, setMarkMode] = useState("none");
 
-    const [standardDrawInfo, setStandardDrawInfo] = useState({id: -1, x: -1, y: -1, type: "none"});
-    const [preciseDrawInfo, setPreciseDrawInfo] = useState({id: -1, x: -1, y: -1, type: "none", func: null, mps: null});
+    const [standardDrawInfo, setStandardDrawInfo] = useState({ id: -1, x: -1, y: -1, type: "none" });
+    const [preciseDrawInfo, setPreciseDrawInfo] = useState({ id: -1, x: -1, y: -1, type: "none", func: null, mps: null });
 
 
     const imgFileName = useRef("未命名"); // 上传色谱图片的文件名
@@ -94,6 +96,10 @@ export default function Chrom(props) {
 
     //-- Protocol Begin
 
+    const uploadIsColorPickerModalVisible = (newone) => {
+        setIsColorPickerModalVisible(newone);
+    }
+
     const uploadSizeboxData = (newSizeboxData) => {
         setSizeboxData(newSizeboxData);
     }
@@ -118,8 +124,8 @@ export default function Chrom(props) {
         console.log(snap());
 
         apiGetTask(accessToken, chromId).then((res) => {
-            let result = {...res.data.result}
-            result.result_str="1";
+            let result = { ...res.data.result }
+            result.result_str = "1";
             console.log(result);
             apiUpdateTask(accessToken, res.data.name, res.data.type, res.data.id, "characterStandard", "characterManualResult", [], res.data.attachments, result, res.data.sub_type).then((res) => {
                 notification.open({
@@ -133,7 +139,7 @@ export default function Chrom(props) {
                 });
                 console.log(err);
             });
-            
+
         }).catch((err) => {
             console.log(err);
         });
@@ -219,8 +225,8 @@ export default function Chrom(props) {
         let xlsx = SaveAsXlsxPlus(sizeboxData, imgNaturalSize, cropBoxSizeList, markedPoints, scalingRatios);
         console.log(xlsx);
         // ipcRenderer.send("save-chrom-csv-with-dialog", {csv: csv, defaultFileName: defaultFileName});
-        ipcRenderer.send("save-chrom-xlsx-with-dialog", {xlsx: xlsx, csv: csv, defaultFileName: defaultFileName});
-        
+        ipcRenderer.send("save-chrom-xlsx-with-dialog", { xlsx: xlsx, csv: csv, defaultFileName: defaultFileName });
+
 
     }
 
@@ -228,8 +234,12 @@ export default function Chrom(props) {
     const triggerShowAttachment = () => {
         // setUpdateAttachmentToggle(updateAttachmentToggle+1);
         setIsAttachmentDrawerVisible(true);
-        
+
         // console.log(snap());
+    }
+
+    const triggerColorPicker = () => {
+        setIsColorPickerModalVisible(true);
     }
 
     //-- Protocol END
@@ -272,13 +282,13 @@ export default function Chrom(props) {
 
     return (
         <div className="mp-chrom">
-        
+
             <MpHeader
                 onHeaderBackClick={onHeaderBackClick}
                 onQuitClick={onQuitClick}
                 onBreadClick={onBreadClick}
                 username={username}
-                breadItems = {[
+                breadItems={[
                     {
                         text: "首页",
                         isActive: true,
@@ -298,7 +308,7 @@ export default function Chrom(props) {
 
             <div className='mp-vlist'>
                 <div className="mp-chrom-content">
-                    <CropCntr 
+                    <CropCntr
                         snapshotRawImg={snapshotRawImg}
                         sizeboxData={sizeboxData}
                         ptc_uploadSizeboxData={uploadSizeboxData}
@@ -309,7 +319,7 @@ export default function Chrom(props) {
                         ptc_triggerUndoCrop={triggerUndoCrop}
                         ptc_triggerSetNewImg={triggerSetNewImg}
                     />
-                    <MarkCntr                     
+                    <MarkCntr
                         ptc_triggerSaveResult={triggerSaveResult}
                         ptc_triggerShowAttachment={triggerShowAttachment}
                         ptc_uploadMarkMode={uploadMarkMode}
@@ -318,6 +328,8 @@ export default function Chrom(props) {
                         ptc_uploadScalingRatios={uploadScalingRatios}
                         ptc_uploadDrawPointToPreciseCanvas={uploadDrawPointToPreciseCanvas}
                         ptc_triggerUploadResult={uploadSnapshot}
+                        ptc_triggerPickColor={triggerColorPicker}
+                        ptc_uploadIsColorPickerModalVisible={uploadIsColorPickerModalVisible}
 
                         cropImgList={cropImgList}
                         cropBoxSizeList={cropBoxSizeList}
@@ -328,6 +340,8 @@ export default function Chrom(props) {
                         scalingRatios={scalingRatios}
 
                         standardDrawInfo={standardDrawInfo}
+
+                        isColorPickerModalVisible={isColorPickerModalVisible}
                     />
                 </div>
                 <HighPrecCntr
@@ -348,7 +362,7 @@ export default function Chrom(props) {
                 visible={isAttachmentDrawerVisible}
                 updateToggle={attachmentDrawerUpdateToggle}
                 onClose={onAttachmentDrawerClose}
-                networdArgs={{type: "task", id: chromId, accessToken: accessToken}}
+                networdArgs={{ type: "task", id: chromId, accessToken: accessToken }}
             />
 
         </div>

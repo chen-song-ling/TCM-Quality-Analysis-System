@@ -1,0 +1,10 @@
+.mp-colorpicker-color-rect {
+    height: 20px;
+    width: 20px;
+    border: 1px solid #000000;
+    /* background-color: #000000; */
+}
+
+.mp-colorpicker-color-box {
+    padding-top: 5px;
+}

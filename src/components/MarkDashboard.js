@@ -160,6 +160,10 @@ export default function MarkDashboard(props) {
         props.ptc_triggerShowAttachment();
     }
 
+    const handlePickColorBtn = () => {
+        props.ptc_triggerPickColor();
+    }
+
     return (
         <div className="chmt-markdb">
             <div className="chmt-markdb-btnlist">
@@ -173,6 +177,7 @@ export default function MarkDashboard(props) {
                 <button type="button" className="btn btn-default" onClick={handleUndoBtn}>{config.text_undobtn}</button>
                 <button type="button" className="btn btn-default" onClick={handleClearBtn}>{config.text_clearbtn}</button>
                 <button type="button" className="btn btn-default" onClick={handleNumberBtn}>{config.text_numberbtn}</button>
+                <button type="button" className="btn btn-default" onClick={handlePickColorBtn} disabled={props.focusedCv < 0 | props.focusedCv >= props.cropImgList.length}>{"取色"}</button>
                 <button type="button" className="btn btn-default" disabled="disabled" onClick={handleReportBtn}>{"预览报告"}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleSaveBtn}>{config.text_savebtn}</button>
                 <button type="button" className="btn btn-default" onClick={handleAttachmentBtn}>{"附件管理"}</button>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MarkBlock from "./MarkBlock";
 import "./MarkCntr.css";
 import MarkDashboard from "./MarkDashboard";
-
+import ColorPicker from "./ColorPicker";
 
 
 /* StateType
@@ -75,6 +75,10 @@ export default function MarkCntr(props) {
         props.ptc_triggerUploadResult();
     }
 
+    const triggerPickColor = () => {
+        props.ptc_triggerPickColor();
+    }
+
     // const uploadDrawPointToPreciseCanvas = (newPrecDrawInfo) => {
     //     props.ptc_uploadDrawPointToPreciseCanvas(newPrecDrawInfo);
     // }
@@ -113,6 +117,18 @@ export default function MarkCntr(props) {
                 ptc_triggerSaveResult={triggerSaveResult}
                 ptc_triggerUploadResult={triggerUploadResult}
                 ptc_triggerShowAttachment={triggerShowAttachment}
+                ptc_triggerPickColor={triggerPickColor}
+
+                cropImgList={props.cropImgList}
+                focusedCv={props.focusedCv}
+            />
+            <ColorPicker
+                isColorPickerModalVisible={props.isColorPickerModalVisible}
+                ptc_uploadIsColorPickerModalVisible={props.ptc_uploadIsColorPickerModalVisible}
+
+                cropImgList={props.cropImgList}
+                focusedCv={props.focusedCv}
+                cropBoxSizeList={props.cropBoxSizeList}
             />
         </div>
     );
