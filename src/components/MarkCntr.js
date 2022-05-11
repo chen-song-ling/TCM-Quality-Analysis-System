@@ -121,6 +121,7 @@ export default function MarkCntr(props) {
 
                 cropImgList={props.cropImgList}
                 focusedCv={props.focusedCv}
+                markedPoints={props.markedPoints}
             />
             <ColorPicker
                 isColorPickerModalVisible={props.isColorPickerModalVisible}

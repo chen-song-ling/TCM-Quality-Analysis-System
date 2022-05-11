@@ -21,6 +21,19 @@ import "./MarkDashboard.css";
 
 export default function MarkDashboard(props) {
     const [markMode, setMarkMode] = useState("none"); 
+    const [isKeyBtnDisabled, setIsKeyBtnDisabled] = useState(true);
+
+    useEffect(() => {
+        if (props.focusedCv < 0 || props.focusedCv >= props.markedPoints.fpListGroup.length || props.markedPoints.fpListGroup[props.focusedCv].length <= 1) {
+            setIsKeyBtnDisabled(true);
+            if (markMode === "key") {
+                setMarkMode("none");
+                props.ptc_uploadMarkMode("none");
+            }
+        } else {
+            setIsKeyBtnDisabled(false);
+        }
+    }, [props.focusedCv, props.markedPoints])
 
     const config = {
         text_fixbtn_active: "标记定位斑点(红色)",
@@ -168,7 +181,7 @@ export default function MarkDashboard(props) {
         <div className="chmt-markdb">
             <div className="chmt-markdb-btnlist">
                 <button type="button" className={setFixBtnStyle()} onClick={()=>handleFKBtnClick("fix")}>{setFixBtnText()}</button>
-                <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")}>{setKeyBtnText()}</button>
+                <button type="button" className={setKeyBtnStyle()} onClick={()=>handleFKBtnClick("key")} disabled={ isKeyBtnDisabled }>{setKeyBtnText()}</button>
                 <button type="button" className={setOriBtnStyle()} onClick={()=>handleFKBtnClick("ori")}>{setOriBtnText()}</button>
                 <button type="button" className={setEscBtnStyle()} onClick={()=>handleFKBtnClick("esc")}>{setEscBtnText()}</button>
                 <button type="button" className="btn btn-primary"  onClick={handleUploadBtn}>{"保存"}</button>
