@@ -50,6 +50,8 @@ export default function Micro(props) {
     const [isSaveBtnActive, setIsSaveBtnActive] = useState(true);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
+    const [modiTexts, setModiTexts] = useState([]);
+
     const [cache, setCache] = useState(null);
 
 
@@ -360,6 +362,12 @@ export default function Micro(props) {
 
     // -- END -- AttachmentDrawer相关
 
+    const onModiInputChange = (idx, e) => {
+        let newones = [... modiTexts];
+        newones[idx] = e.target.value;
+        setModiTexts(newones)
+    }
+
     if (redirect !== null) {
         return (
             <Redirect push to={redirect} />
@@ -421,6 +429,8 @@ export default function Micro(props) {
                 characterImgGroup={microImgGroup}
                 characterStandardImgGroup={microStandardImgGroup}
                 characterImgAiInfo={microImgAiInfo}
+                modiTexts={modiTexts}
+                onModiInputChange={onModiInputChange}
             />
 
             <AttachmentDrawerPlus

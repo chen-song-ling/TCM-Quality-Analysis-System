@@ -54,7 +54,11 @@ export default function Character(props) {
     const [isSaveBtnActive, setIsSaveBtnActive] = useState(true);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
+    const [modiTexts, setModiTexts] = useState([]);
+
     const [cache, setCache] = useState(null);
+
+
 
 
     useEffect(() => {
@@ -494,16 +498,19 @@ export default function Character(props) {
                     let newones_smp = [];
                     let newones_std = [];
                     let newones_info = [];
+                    let newones_modi = [];
                     res.data.result.results.forEach(item => {
                         newones_smp.push(item.origin_image.save_path);
                         newones_std.push(item.retrieval_image.save_path);
                         // newones_info.push(item.score);
                         newones_info.push(`类别: ${item.category}\n置信度: ${item.score.toFixed(2)}`);
+                        newones_modi.push("");
                     });
                     dispatch(setCharacterImgGroup(newones_smp));
                     dispatch(setCharacterStandardImgGroup(newones_std));
                     dispatch(setCharacterImgAiInfo(newones_info));
 
+                    setModiTexts(newones_modi);
                     setIsLoadingAI(false);
                     setIsReportBtnActive(true);
                 }).catch((err) => {
@@ -521,6 +528,12 @@ export default function Character(props) {
     }
 
     // -- END -- Crop Modal相关
+
+    const onModiInputChange = (idx, e) => {
+        let newones = [... modiTexts];
+        newones[idx] = e.target.value;
+        setModiTexts(newones)
+    }
 
 
     if (redirect !== null) {
@@ -585,6 +598,8 @@ export default function Character(props) {
                 characterImgGroup={characterImgGroup}
                 characterStandardImgGroup={characterStandardImgGroup}
                 characterImgAiInfo={characterImgAiInfo}
+                modiTexts={modiTexts}
+                onModiInputChange={onModiInputChange}
             // cropBoxSize={characterSampleImg.cropSize}
             />
 

@@ -2,6 +2,9 @@ import React from 'react';
 import { useEffect } from "react";
 import './CharacterImgList.css';
 import { baseStaticUrl } from '../util/const';
+import { Input } from 'antd';
+const { TextArea } = Input;
+
 
 export default function CharacterImgList(props) {
 
@@ -107,6 +110,16 @@ export default function CharacterImgList(props) {
                 <div className="mp-charimglist-row-right mp-vlist">
                     {renderAiInfo(idx)}
                 </div>
+
+                <div className="mp-charimglist-row-modi mp-vlist">
+                    <TextArea
+                        className='modi-input'
+                        value={props.modiTexts[idx]}
+                        onChange={(e)=>props.onModiInputChange(idx, e)}
+                        autoSize={{ minRows: 3, maxRows: 3 }}
+                    />
+                </div>
+
             </div>
         );
     }
@@ -151,6 +164,9 @@ export default function CharacterImgList(props) {
                     </div>
                     <div className="mp-charimglist-row-head mp-vlist">
                         <p>识别信息</p>
+                    </div>
+                    <div className="mp-charimglist-row-head mp-vlist">
+                        <p>修改信息</p>
                     </div>
                 </div>
                 {rows}

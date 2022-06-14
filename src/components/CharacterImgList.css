@@ -26,6 +26,16 @@
     width: 200px;
 }
 
+.mp-charimglist-row-modi {
+    background-color: rgb(232, 222, 222);
+    height: 200px;
+    width: 200px;
+}
+
+.modi-input {
+    width: 180px;
+}
+
 .mp-charimglist-row-head {
     width: 200px;
 }
