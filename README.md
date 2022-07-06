@@ -1,4 +1,4 @@
-# drug-control-medp
+# TCM-Quality-Analysis-System
 
 毕业设计，辅助工具之二
 
