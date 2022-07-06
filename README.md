@@ -5,8 +5,8 @@
 ## 快速开始 Or 生产环境测试
 
 ```bas
-git clone git@github.com:Leundo/drug-control-medp.git
-cd drug-control-medp
+git clone git@github.com:Leundo/TCM-Quality-Analysis-System.git
+cd TCM-Quality-Analysis-System
 npm install
 npm run build
 npm run elec
