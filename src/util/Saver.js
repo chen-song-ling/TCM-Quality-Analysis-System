@@ -65,8 +65,8 @@ function getCsvHeaderType4 (num) {
 
 function getXlsxHeaderType4 (num) {
     let ans = ["标记点色谱颜色"];
-    for (let i = 0; i < num; i++) {
-        ans.push("标记点", "颜色")
+    for (let i = 0; i < num+1; i++) {
+        ans.push("标记点", "RGB","HSB")
     }
     return ans;
 }
@@ -625,9 +625,37 @@ export function SaveAsXlsxPlus (sizeboxData, imgNaturalSize, cropBoxSizeList, ma
             if (MarkPoint.type === "ori") {
                 continue; // 跳过原点
             }
-            let markPointSerialNumber = `${psy2Log[i][markPointpsy].group}${psy2Log[i][markPointpsy].rank + 1}`
-
-            row.push(`${markPointSerialNumber}`, `${MarkPoint.color}`);
+            let markPointSerialNumber = `${psy2Log[i][markPointpsy].group}${psy2Log[i][markPointpsy].rank + 1}`;
+            let hsvelcolor=MarkPoint.color.substr(1,MarkPoint.color.length-2).split(";");
+            // console.log(hsvelcolor[2])
+            hsvelcolor[0]=Number(hsvelcolor[0]);
+            hsvelcolor[1]=Number(hsvelcolor[1]);
+            hsvelcolor[2]=Number(hsvelcolor[2]);
+            let max=Math.max(hsvelcolor[0],hsvelcolor[1],hsvelcolor[2]);
+            let min=Math.min(hsvelcolor[0],hsvelcolor[1],hsvelcolor[2]);
+            let H,S,V=(hsvelcolor[0],hsvelcolor[1],hsvelcolor[2]);
+            if(max!==min){
+                if (max === hsvelcolor[0])
+                    H=(hsvelcolor[1]-hsvelcolor[2])/(max-min);
+                if (max === hsvelcolor[1])
+                    H=2+(hsvelcolor[2]-hsvelcolor[0])/(max-min);
+                if (max === hsvelcolor[2])
+                    H=4+(hsvelcolor[0]-hsvelcolor[1])/(max-min);
+            }
+            else{
+                H=0;
+            }
+            H=60*H;
+            if(H<0)
+                H=H+360;
+            V=max/255;
+            if(max!==0)
+                S=(max-min)/max;
+            else
+                S=0;
+            console.log(hsvelcolor[0],hsvelcolor[1],hsvelcolor[2]);
+            row.push(`${markPointSerialNumber}`, `${MarkPoint.color}`,`(${Math.round(H)}; ${(S).toFixed(3)}; ${(V).toFixed(3)})`);
+            // console.log(hsvelcolor)
         }
         xlsx.push(row);
     }

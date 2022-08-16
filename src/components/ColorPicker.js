@@ -50,11 +50,40 @@ export default function ColorPicker(props) {
         props.ptc_uploadIsColorPickerModalVisible(false);
     }
 
+    // const setColorStr = (color) => {
+    //     if (color === null) {
+    //         return "null";
+    //     } else {
+    //         return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+    //     }
+    // }
     const setColorStr = (color) => {
         if (color === null) {
             return "null";
         } else {
-            return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+            let max=Math.max(color[0],color[1],color[2]);
+            let min=Math.min(color[0],color[1],color[2]);
+            let H,S,V=(color[0],color[1],color[2]);
+            if(max!==min){
+                if (max === color[0])
+                    H=(color[1]-color[2])/(max-min);
+                if (max === color[1])
+                    H=2+(color[2]-color[0])/(max-min);
+                if (max === color[2])
+                    H=4+(color[0]-color[1])/(max-min);
+            }
+            else{
+                H=0;
+            }
+            H=60*H;
+            if(H<0)
+                H=H+360;
+            V=max/255;
+            if(max!==0)
+                S=(max-min)/max;
+            else
+                S=0;
+            return `rgb(${color[0]}, ${color[1]}, ${color[2]})\nhsv(${Math.round(H)}, ${(S*100).toFixed(1)}%, ${(V*100).toFixed(1)}%)`;
         }
     }
 
